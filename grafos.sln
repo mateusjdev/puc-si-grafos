@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37531.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grafos_lista_01_atv_10", "grafos_lista_01_atv_10\grafos_lista_01_atv_10.csproj", "{68350609-B315-4231-A91A-A5DDD6AFF0BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68350609-B315-4231-A91A-A5DDD6AFF0BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68350609-B315-4231-A91A-A5DDD6AFF0BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68350609-B315-4231-A91A-A5DDD6AFF0BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68350609-B315-4231-A91A-A5DDD6AFF0BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {99F7A39A-F797-42C2-AD24-DAA272110826}
+	EndGlobalSection
+EndGlobal
