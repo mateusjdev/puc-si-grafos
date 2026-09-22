@@ -9,17 +9,17 @@ namespace grafos_lista_01_atv_10 {
 
     public class Grafo {
 
-        private readonly LinkedList<string> _vertices;
+        private readonly OrderedDictionary<string, Vertice> _vertices;
         private readonly LinkedList<(string, string)> _arestas;
         private readonly bool direcionado;
 
         private int[,] _matrizAdjacencia;
         private int[,] _matrizIncidencia;
-        private Dictionary<string, LinkedList<string>> _listaAdjacencia;
+        private Dictionary<string, LinkedList<Vertice>> _listaAdjacencia;
         private bool representacaoAtualizada;
 
         public Grafo(bool direcionado) {
-            _vertices = new LinkedList<string>();
+            _vertices = new OrderedDictionary<string, Vertice>();
             _arestas = new LinkedList<(string, string)>();
             this.direcionado = direcionado;
             representacaoAtualizada = true;
@@ -41,8 +41,8 @@ namespace grafos_lista_01_atv_10 {
             _matrizAdjacencia = new int[tamanho, tamanho];
             var vertices = _vertices.ToList();
             foreach (var aresta in _arestas) {
-                int i = vertices.IndexOf(aresta.Item1);
-                int j = vertices.IndexOf(aresta.Item2);
+                int i = _vertices.IndexOf(aresta.Item1);
+                int j = _vertices.IndexOf(aresta.Item2);
                 if (i < 0 || j < 0) {
                     throw new InvalidOperationException();
                 }
@@ -60,8 +60,8 @@ namespace grafos_lista_01_atv_10 {
             var vertices = _vertices.ToList();
             var iAresta = _arestas.First;
             for (int i = 0; iAresta != null; i++) {
-                int j = vertices.IndexOf(iAresta.Value.Item1);
-                int k = vertices.IndexOf(iAresta.Value.Item2);
+                int j = _vertices.IndexOf(iAresta.Value.Item1);
+                int k = _vertices.IndexOf(iAresta.Value.Item2);
                 if (j < 0 || k < 0) {
                     throw new InvalidOperationException();
                 }
@@ -73,22 +73,22 @@ namespace grafos_lista_01_atv_10 {
 
         private void MontarRepresentacao_ListaAdjacencia() {
             int tamanho = _vertices.Count;
-            _listaAdjacencia = new Dictionary<string, LinkedList<string>>(tamanho);
-            foreach (var item in _vertices) {
-                _listaAdjacencia.Add(item, new LinkedList<string>());
+            _listaAdjacencia = new Dictionary<string, LinkedList<Vertice>>(tamanho);
+            foreach (var item in _vertices.Keys) {
+                _listaAdjacencia.Add(item, new LinkedList<Vertice>());
             }
             foreach (var aresta in _arestas) {
-                _listaAdjacencia.TryGetValue(aresta.Item1, out LinkedList<string> tmp);
+                _listaAdjacencia.TryGetValue(aresta.Item1, out LinkedList<Vertice> tmp);
                 if (tmp == null) {
                     throw new InvalidOperationException();
                 }
-                tmp.AddLast(aresta.Item2);
+                tmp.AddLast(_vertices[aresta.Item2]);
                 if (!direcionado && aresta.Item1 != aresta.Item2) {
-                    _listaAdjacencia.TryGetValue(aresta.Item2, out LinkedList<string> tmp2);
+                    _listaAdjacencia.TryGetValue(aresta.Item2, out LinkedList<Vertice> tmp2);
                     if (tmp2 == null) {
                         throw new InvalidOperationException();
                     }
-                    tmp2.AddLast(aresta.Item1);
+                    tmp2.AddLast(_vertices[aresta.Item1]);
                 }
             }
         }
@@ -96,8 +96,9 @@ namespace grafos_lista_01_atv_10 {
         #endregion
 
         public Grafo AdicionarVertice(string vertice) {
-            if (!_vertices.Contains(vertice)) {
-                _vertices.AddLast(vertice);
+            if (!_vertices.ContainsKey(vertice)) {
+                var v = new Vertice(vertice);
+                _vertices.Add(vertice, v);
                 representacaoAtualizada = false;
             }
             return this;
@@ -114,28 +115,27 @@ namespace grafos_lista_01_atv_10 {
             return this;
         }
 
-        public string[] Adjacencias_Matriz(string vertice) {
-            if (!_vertices.Contains(vertice)) {
+        public Vertice[] Adjacencias_Matriz(string vertice) {
+            if (!_vertices.ContainsKey(vertice)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
             AtualizarRepresentacao();
-            LinkedList<string> tmp = new();
-            var vertices = _vertices.ToList();
-            int i = vertices.IndexOf(vertice);
+            LinkedList<Vertice> tmp = new();
+            int i = _vertices.IndexOf(vertice);
             for (int j = 0; j < _matrizAdjacencia.GetLength(0); j++) {
                 if (_matrizAdjacencia[i, j] > 0) {
-                    tmp.AddLast(vertices.ElementAt(j));
+                    tmp.AddLast(_vertices.GetAt(j).Value);
                 }
             }
             return tmp.ToArray();
         }
 
-        public string[] Adjacencias_Lista(string vertice) {
-            if (!_vertices.Contains(vertice)) {
+        public Vertice[] Adjacencias_Lista(string vertice) {
+            if (!_vertices.ContainsKey(vertice)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
             AtualizarRepresentacao();
-            _listaAdjacencia.TryGetValue(vertice, out LinkedList<string> tmp);
+            _listaAdjacencia.TryGetValue(vertice, out LinkedList<Vertice> tmp);
             if (tmp == null) {
                 throw new InvalidOperationException();
             }
@@ -147,11 +147,9 @@ namespace grafos_lista_01_atv_10 {
         public override string ToString() {
             StringBuilder sb = new();
             sb.Append("V = {");
-            var v = _vertices.First;
-            for (int i = 0; v != null; i++) {
-                sb.Append(v.Value);
-                v = v.Next;
-                if (v != null) {
+            for (int i = 0; i < _vertices.Count; i++) {
+                sb.Append(_vertices.GetAt(i));
+                if (i != _vertices.Count - 1) {
                     sb.Append(", ");
                 }
             }
@@ -226,15 +224,17 @@ namespace grafos_lista_01_atv_10 {
             StringBuilder stringBuilder = new();
             var adj = Adjacencias_Matriz(vertice);
             stringBuilder.AppendLine("Adjacencias por Matriz:");
-            stringBuilder.AppendLine(string.Join(", ", adj));
-            return stringBuilder.ToString();
+            var adjs = adj.Select(a => a.ToString());
+            stringBuilder.AppendJoin(", ", adjs);
+            return stringBuilder.AppendLine().ToString();
         }
 
         public string Imprimir_VerticesAdjacentes_Lista(string vertice) {
             StringBuilder stringBuilder = new();
             var adj = Adjacencias_Lista(vertice);
             stringBuilder.AppendLine("Adjacencias por Lista:");
-            stringBuilder.AppendLine(string.Join(", ", adj));
+            var adjs = adj.Select(a => a.ToString());
+            stringBuilder.AppendJoin(", ", adjs);
             return stringBuilder.ToString();
         }
 
