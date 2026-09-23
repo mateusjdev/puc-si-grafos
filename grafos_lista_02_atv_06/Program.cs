@@ -5,9 +5,12 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace grafos_lista_02_atv_06 {
-    public class Program {
-        public static void Testar_Grafo_v1() {
+namespace grafos_lista_02_atv_06
+{
+    public class Program
+    {
+        public static void Testar_Grafo_v1()
+        {
             // V = { v1, v2, v3, v4, v5}
             // A = { { v1, v2}, { v1, v3}, { v1, v5}, { v2, v3}, { v2, v4}, { v3, v4}, { v3, v5} }
 
@@ -34,8 +37,9 @@ namespace grafos_lista_02_atv_06 {
             Console.WriteLine(grafo.Imprimir_VerticesAdjacentes_Matriz("v3"));
             Console.WriteLine(grafo.Imprimir_VerticesAdjacentes_Lista("v3"));
         }
-    
-        public static void Testar_Grafo_v2() {
+
+        public static void Testar_Grafo_v2()
+        {
             // Questão 4 - Grafo 3
             var grafo = new Grafo(false, "Questão 4 - Grafo 3");
             grafo.AdicionarVertice("0")
@@ -66,7 +70,8 @@ namespace grafos_lista_02_atv_06 {
             Console.WriteLine(grafo.RealizarBusca_BFS());
         }
 
-        public static void Testar_Grafo_v3() {
+        public static void Testar_Grafo_v3()
+        {
             // Questão 4 - Grafo 1
             var grafo = new Grafo(true, "Questão 4 - Grafo 1");
             grafo.AdicionarVertice("1")
@@ -95,9 +100,70 @@ namespace grafos_lista_02_atv_06 {
             Console.WriteLine(grafo.RealizarBusca_BFS());
         }
 
-        static void Main() {
+        public static void Testar_Grafo_v4()
+        {
+            // Questão 4 - Grafo 1
+            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
+            grafo.AdicionarVertice("1")
+                .AdicionarVertice("2")
+                .AdicionarVertice("3")
+                .AdicionarVertice("4")
+                .AdicionarVertice("5")
+                .AdicionarAresta("1", "2")
+                .AdicionarAresta("2", "3")
+                .AdicionarAresta("3", "4")
+                .AdicionarAresta("4", "5")
+                .AdicionarAresta("5", "2")
+                .AtualizarRepresentacao();
+
+            Console.WriteLine(grafo);
+            bool ehCiclico = grafo.EhCiclico();
+            if (ehCiclico)
+            {
+                Console.WriteLine("O grafo é ciclico.\n");
+            }
+            else
+            {
+                Console.WriteLine("O grafo é aciclico.\n");
+            }
+        }
+
+        public static void Testar_Grafo_v5()
+        {
+            // Questão 4 - Grafo 1
+            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
+            grafo.AdicionarVertice("1")
+                .AdicionarVertice("2")
+                .AdicionarVertice("3")
+                .AdicionarVertice("4")
+                .AdicionarVertice("5")
+                .AdicionarAresta("1", "2")
+                .AdicionarAresta("2", "3")
+                .AdicionarAresta("3", "4")
+                .AdicionarAresta("4", "5")
+                .AtualizarRepresentacao();
+
+            Console.WriteLine(grafo);
+            bool ehCiclico = grafo.EhCiclico();
+            if (ehCiclico)
+            {
+                Console.WriteLine("O grafo é ciclico.\n");
+            }
+            else
+            {
+                Console.WriteLine("O grafo é aciclico.\n");
+            }
+        }
+
+        static void Main()
+        {
+            // DFS e BFS em grafo direcionado
             Testar_Grafo_v2();
+            // DFS e BFS em grafo não direcionado
             Testar_Grafo_v3();
+            // Eh Ciclico (ou !ciclico)
+            Testar_Grafo_v4();
+            Testar_Grafo_v5();
         }
     }
 }
