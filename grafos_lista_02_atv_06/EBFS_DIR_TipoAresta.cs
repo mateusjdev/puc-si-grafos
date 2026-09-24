@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
-    internal enum EBFS_TipoAresta_NDIR {
-        Pai,
-        Irmao,
-        Primo,
-        Tio
+    internal enum EBFS_DIR_TipoAresta {
+        Arvore,
+        Retorno,
+        Cruzamento
     }
 }

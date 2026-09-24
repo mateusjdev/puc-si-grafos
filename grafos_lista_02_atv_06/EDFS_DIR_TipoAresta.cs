@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
-    internal enum EDFS_TipoAresta_NDIR {
+    internal enum EDFS_DIR_TipoAresta {
         Arvore,
-        Retorno
+        Retorno,
+        Avanco,
+        Cruzamento
     }
 }

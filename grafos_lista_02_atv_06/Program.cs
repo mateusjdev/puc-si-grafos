@@ -40,6 +40,69 @@ namespace grafos_lista_02_atv_06
 
         public static void Testar_Grafo_v2()
         {
+            // Questão 4 - Grafo 1
+            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
+            grafo.AdicionarVertice("1")
+                .AdicionarVertice("2")
+                .AdicionarVertice("3")
+                .AdicionarVertice("4")
+                .AdicionarVertice("5")
+                .AdicionarVertice("6")
+                .AdicionarVertice("7")
+                .AdicionarVertice("8")
+                .AdicionarVertice("9")
+                .AdicionarAresta("1", "2")
+                .AdicionarAresta("2", "3")
+                .AdicionarAresta("2", "4")
+                .AdicionarAresta("3", "2")
+                .AdicionarAresta("4", "5")
+                .AdicionarAresta("4", "7")
+                .AdicionarAresta("5", "3")
+                .AdicionarAresta("5", "8")
+                .AdicionarAresta("6", "8")
+                .AdicionarAresta("9", "1")
+                .AtualizarRepresentacao();
+
+            Console.WriteLine(grafo);
+            Console.WriteLine(grafo.RealizarBusca_DFS("v1"));
+            Console.WriteLine(grafo.RealizarBusca_BFS("v1"));
+        }
+
+        public static void Testar_Grafo_v3()
+        {
+            // Questão 4 - Grafo 1
+            var grafo = new Grafo(true, "Questão 4 - Grafo 2");
+            grafo.AdicionarVertice("1")
+                .AdicionarVertice("2")
+                .AdicionarVertice("3")
+                .AdicionarVertice("4")
+                .AdicionarVertice("5")
+                .AdicionarVertice("6")
+                .AdicionarVertice("7")
+                .AdicionarVertice("8")
+                .AdicionarVertice("9")
+                .AdicionarAresta("1", "2")
+                .AdicionarAresta("1", "9")
+                .AdicionarAresta("2", "3")
+                .AdicionarAresta("3", "5")
+                .AdicionarAresta("3", "6")
+                .AdicionarAresta("5", "3")
+                .AdicionarAresta("5", "4")
+                .AdicionarAresta("4", "2")
+                .AdicionarAresta("4", "7")
+                .AdicionarAresta("6", "8")
+                .AdicionarAresta("7", "8")
+                .AdicionarAresta("8", "5")
+                .AdicionarAresta("9", "1")
+                .AtualizarRepresentacao();
+
+            Console.WriteLine(grafo);
+            Console.WriteLine(grafo.RealizarBusca_DFS("1"));
+            Console.WriteLine(grafo.RealizarBusca_BFS("1"));
+        }
+
+        public static void Testar_Grafo_v4()
+        {
             // Questão 4 - Grafo 3
             var grafo = new Grafo(false, "Questão 4 - Grafo 3");
             grafo.AdicionarVertice("0")
@@ -66,44 +129,14 @@ namespace grafos_lista_02_atv_06
                 .AtualizarRepresentacao();
 
             Console.WriteLine(grafo);
-            Console.WriteLine(grafo.RealizarBusca_DFS());
-            Console.WriteLine(grafo.RealizarBusca_BFS());
+            Console.WriteLine(grafo.RealizarBusca_DFS("1"));
+            Console.WriteLine(grafo.RealizarBusca_BFS("1"));
         }
 
-        public static void Testar_Grafo_v3()
+        public static void Testar_Grafo_v5()
         {
             // Questão 4 - Grafo 1
-            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
-            grafo.AdicionarVertice("1")
-                .AdicionarVertice("2")
-                .AdicionarVertice("3")
-                .AdicionarVertice("4")
-                .AdicionarVertice("5")
-                .AdicionarVertice("6")
-                .AdicionarVertice("7")
-                .AdicionarVertice("8")
-                .AdicionarVertice("9")
-                .AdicionarAresta("1", "2")
-                .AdicionarAresta("2", "3")
-                .AdicionarAresta("2", "4")
-                .AdicionarAresta("3", "2")
-                .AdicionarAresta("4", "5")
-                .AdicionarAresta("4", "7")
-                .AdicionarAresta("5", "3")
-                .AdicionarAresta("5", "8")
-                .AdicionarAresta("6", "8")
-                .AdicionarAresta("9", "1")
-                .AtualizarRepresentacao();
-
-            Console.WriteLine(grafo);
-            Console.WriteLine(grafo.RealizarBusca_DFS());
-            Console.WriteLine(grafo.RealizarBusca_BFS());
-        }
-
-        public static void Testar_Grafo_v4()
-        {
-            // Questão 4 - Grafo 1
-            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
+            var grafo = new Grafo(true);
             grafo.AdicionarVertice("1")
                 .AdicionarVertice("2")
                 .AdicionarVertice("3")
@@ -128,10 +161,10 @@ namespace grafos_lista_02_atv_06
             }
         }
 
-        public static void Testar_Grafo_v5()
+        public static void Testar_Grafo_v6()
         {
             // Questão 4 - Grafo 1
-            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
+            var grafo = new Grafo(true);
             grafo.AdicionarVertice("1")
                 .AdicionarVertice("2")
                 .AdicionarVertice("3")
@@ -159,11 +192,12 @@ namespace grafos_lista_02_atv_06
         {
             // DFS e BFS em grafo direcionado
             Testar_Grafo_v2();
-            // DFS e BFS em grafo não direcionado
             Testar_Grafo_v3();
-            // Eh Ciclico (ou !ciclico)
+            // DFS e BFS em grafo não direcionado
             Testar_Grafo_v4();
+            // Eh Ciclico (ou !ciclico)
             Testar_Grafo_v5();
+            Testar_Grafo_v6();
         }
     }
 }
