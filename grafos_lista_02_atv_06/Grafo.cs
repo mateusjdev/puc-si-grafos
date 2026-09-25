@@ -561,6 +561,13 @@ namespace grafos_lista_02_atv_06 {
 
         #endregion
 
+        public Grafo AdicionarVertices(params string[] vertices) {
+            foreach (var vertice in vertices) {
+                AdicionarVertice(vertice);
+            }
+            return this;
+        }
+
         public Grafo AdicionarVertice(string vertice) {
             if (!_vertices.ContainsKey(vertice)) {
                 var v = new Vertice(vertice);
