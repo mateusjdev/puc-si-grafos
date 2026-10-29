@@ -14,9 +14,11 @@ namespace grafos_lista_02_atv_06 {
             _tabela = [];
         }
 
-        public void Add(T item) {
-            _tabela[item] = _lista.Count;
+        public int Add(T item) {
+            int i = _lista.Count;
+            _tabela[item] = i;
             _lista.Add(item);
+            return i;
         }
 
         public int IndexOf(T item) {

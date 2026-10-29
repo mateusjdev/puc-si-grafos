@@ -38,7 +38,7 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public override string ToString() {
-            StringBuilder sb = new("Lista Adjacencia:");
+            StringBuilder sb = new("Lista Adjacencia:\n");
             foreach (var vertice in _lista) {
                 sb.Append($"{vertice.Key}: ");
                 var adj = vertice.Value.First;

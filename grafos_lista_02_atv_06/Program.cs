@@ -131,14 +131,19 @@ namespace grafos_lista_02_atv_06 {
         }
 
         static void Main() {
-            // DFS e BFS em grafo direcionado
-            Testar_Grafo_v2();
-            Testar_Grafo_v3();
-            // DFS e BFS em grafo não direcionado
-            Testar_Grafo_v4();
-            // Eh Ciclico (ou !ciclico)
-            Testar_Grafo_v5();
-            Testar_Grafo_v6();
+            // // DFS e BFS em grafo direcionado
+            // Testar_Grafo_v2();
+            // Testar_Grafo_v3();
+            // // DFS e BFS em grafo não direcionado
+            // Testar_Grafo_v4();
+            // // Eh Ciclico (ou !ciclico)
+            // Testar_Grafo_v5();
+            // Testar_Grafo_v6();
+            var representacao = new MatrixAdjacencia();
+            var grafo = new Grafo(false, representacao, "H");
+            grafo.AdicionarVertices("v1", "v2", "v3", "v4", "v5");
+            grafo.AdicionarAresta("v1", "v2");
+            Console.WriteLine(grafo.ImprimirRepresentacao());
         }
     }
 }
