@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     public class Grafo {
+        // Grafo
+        private readonly string _nome;
+        private readonly bool _ehDirecionado;
+
+        // Representação
+        private readonly IRepresentacaoGrafo _representacao;
+
         private readonly OrderedDictionary<string, Vertice> _vertices;
         private readonly LinkedList<(string, string)> _arestas;
-        private readonly bool direcionado;
-        private readonly string nome;
-
-        private int[,] _matrizAdjacencia;
-        private int[,] _matrizIncidencia;
-        private Dictionary<string, LinkedList<Vertice>> _listaAdjacencia;
-        private bool representacaoAtualizada;
 
         // Pesquisa em Profundidade (não direcionado)
         private int dfs_ndir_Tempo;
@@ -51,16 +51,25 @@ namespace grafos_lista_02_atv_06 {
         private Vertice[] bfs_dir_Pai;
         private LinkedList<(Vertice, Vertice, EBFS_DIR_TipoAresta)> bfs_dir_bfsTipoArestas;
 
-        public Grafo(bool direcionado, string nome = "G") {
-            _vertices = new OrderedDictionary<string, Vertice>();
+        public Grafo(bool ehDirecionado, string nome = "G") {
+            _vertices = [];
             _arestas = new LinkedList<(string, string)>();
-            this.direcionado = direcionado;
-            this.nome = nome;
+            _ehDirecionado = ehDirecionado;
+            _nome = nome;
+            _representacao = new ListaAdjacencia();
+            MarcarComoDesatualizado();
+        }
+
+        public Grafo(bool direcionado, IRepresentacaoGrafo representacao, string nome = "G") {
+            _vertices = [];
+            _arestas = new LinkedList<(string, string)>();
+            _ehDirecionado = direcionado;
+            _nome = nome;
+            _representacao = representacao;
             MarcarComoDesatualizado();
         }
 
         private void MarcarComoDesatualizado() {
-            representacaoAtualizada = false;
             dfs_ndir_Atualizada = false;
             dfs_dir_Atualizada = false;
             bfs_ndir_Atualizada = false;
@@ -86,7 +95,7 @@ namespace grafos_lista_02_atv_06 {
             dfs_ndir_Tempo++;
             dfs_ndir_TempoDescoberta[iVertice] = dfs_ndir_Tempo;
 
-            var adjs = Sucessores_Matriz(kVertice);
+            var adjs = Sucessores(kVertice);
             foreach (var a in adjs) {
                 var kAdjs = a.Chave;
                 var iAdjs = _vertices.IndexOf(kAdjs);
@@ -109,7 +118,6 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public void DFS_NDIR_Inicializar(Vertice ver = null) {
-            AtualizarRepresentacao();
             if (!dfs_ndir_Atualizada) {
                 DFS_NDIR_Resetar();
                 if (ver != null) {
@@ -150,7 +158,7 @@ namespace grafos_lista_02_atv_06 {
             dfs_dir_Tempo++;
             dfs_dir_TempoDescoberta[iVertice] = dfs_dir_Tempo;
 
-            var adjs = Sucessores_Matriz(kVertice);
+            var adjs = Sucessores(kVertice);
             foreach (var a in adjs) {
                 var kAdjs = a.Chave;
                 var iAdjs = _vertices.IndexOf(kAdjs);
@@ -179,7 +187,6 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public void DFS_DIR_Inicializar(Vertice ver = null) {
-            AtualizarRepresentacao();
             if (!dfs_dir_Atualizada) {
                 DFS_DIR_Resetar();
                 if (ver != null) {
@@ -219,7 +226,7 @@ namespace grafos_lista_02_atv_06 {
                 Vertice vertice = bfs_ndir_Fila.Dequeue();
                 string kVertice = vertice.Chave;
                 int iVertice = _vertices.IndexOf(kVertice);
-                var adjs = Sucessores_Matriz(kVertice);
+                var adjs = Sucessores(kVertice);
                 foreach (var a in adjs) {
                     string kAdjs = a.Chave;
                     int iAdjs = _vertices.IndexOf(kAdjs);
@@ -253,7 +260,6 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public void BFS_NDIR_Inicializar(Vertice ver = null) {
-            AtualizarRepresentacao();
             if (!bfs_ndir_Atualizada) {
                 BFS_NDIR_Resetar();
                 if (ver != null) {
@@ -300,7 +306,7 @@ namespace grafos_lista_02_atv_06 {
                 Vertice vertice = bfs_dir_Fila.Dequeue();
                 string kVertice = vertice.Chave;
                 int iVertice = _vertices.IndexOf(kVertice);
-                var adjs = Sucessores_Matriz(kVertice);
+                var adjs = Sucessores(kVertice);
                 foreach (var a in adjs) {
                     string kAdjs = a.Chave;
                     int iAdjs = _vertices.IndexOf(kAdjs);
@@ -327,7 +333,6 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public void BFS_DIR_Inicializar(Vertice ver = null) {
-            AtualizarRepresentacao();
             if (!bfs_dir_Atualizada) {
                 BFS_DIR_Resetar();
                 if (ver != null) {
@@ -358,105 +363,85 @@ namespace grafos_lista_02_atv_06 {
 
         #region Busca
 
-        public string RealizarBusca_BFS(string v = null) {
+        public string RealizarBusca_BFS(string vInicial = null) {
             Vertice ver = null;
-            if (v != null && _vertices.TryGetValue(v, out Vertice value)) {
+            if (vInicial != null && _vertices.TryGetValue(vInicial, out Vertice value)) {
                 ver = value;
             }
-            StringBuilder sb = new StringBuilder();
-            if (direcionado) {
+            StringBuilder sb = new();
+            if (_ehDirecionado) {
                 BFS_DIR_Inicializar(ver);
-                // marcações de aresta
-                sb.AppendLine("Busca por Largura - Direcionado");
-                sb.Append("V: ");
-                sb.AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)));
-                sb.AppendLine();
-
-                sb.Append("L: ");
-                sb.AppendJoin(", ", bfs_dir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)));
-                sb.AppendLine();
-
-                sb.Append("N: ");
-                sb.AppendJoin(", ", bfs_dir_NiveilDescoberta.Select(x => x.ToString().PadLeft(3)));
-                sb.AppendLine();
-
-                sb.Append("P: ");
-                sb.AppendJoin(", ", bfs_dir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)));
-                sb.AppendLine();
-
-                return sb.ToString();
+                sb.AppendLine("Busca por Largura - Direcionado")
+                    .Append("V: ")
+                    .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("L: ")
+                    .AppendJoin(", ", bfs_dir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("N: ")
+                    .AppendJoin(", ", bfs_dir_NiveilDescoberta.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("P: ")
+                    .AppendJoin(", ", bfs_dir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
+                    .AppendLine();
             }
-
-            BFS_NDIR_Inicializar(ver);
-            // marcações de aresta
-            sb.AppendLine("Busca por Largura - Não direcionado");
-            sb.Append("V: ");
-            sb.AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)));
-            sb.AppendLine();
-
-            sb.Append("L: ");
-            sb.AppendJoin(", ", bfs_ndir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)));
-            sb.AppendLine();
-
-            sb.Append("N: ");
-            sb.AppendJoin(", ", bfs_ndir_NiveilDescoberta.Select(x => x.ToString().PadLeft(3)));
-            sb.AppendLine();
-
-            sb.Append("P: ");
-            sb.AppendJoin(", ", bfs_ndir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)));
-            sb.AppendLine();
-
+            else {
+                BFS_NDIR_Inicializar(ver);
+                sb.AppendLine("Busca por Largura - Não direcionado")
+                    .Append("V: ")
+                    .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("L: ")
+                    .AppendJoin(", ", bfs_ndir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("N: ")
+                    .AppendJoin(", ", bfs_ndir_NiveilDescoberta.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("P: ")
+                    .AppendJoin(", ", bfs_ndir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
+                    .AppendLine();
+            }
             return sb.ToString();
         }
 
-        public string RealizarBusca_DFS(string v = null) {
+        public string RealizarBusca_DFS(string vInicial = null) {
             Vertice ver = null;
-            if (v != null && _vertices.TryGetValue(v, out Vertice value)) {
+            if (vInicial != null && _vertices.TryGetValue(vInicial, out Vertice value)) {
                 ver = value;
             }
-            StringBuilder sb = new StringBuilder();
-            if (direcionado) {
+            StringBuilder sb = new();
+            if (_ehDirecionado) {
                 DFS_DIR_Inicializar(ver);
-                // marcações de aresta
-                sb.AppendLine("Busca por Profundidade - Direcionado");
-                sb.Append("V:  ");
-                sb.AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)));
-                sb.AppendLine();
-
-                sb.Append("TD: ");
-                sb.AppendJoin(", ", dfs_dir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)));
-                sb.AppendLine();
-
-                sb.Append("TT: ");
-                sb.AppendJoin(", ", dfs_dir_TempoTermino.Select(x => x.ToString().PadLeft(3)));
-                sb.AppendLine();
-
-                sb.Append("P:  ");
-                sb.AppendJoin(", ", dfs_dir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)));
-                sb.AppendLine();
-
-                return sb.ToString();
+                sb.AppendLine("Busca por Profundidade - Direcionado")
+                   .Append("V:  ")
+                   .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
+                   .AppendLine()
+                   .Append("TD: ")
+                   .AppendJoin(", ", dfs_dir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
+                   .AppendLine()
+                   .Append("TT: ")
+                   .AppendJoin(", ", dfs_dir_TempoTermino.Select(x => x.ToString().PadLeft(3)))
+                   .AppendLine()
+                   .Append("P:  ")
+                   .AppendJoin(", ", dfs_dir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
+                   .AppendLine();
             }
-
-            DFS_NDIR_Inicializar(ver);
-            // marcações de aresta
-            sb.AppendLine("Busca por Profundidade - Não direcionado");
-            sb.Append("V:  ");
-            sb.AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)));
-            sb.AppendLine();
-
-            sb.Append("TD: ");
-            sb.AppendJoin(", ", dfs_ndir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)));
-            sb.AppendLine();
-
-            sb.Append("TT: ");
-            sb.AppendJoin(", ", dfs_ndir_TempoTermino.Select(x => x.ToString().PadLeft(3)));
-            sb.AppendLine();
-
-            sb.Append("P:  ");
-            sb.AppendJoin(", ", dfs_ndir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)));
-            sb.AppendLine();
-
+            else {
+                DFS_NDIR_Inicializar(ver);
+                sb.AppendLine("Busca por Profundidade - Não direcionado")
+                    .Append("V:  ")
+                    .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("TD: ")
+                    .AppendJoin(", ", dfs_ndir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("TT: ")
+                    .AppendJoin(", ", dfs_ndir_TempoTermino.Select(x => x.ToString().PadLeft(3)))
+                    .AppendLine()
+                    .Append("P:  ")
+                    .AppendJoin(", ", dfs_ndir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
+                    .AppendLine();
+            }
             return sb.ToString();
         }
 
@@ -466,7 +451,7 @@ namespace grafos_lista_02_atv_06 {
 
         public bool EhCiclico() {
             bool resposta = false;
-            if (direcionado) {
+            if (_ehDirecionado) {
                 DFS_DIR_Inicializar();
                 var first = dfs_dir_TipoArestas.First;
                 for (int i = 0; first != null && !resposta; i++) {
@@ -491,147 +476,68 @@ namespace grafos_lista_02_atv_06 {
 
         #endregion
 
-        #region Representação
-
-        public void AtualizarRepresentacao() {
-            if (!representacaoAtualizada) {
-                MontarRepresentacao_MatrizAdjacencia();
-                MontarRepresentacao_MatrizIncidencia();
-                MontarRepresentacao_ListaAdjacencia();
-                representacaoAtualizada = true;
+        private Vertice GarantirExistenciaVertice(string vertice) {
+            vertice = vertice.Trim();
+            Vertice v;
+            if (_vertices.TryGetValue(vertice, out Vertice value)) {
+                v = value;
             }
-        }
-
-        private void MontarRepresentacao_MatrizAdjacencia() {
-            int tamanho = _vertices.Count;
-            _matrizAdjacencia = new int[tamanho, tamanho];
-            var vertices = _vertices.ToList();
-            foreach (var aresta in _arestas) {
-                int i = _vertices.IndexOf(aresta.Item1);
-                int j = _vertices.IndexOf(aresta.Item2);
-                if (i < 0 || j < 0) {
-                    throw new InvalidOperationException();
-                }
-                _matrizAdjacencia[i, j] += 1;
-                if (!direcionado && i != j) {
-                    _matrizAdjacencia[j, i] += 1;
-                }
+            else {
+                v = new Vertice(vertice);
+                _vertices.Add(vertice, v);
+                _representacao.AdicionarVertice(v);
             }
-        }
-
-        private void MontarRepresentacao_MatrizIncidencia() {
-            int colunas = _arestas.Count;
-            int linhas = _vertices.Count;
-            _matrizIncidencia = new int[linhas, colunas];
-            var vertices = _vertices.ToList();
-            var iAresta = _arestas.First;
-            for (int i = 0; iAresta != null; i++) {
-                int j = _vertices.IndexOf(iAresta.Value.Item1);
-                int k = _vertices.IndexOf(iAresta.Value.Item2);
-                if (j < 0 || k < 0) {
-                    throw new InvalidOperationException();
-                }
-                _matrizIncidencia[j, i] -= 1;
-                _matrizIncidencia[k, i] += 1;
-                iAresta = iAresta.Next;
-            }
-        }
-
-        private void MontarRepresentacao_ListaAdjacencia() {
-            int tamanho = _vertices.Count;
-            _listaAdjacencia = new Dictionary<string, LinkedList<Vertice>>(tamanho);
-            foreach (var item in _vertices.Keys) {
-                _listaAdjacencia.Add(item, new LinkedList<Vertice>());
-            }
-            foreach (var aresta in _arestas) {
-                _listaAdjacencia.TryGetValue(aresta.Item1, out LinkedList<Vertice> tmp);
-                if (tmp == null) {
-                    throw new InvalidOperationException();
-                }
-                tmp.AddLast(_vertices[aresta.Item2]);
-                if (!direcionado && aresta.Item1 != aresta.Item2) {
-                    _listaAdjacencia.TryGetValue(aresta.Item2, out LinkedList<Vertice> tmp2);
-                    if (tmp2 == null) {
-                        throw new InvalidOperationException();
-                    }
-                    tmp2.AddLast(_vertices[aresta.Item1]);
-                }
-            }
-        }
-
-        #endregion
-
-        public Grafo AdicionarVertices(params string[] vertices) {
-            foreach (var vertice in vertices) {
-                AdicionarVertice(vertice);
-            }
-            return this;
+            return v;
         }
 
         public Grafo AdicionarVertice(string vertice) {
-            if (!_vertices.ContainsKey(vertice)) {
-                var v = new Vertice(vertice);
-                _vertices.Add(vertice, v);
-                MarcarComoDesatualizado();
+            GarantirExistenciaVertice(vertice);
+            MarcarComoDesatualizado();
+            return this;
+        }
+
+        public Grafo AdicionarVertices(params string[] vertices) {
+            foreach (var vertice in vertices) {
+                GarantirExistenciaVertice(vertice);
             }
+            MarcarComoDesatualizado();
             return this;
         }
 
         public Grafo AdicionarAresta(string origem, string destino) {
-            origem = origem.Trim();
-            destino = destino.Trim();
-            AdicionarVertice(origem);
-            AdicionarVertice(destino);
+            Vertice vOrigem = GarantirExistenciaVertice(origem);
+            Vertice vDestino = GarantirExistenciaVertice(destino);
+            _representacao.AdicionarAresta(vOrigem, vDestino);
+            if (!_ehDirecionado) {
+                _representacao.AdicionarAresta(vDestino, vOrigem);
+            }
             var aresta = (origem, destino);
             _arestas.AddLast(aresta);
             MarcarComoDesatualizado();
             return this;
         }
 
-        public Vertice[] Sucessores_Matriz(string vertice) {
-            if (!_vertices.ContainsKey(vertice)) {
-                throw new InvalidOperationException("O vértice não pertente ao grafo.");
-            }
-            AtualizarRepresentacao();
-            LinkedList<Vertice> tmp = new();
-            int i = _vertices.IndexOf(vertice);
-            for (int j = 0; j < _matrizAdjacencia.GetLength(0); j++) {
-                if (_matrizAdjacencia[i, j] > 0) {
-                    tmp.AddLast(_vertices.GetAt(j).Value);
-                }
-            }
-            return tmp.OrderBy(v => v.Chave).ToArray();
-        }
-
-        public Vertice[] Sucessores_Lista(string vertice) {
-            if (!_vertices.ContainsKey(vertice)) {
-                throw new InvalidOperationException("O vértice não pertente ao grafo.");
-            }
-            AtualizarRepresentacao();
-            _listaAdjacencia.TryGetValue(vertice, out LinkedList<Vertice> tmp);
-            if (tmp == null) {
-                throw new InvalidOperationException();
-            }
-            return tmp.OrderBy(v => v.Chave).ToArray();
+        public Vertice[] Sucessores(string vertice) {
+            Vertice v = _vertices[vertice];
+            var sucessores = _representacao.Sucessores(v);
+            return sucessores.OrderBy(v => v.Chave).ToArray();
         }
 
         #region Impressão de Informações
 
         public override string ToString() {
             StringBuilder sb = new();
-            sb.AppendLine($"Grafo {nome}:");
-            sb.Append("V = {");
+            sb.AppendLine($"Grafo {_nome}:").Append("V = {");
             for (int i = 0; i < _vertices.Count; i++) {
                 sb.Append(_vertices.GetAt(i).Value);
                 if (i != _vertices.Count - 1) {
                     sb.Append(", ");
                 }
             }
-            sb.AppendLine("}");
-            sb.Append("A = {");
+            sb.AppendLine("}").Append("A = {");
             var a = _arestas.First;
             for (int i = 0; a != null; i++) {
-                if (direcionado) {
+                if (_ehDirecionado) {
                     sb.Append(a.Value);
                 }
                 else {
@@ -642,74 +548,19 @@ namespace grafos_lista_02_atv_06 {
                     sb.Append(", ");
                 }
             }
-            sb.AppendLine("}");
-            return sb.ToString();
+            return sb.AppendLine("}").ToString();
         }
 
-        public string Imprimir_MatrizAdjacencia() {
-            StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine("Matriz Adjacencia:");
-            for (int i = 0; i < _matrizAdjacencia.GetLength(0); i++) {
-                for (int j = 0; j < _matrizAdjacencia.GetLength(1); j++) {
-                    stringBuilder.Append(_matrizAdjacencia[i, j]);
-                    if (j != _matrizAdjacencia.GetLength(1) - 1) {
-                        stringBuilder.Append(", ");
-                    }
-                }
-                stringBuilder.AppendLine();
-            }
-            return stringBuilder.ToString();
+        public string ImprimirRepresentacao() {
+            return _representacao.ToString();
         }
 
-        public string Imprimir_MatrizIncidencia() {
-            StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine("Matriz Incidencia:");
-            for (int i = 0; i < _matrizIncidencia.GetLength(0); i++) {
-                for (int j = 0; j < _matrizIncidencia.GetLength(1); j++) {
-                    stringBuilder.Append(_matrizIncidencia[i, j]);
-                    if (j != _matrizIncidencia.GetLength(1) - 1) {
-                        stringBuilder.Append(", ");
-                    }
-                }
-                stringBuilder.AppendLine();
-            }
-            return stringBuilder.ToString();
-        }
-
-        public string Imprimir_ListaAdjacencia() {
-            StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine("Lista Adjacencia:");
-            foreach (var vertice in _listaAdjacencia) {
-                stringBuilder.Append($"{vertice.Key}: ");
-                var adj = vertice.Value.First;
-                while (adj != null) {
-                    stringBuilder.Append(adj.Value);
-                    adj = adj.Next;
-                    if (adj != null) {
-                        stringBuilder.Append(", ");
-                    }
-                }
-                stringBuilder.AppendLine();
-            }
-            return stringBuilder.ToString();
-        }
-
-        public string Imprimir_VerticesAdjacentes_Matriz(string vertice) {
-            StringBuilder stringBuilder = new();
-            var adj = Sucessores_Matriz(vertice);
-            stringBuilder.AppendLine("Adjacencias por Matriz:");
+        public string ImprimirVerticesAdjacentes(string vertice) {
+            StringBuilder sb = new("Adjacencias:");
+            Vertice v = _vertices[vertice];
+            Vertice[] adj = _representacao.Sucessores(v);
             var adjs = adj.Select(a => a.ToString());
-            stringBuilder.AppendJoin(", ", adjs);
-            return stringBuilder.AppendLine().ToString();
-        }
-
-        public string Imprimir_VerticesAdjacentes_Lista(string vertice) {
-            StringBuilder stringBuilder = new();
-            var adj = Sucessores_Lista(vertice);
-            stringBuilder.AppendLine("Adjacencias por Lista:");
-            var adjs = adj.Select(a => a.ToString());
-            stringBuilder.AppendJoin(", ", adjs);
-            return stringBuilder.ToString();
+            return sb.AppendJoin(", ", adjs).AppendLine().ToString();
         }
 
         #endregion

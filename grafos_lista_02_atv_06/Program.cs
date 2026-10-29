@@ -19,16 +19,12 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("v2", "v3")
                 .AdicionarAresta("v2", "v4")
                 .AdicionarAresta("v3", "v4")
-                .AdicionarAresta("v3", "v5")
-                .AtualizarRepresentacao();
+                .AdicionarAresta("v3", "v5");
 
             Console.WriteLine(grafo);
-            Console.WriteLine(grafo.Imprimir_MatrizAdjacencia());
-            Console.WriteLine(grafo.Imprimir_MatrizIncidencia());
-            Console.WriteLine(grafo.Imprimir_ListaAdjacencia());
+            Console.WriteLine(grafo.ImprimirRepresentacao());
 
-            Console.WriteLine(grafo.Imprimir_VerticesAdjacentes_Matriz("v3"));
-            Console.WriteLine(grafo.Imprimir_VerticesAdjacentes_Lista("v3"));
+            Console.WriteLine(grafo.ImprimirVerticesAdjacentes("v3"));
         }
 
         public static void Testar_Grafo_v2() {
@@ -44,8 +40,7 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("5", "3")
                 .AdicionarAresta("5", "8")
                 .AdicionarAresta("6", "8")
-                .AdicionarAresta("9", "1")
-                .AtualizarRepresentacao();
+                .AdicionarAresta("9", "1");
 
             Console.WriteLine(grafo);
             Console.WriteLine(grafo.RealizarBusca_DFS("v1"));
@@ -68,8 +63,7 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("6", "8")
                 .AdicionarAresta("7", "8")
                 .AdicionarAresta("8", "5")
-                .AdicionarAresta("9", "1")
-                .AtualizarRepresentacao();
+                .AdicionarAresta("9", "1");
 
             Console.WriteLine(grafo);
             Console.WriteLine(grafo.RealizarBusca_DFS("1"));
@@ -90,8 +84,7 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("5", "7")
                 .AdicionarAresta("6", "7")
                 .AdicionarAresta("7", "8")
-                .AdicionarAresta("8", "9")
-                .AtualizarRepresentacao();
+                .AdicionarAresta("8", "9");
 
             Console.WriteLine(grafo);
             Console.WriteLine(grafo.RealizarBusca_DFS("1"));
@@ -106,8 +99,7 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("2", "3")
                 .AdicionarAresta("3", "4")
                 .AdicionarAresta("4", "5")
-                .AdicionarAresta("5", "2")
-                .AtualizarRepresentacao();
+                .AdicionarAresta("5", "2");
 
             Console.WriteLine(grafo);
             bool ehCiclico = grafo.EhCiclico();
@@ -126,8 +118,7 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("1", "2")
                 .AdicionarAresta("2", "3")
                 .AdicionarAresta("3", "4")
-                .AdicionarAresta("4", "5")
-                .AtualizarRepresentacao();
+                .AdicionarAresta("4", "5");
 
             Console.WriteLine(grafo);
             bool ehCiclico = grafo.EhCiclico();
