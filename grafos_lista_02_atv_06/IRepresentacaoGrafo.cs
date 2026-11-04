@@ -13,6 +13,8 @@ namespace grafos_lista_02_atv_06 {
 
         public Vertice[] Sucessores(Vertice v);
 
+        public int Grau(Vertice v);
+
         public int GetCount();
     }
 }

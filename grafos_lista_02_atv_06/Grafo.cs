@@ -57,7 +57,6 @@ namespace grafos_lista_02_atv_06 {
             _ehDirecionado = ehDirecionado;
             _nome = nome;
             _representacao = new ListaAdjacencia();
-            MarcarComoDesatualizado();
         }
 
         public Grafo(bool direcionado, IRepresentacaoGrafo representacao, string nome = "G") {
@@ -66,415 +65,7 @@ namespace grafos_lista_02_atv_06 {
             _ehDirecionado = direcionado;
             _nome = nome;
             _representacao = representacao;
-            MarcarComoDesatualizado();
         }
-
-        private void MarcarComoDesatualizado() {
-            dfs_ndir_Atualizada = false;
-            dfs_dir_Atualizada = false;
-            bfs_ndir_Atualizada = false;
-            bfs_dir_Atualizada = false;
-        }
-
-        #region Pesquisa em Profundidade (Não direcionado)
-
-        private void DFS_NDIR_Resetar() {
-            int tamanho = _vertices.Count;
-            dfs_ndir_Tempo = 0;
-            dfs_ndir_Atualizada = false;
-            dfs_ndir_TempoDescoberta = new int[tamanho];
-            dfs_ndir_TempoTermino = new int[tamanho];
-            dfs_ndir_Pai = new Vertice[tamanho];
-            dfs_ndir_TipoArestas = new LinkedList<(Vertice, Vertice, EDFS_NDIR_TipoAresta)>();
-        }
-
-        private void DFS_NDIR_Buscar(Vertice vertice) {
-            string kVertice = vertice.Chave;
-            int iVertice = _vertices.IndexOf(kVertice);
-
-            dfs_ndir_Tempo++;
-            dfs_ndir_TempoDescoberta[iVertice] = dfs_ndir_Tempo;
-
-            var adjs = Sucessores(kVertice);
-            foreach (var a in adjs) {
-                var kAdjs = a.Chave;
-                var iAdjs = _vertices.IndexOf(kAdjs);
-                if (dfs_ndir_TempoDescoberta[iAdjs] == 0) {
-                    dfs_ndir_Pai[iAdjs] = vertice;
-                    DFS_NDIR_MarcarAresta(vertice, a, EDFS_NDIR_TipoAresta.Arvore);
-                    DFS_NDIR_Buscar(a);
-                }
-                else if (dfs_ndir_TempoTermino[iAdjs] == 0 && a != dfs_ndir_Pai[iVertice]) {
-                    DFS_NDIR_MarcarAresta(vertice, a, EDFS_NDIR_TipoAresta.Retorno);
-                }
-            }
-
-            dfs_ndir_Tempo++;
-            dfs_ndir_TempoTermino[iVertice] = dfs_ndir_Tempo;
-        }
-
-        private void DFS_NDIR_MarcarAresta(Vertice u, Vertice v, EDFS_NDIR_TipoAresta tipo) {
-            dfs_ndir_TipoArestas.AddLast((u, v, tipo));
-        }
-
-        public void DFS_NDIR_Inicializar(Vertice ver = null) {
-            if (!dfs_ndir_Atualizada) {
-                DFS_NDIR_Resetar();
-                if (ver != null) {
-                    int iVertice = _vertices.IndexOf(ver.Chave);
-                    if (dfs_ndir_TempoTermino[iVertice] == 0) {
-                        DFS_NDIR_Buscar(ver);
-                    }
-                }
-                foreach (var kVertice in _vertices.Keys) {
-                    int iVertice = _vertices.IndexOf(kVertice);
-                    if (dfs_ndir_TempoTermino[iVertice] == 0) {
-                        var v = _vertices[kVertice];
-                        DFS_NDIR_Buscar(v);
-                    }
-                }
-                dfs_ndir_Atualizada = true;
-            }
-        }
-
-        #endregion
-
-        #region Pesquisa em Profundidade (Direcionado)
-
-        private void DFS_DIR_Resetar() {
-            int tamanho = _vertices.Count;
-            dfs_dir_Tempo = 0;
-            dfs_dir_Atualizada = false;
-            dfs_dir_TempoDescoberta = new int[tamanho];
-            dfs_dir_TempoTermino = new int[tamanho];
-            dfs_dir_Pai = new Vertice[tamanho];
-            dfs_dir_TipoArestas = new LinkedList<(Vertice, Vertice, EDFS_DIR_TipoAresta)>();
-        }
-
-        private void DFS_DIR_Buscar(Vertice vertice) {
-            string kVertice = vertice.Chave;
-            int iVertice = _vertices.IndexOf(kVertice);
-
-            dfs_dir_Tempo++;
-            dfs_dir_TempoDescoberta[iVertice] = dfs_dir_Tempo;
-
-            var adjs = Sucessores(kVertice);
-            foreach (var a in adjs) {
-                var kAdjs = a.Chave;
-                var iAdjs = _vertices.IndexOf(kAdjs);
-                if (dfs_dir_TempoDescoberta[iAdjs] == 0) {
-                    dfs_dir_Pai[iAdjs] = vertice;
-                    DFS_DIR_MarcarAresta(vertice, a, EDFS_DIR_TipoAresta.Arvore);
-                    DFS_DIR_Buscar(a);
-                }
-                else if (dfs_dir_TempoTermino[iAdjs] == 0) {
-                    DFS_DIR_MarcarAresta(vertice, a, EDFS_DIR_TipoAresta.Retorno);
-                }
-                else if (dfs_dir_TempoDescoberta[iVertice] < dfs_dir_TempoDescoberta[iAdjs]) {
-                    DFS_DIR_MarcarAresta(vertice, a, EDFS_DIR_TipoAresta.Avanco);
-                }
-                else {
-                    DFS_DIR_MarcarAresta(vertice, a, EDFS_DIR_TipoAresta.Cruzamento);
-                }
-            }
-
-            dfs_dir_Tempo++;
-            dfs_dir_TempoTermino[iVertice] = dfs_dir_Tempo;
-        }
-
-        private void DFS_DIR_MarcarAresta(Vertice u, Vertice v, EDFS_DIR_TipoAresta tipo) {
-            dfs_dir_TipoArestas.AddLast((u, v, tipo));
-        }
-
-        public void DFS_DIR_Inicializar(Vertice ver = null) {
-            if (!dfs_dir_Atualizada) {
-                DFS_DIR_Resetar();
-                if (ver != null) {
-                    int iVertice = _vertices.IndexOf(ver.Chave);
-                    if (dfs_dir_TempoTermino[iVertice] == 0) {
-                        DFS_DIR_Buscar(ver);
-                    }
-                }
-                foreach (var kVertice in _vertices.Keys) {
-                    int iVertice = _vertices.IndexOf(kVertice);
-                    if (dfs_dir_TempoTermino[iVertice] == 0) {
-                        var v = _vertices[kVertice];
-                        DFS_DIR_Buscar(v);
-                    }
-                }
-                dfs_dir_Atualizada = true;
-            }
-        }
-
-        #endregion
-
-        #region Busca em Largura (não direcionada)
-
-        public void BFS_NDIR_Resetar() {
-            int tamanho = _vertices.Count;
-            bfs_ndir_Tempo = 0;
-            bfs_ndir_Atualizada = false;
-            bfs_ndir_TempoDescoberta = new int[tamanho];
-            bfs_ndir_NiveilDescoberta = new int[tamanho];
-            bfs_ndir_Pai = new Vertice[tamanho];
-            bfs_ndir_Fila = new Queue<Vertice>(tamanho);
-            bfs_ndir_TipoArestas = new LinkedList<(Vertice, Vertice, EBFS_NDIR_TipoAresta)>();
-        }
-
-        private void BFS_NDIR_Buscar() {
-            while (bfs_ndir_Fila.Count > 0) {
-                Vertice vertice = bfs_ndir_Fila.Dequeue();
-                string kVertice = vertice.Chave;
-                int iVertice = _vertices.IndexOf(kVertice);
-                var adjs = Sucessores(kVertice);
-                foreach (var a in adjs) {
-                    string kAdjs = a.Chave;
-                    int iAdjs = _vertices.IndexOf(kAdjs);
-                    if (bfs_ndir_TempoDescoberta[iAdjs] == 0) {
-                        bfs_ndir_Tempo++;
-                        bfs_ndir_TempoDescoberta[iAdjs] = bfs_ndir_Tempo;
-                        bfs_ndir_NiveilDescoberta[iAdjs] = bfs_ndir_NiveilDescoberta[iVertice] + 1;
-                        bfs_ndir_Pai[iAdjs] = vertice;
-                        bfs_ndir_Fila.Enqueue(a);
-                        BFS_NDIR_MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Pai);
-                    }
-                    else if (bfs_ndir_NiveilDescoberta[iAdjs] == bfs_ndir_NiveilDescoberta[iVertice] + 1) {
-                        BFS_NDIR_MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Tio);
-                    }
-                    else if (bfs_ndir_NiveilDescoberta[iVertice] == bfs_ndir_NiveilDescoberta[iAdjs]
-                        && bfs_ndir_TempoDescoberta[iAdjs] > bfs_ndir_TempoDescoberta[iVertice]
-                        ) {
-                        if (bfs_ndir_Pai[iVertice] == bfs_ndir_Pai[iAdjs]) {
-                            BFS_NDIR_MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Irmao);
-                        }
-                        else {
-                            BFS_NDIR_MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Primo);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void BFS_NDIR_MarcarAresta(Vertice u, Vertice v, EBFS_NDIR_TipoAresta tipo) {
-            bfs_ndir_TipoArestas.AddLast((u, v, tipo));
-        }
-
-        public void BFS_NDIR_Inicializar(Vertice ver = null) {
-            if (!bfs_ndir_Atualizada) {
-                BFS_NDIR_Resetar();
-                if (ver != null) {
-                    int iVertice = _vertices.IndexOf(ver.Chave);
-                    if (bfs_ndir_TempoDescoberta[iVertice] == 0) {
-                        bfs_ndir_Tempo++;
-                        bfs_ndir_TempoDescoberta[iVertice] = bfs_ndir_Tempo;
-                        bfs_ndir_NiveilDescoberta[iVertice] = 0;
-                        bfs_ndir_Fila.Enqueue(ver);
-                        BFS_NDIR_Buscar();
-                    }
-                }
-                foreach (var kVertice in _vertices.Keys) {
-                    int iVertice = _vertices.IndexOf(kVertice);
-                    if (bfs_ndir_TempoDescoberta[iVertice] == 0) {
-                        var v = _vertices[kVertice];
-                        bfs_ndir_Tempo++;
-                        bfs_ndir_TempoDescoberta[iVertice] = bfs_ndir_Tempo;
-                        bfs_ndir_NiveilDescoberta[iVertice] = 0;
-                        bfs_ndir_Fila.Enqueue(v);
-                        BFS_NDIR_Buscar();
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        #region Busca em Largura (direcionada)
-
-        public void BFS_DIR_Resetar() {
-            int tamanho = _vertices.Count;
-            bfs_dir_Tempo = 0;
-            bfs_dir_Atualizada = false;
-            bfs_dir_TempoDescoberta = new int[tamanho];
-            bfs_dir_NiveilDescoberta = new int[tamanho];
-            bfs_dir_Pai = new Vertice[tamanho];
-            bfs_dir_Fila = new Queue<Vertice>(tamanho);
-            bfs_dir_bfsTipoArestas = new LinkedList<(Vertice, Vertice, EBFS_DIR_TipoAresta)>();
-        }
-
-        private void BFS_DIR_Buscar() {
-            while (bfs_dir_Fila.Count > 0) {
-                Vertice vertice = bfs_dir_Fila.Dequeue();
-                string kVertice = vertice.Chave;
-                int iVertice = _vertices.IndexOf(kVertice);
-                var adjs = Sucessores(kVertice);
-                foreach (var a in adjs) {
-                    string kAdjs = a.Chave;
-                    int iAdjs = _vertices.IndexOf(kAdjs);
-                    if (bfs_dir_TempoDescoberta[iAdjs] == 0) {
-                        bfs_dir_Tempo++;
-                        bfs_dir_TempoDescoberta[iAdjs] = bfs_dir_Tempo;
-                        bfs_dir_NiveilDescoberta[iAdjs] = bfs_dir_NiveilDescoberta[iVertice] + 1;
-                        bfs_dir_Pai[iAdjs] = vertice;
-                        bfs_dir_Fila.Enqueue(a);
-                        BFS_DIR_MarcarAresta(vertice, a, EBFS_DIR_TipoAresta.Arvore);
-                    }
-                    else if (bfs_dir_Pai[iVertice] != a && bfs_dir_NiveilDescoberta[iVertice] > bfs_dir_NiveilDescoberta[iAdjs]) {
-                        BFS_DIR_MarcarAresta(vertice, a, EBFS_DIR_TipoAresta.Retorno);
-                    }
-                    else {
-                        BFS_DIR_MarcarAresta(vertice, a, EBFS_DIR_TipoAresta.Cruzamento);
-                    }
-                }
-            }
-        }
-
-        private void BFS_DIR_MarcarAresta(Vertice u, Vertice v, EBFS_DIR_TipoAresta tipo) {
-            bfs_dir_bfsTipoArestas.AddLast((u, v, tipo));
-        }
-
-        public void BFS_DIR_Inicializar(Vertice ver = null) {
-            if (!bfs_dir_Atualizada) {
-                BFS_DIR_Resetar();
-                if (ver != null) {
-                    int iVertice = _vertices.IndexOf(ver.Chave);
-                    if (bfs_dir_TempoDescoberta[iVertice] == 0) {
-                        bfs_dir_Tempo++;
-                        bfs_dir_TempoDescoberta[iVertice] = bfs_dir_Tempo;
-                        bfs_dir_NiveilDescoberta[iVertice] = 0;
-                        bfs_dir_Fila.Enqueue(ver);
-                        BFS_DIR_Buscar();
-                    }
-                }
-                foreach (var kVertice in _vertices.Keys) {
-                    int iVertice = _vertices.IndexOf(kVertice);
-                    if (bfs_dir_TempoDescoberta[iVertice] == 0) {
-                        var v = _vertices[kVertice];
-                        bfs_dir_Tempo++;
-                        bfs_dir_TempoDescoberta[iVertice] = bfs_dir_Tempo;
-                        bfs_dir_NiveilDescoberta[iVertice] = 0;
-                        bfs_dir_Fila.Enqueue(v);
-                        BFS_DIR_Buscar();
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        #region Busca
-
-        public string RealizarBusca_BFS(string vInicial = null) {
-            Vertice ver = null;
-            if (vInicial != null && _vertices.TryGetValue(vInicial, out Vertice value)) {
-                ver = value;
-            }
-            StringBuilder sb = new();
-            if (_ehDirecionado) {
-                BFS_DIR_Inicializar(ver);
-                sb.AppendLine("Busca por Largura - Direcionado")
-                    .Append("V: ")
-                    .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("L: ")
-                    .AppendJoin(", ", bfs_dir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("N: ")
-                    .AppendJoin(", ", bfs_dir_NiveilDescoberta.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("P: ")
-                    .AppendJoin(", ", bfs_dir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
-                    .AppendLine();
-            }
-            else {
-                BFS_NDIR_Inicializar(ver);
-                sb.AppendLine("Busca por Largura - Não direcionado")
-                    .Append("V: ")
-                    .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("L: ")
-                    .AppendJoin(", ", bfs_ndir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("N: ")
-                    .AppendJoin(", ", bfs_ndir_NiveilDescoberta.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("P: ")
-                    .AppendJoin(", ", bfs_ndir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
-                    .AppendLine();
-            }
-            return sb.ToString();
-        }
-
-        public string RealizarBusca_DFS(string vInicial = null) {
-            Vertice ver = null;
-            if (vInicial != null && _vertices.TryGetValue(vInicial, out Vertice value)) {
-                ver = value;
-            }
-            StringBuilder sb = new();
-            if (_ehDirecionado) {
-                DFS_DIR_Inicializar(ver);
-                sb.AppendLine("Busca por Profundidade - Direcionado")
-                   .Append("V:  ")
-                   .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
-                   .AppendLine()
-                   .Append("TD: ")
-                   .AppendJoin(", ", dfs_dir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
-                   .AppendLine()
-                   .Append("TT: ")
-                   .AppendJoin(", ", dfs_dir_TempoTermino.Select(x => x.ToString().PadLeft(3)))
-                   .AppendLine()
-                   .Append("P:  ")
-                   .AppendJoin(", ", dfs_dir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
-                   .AppendLine();
-            }
-            else {
-                DFS_NDIR_Inicializar(ver);
-                sb.AppendLine("Busca por Profundidade - Não direcionado")
-                    .Append("V:  ")
-                    .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("TD: ")
-                    .AppendJoin(", ", dfs_ndir_TempoDescoberta.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("TT: ")
-                    .AppendJoin(", ", dfs_ndir_TempoTermino.Select(x => x.ToString().PadLeft(3)))
-                    .AppendLine()
-                    .Append("P:  ")
-                    .AppendJoin(", ", dfs_ndir_Pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
-                    .AppendLine();
-            }
-            return sb.ToString();
-        }
-
-        #endregion
-
-        #region Ciclo
-
-        public bool EhCiclico() {
-            bool resposta = false;
-            if (_ehDirecionado) {
-                DFS_DIR_Inicializar();
-                var first = dfs_dir_TipoArestas.First;
-                for (int i = 0; first != null && !resposta; i++) {
-                    if (first.Value.Item3 == EDFS_DIR_TipoAresta.Retorno) {
-                        resposta = true;
-                    }
-                    first = first.Next;
-                }
-            }
-            else {
-                DFS_NDIR_Inicializar();
-                var first = dfs_ndir_TipoArestas.First;
-                for (int i = 0; first != null && !resposta; i++) {
-                    if (first.Value.Item3 == EDFS_NDIR_TipoAresta.Retorno) {
-                        resposta = true;
-                    }
-                    first = first.Next;
-                }
-            }
-            return resposta;
-        }
-
-        #endregion
 
         private Vertice GarantirExistenciaVertice(string vertice) {
             vertice = vertice.Trim();
@@ -492,7 +83,6 @@ namespace grafos_lista_02_atv_06 {
 
         public Grafo AdicionarVertice(string vertice) {
             GarantirExistenciaVertice(vertice);
-            MarcarComoDesatualizado();
             return this;
         }
 
@@ -500,7 +90,6 @@ namespace grafos_lista_02_atv_06 {
             foreach (var vertice in vertices) {
                 GarantirExistenciaVertice(vertice);
             }
-            MarcarComoDesatualizado();
             return this;
         }
 
@@ -513,7 +102,6 @@ namespace grafos_lista_02_atv_06 {
             }
             var aresta = (origem, destino);
             _arestas.AddLast(aresta);
-            MarcarComoDesatualizado();
             return this;
         }
 
@@ -521,6 +109,22 @@ namespace grafos_lista_02_atv_06 {
             Vertice v = _vertices[vertice];
             var sucessores = _representacao.Sucessores(v);
             return sucessores.OrderBy(v => v.Chave).ToArray();
+        }
+
+        public bool EhSimples() {
+            return EhConexo && !PossuiLaco;
+        }
+
+        public bool EhHamiltoniano() {
+            if (_ehDirecionado) {
+                throw new NotImplementedException("Testes Hamiltoniano não foram implementados para grafos direcionados.");
+            }
+            bool ehSimples = true;
+            if (ehSimples) {
+                return false;
+            }
+
+            return true;
         }
 
         #region Impressão de Informações
