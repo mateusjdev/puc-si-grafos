@@ -12,5 +12,7 @@ namespace grafos_lista_02_atv_06 {
         public void AdicionarAresta(Vertice v, Vertice w);
 
         public Vertice[] Sucessores(Vertice v);
+
+        public int GetCount();
     }
 }

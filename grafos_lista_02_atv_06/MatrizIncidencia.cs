@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace grafos_lista_02_atv_06 {
     internal class MatrizIncidencia : IRepresentacaoGrafo {
         private readonly DicionarioIndexado<Vertice> _dicionarioIndexado;
+        private readonly DicionarioIndexado<Aresta> _dicionarioIndexadoAresta;
         private readonly MatrizRedimensionavel _matriz;
 
         public MatrizIncidencia() {
@@ -53,6 +54,11 @@ namespace grafos_lista_02_atv_06 {
                 sb.AppendLine();
             }
             return sb.ToString();
+        }
+
+        public int GetCount()
+        {
+            return _dicionarioIndexado.Count;
         }
     }
 }

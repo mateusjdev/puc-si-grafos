@@ -15,6 +15,10 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public int Add(T item) {
+            if (_tabela.ContainsKey(item))
+            {
+                throw new ArgumentException("Já contem o vértice.");
+            }
             int i = _lista.Count;
             _tabela[item] = i;
             _lista.Add(item);
@@ -28,5 +32,17 @@ namespace grafos_lista_02_atv_06 {
         public bool Contains(T item) => _tabela.ContainsKey(item);
 
         public T this[int i] => _lista[i];
+
+        public int Count => _lista.Count;
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in _lista)
+            {
+                sb.AppendLine(item.ToString());
+            }
+            return sb.ToString();
+        }
     }
 }

@@ -53,5 +53,10 @@ namespace grafos_lista_02_atv_06 {
             }
             return sb.ToString();
         }
+
+        public int GetCount()
+        {
+            return _lista.Count;
+        }
     }
 }
