@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,8 +16,7 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public int Add(T item) {
-            if (_tabela.ContainsKey(item))
-            {
+            if (_tabela.ContainsKey(item)) {
                 throw new ArgumentException("Já contem o vértice.");
             }
             int i = _lista.Count;
@@ -35,14 +35,18 @@ namespace grafos_lista_02_atv_06 {
 
         public int Count => _lista.Count;
 
-        public override string ToString()
-        {
+        public override string ToString() {
             StringBuilder sb = new StringBuilder();
-            foreach (var item in _lista)
-            {
+            foreach (var item in _lista) {
                 sb.AppendLine(item.ToString());
             }
             return sb.ToString();
+        }
+
+        public void ForEach(Action<T> action) {
+            foreach (var item in _lista) {
+                action.Invoke(item);
+            }
         }
     }
 }

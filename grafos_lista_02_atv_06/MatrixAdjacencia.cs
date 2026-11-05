@@ -129,5 +129,16 @@ namespace grafos_lista_02_atv_06 {
             }
             return maior;
         }
+
+        public int IndexOf(Vertice v) {
+            if (!_dicionarioIndexado.Contains(v)) {
+                throw new InvalidOperationException("O vértice não pertente ao grafo.");
+            }
+            return _dicionarioIndexado.IndexOf(v);
+        }
+
+        public void ForEach(Action<Vertice> action) {
+            _dicionarioIndexado.ForEach(action);
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 
 namespace grafos_lista_02_atv_06 {
     public class Program {
+        /*
         public static void Testar_Grafo_v1() {
             // V = { v1, v2, v3, v4, v5}
             // A = { { v1, v2}, { v1, v3}, { v1, v5}, { v2, v3}, { v2, v4}, { v3, v4}, { v3, v5} }
@@ -26,8 +27,9 @@ namespace grafos_lista_02_atv_06 {
 
             Console.WriteLine(grafo.ImprimirVerticesAdjacentes("v3"));
         }
+        */
 
-        /*
+
         public static void Testar_Grafo_v2() {
             // Questão 4 - Grafo 1
             var grafo = new Grafo(true, "Questão 4 - Grafo 1");
@@ -44,12 +46,18 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("9", "1");
 
             Console.WriteLine(grafo);
-            Console.WriteLine(grafo.RealizarBusca_DFS("v1"));
-            Console.WriteLine(grafo.RealizarBusca_BFS("v1"));
+
+            Console.WriteLine(grafo.ImprimirBusca_DFS("1"));
+            Console.WriteLine(grafo.ImprimirBusca_BFS("1"));
+            Console.WriteLine($"Possui Laço: {grafo.PossuiLaco()}");
+            Console.WriteLine($"É Conexo: {grafo.EhConexo()}");
+            Console.WriteLine();
         }
 
+
+
         public static void Testar_Grafo_v3() {
-            // Questão 4 - Grafo 1
+            // Questão 4 - Grafo 2
             var grafo = new Grafo(true, "Questão 4 - Grafo 2");
             grafo.AdicionarVertices("1", "2", "3", "4", "5", "6", "7", "8", "9")
                 .AdicionarAresta("1", "2")
@@ -67,8 +75,12 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("9", "1");
 
             Console.WriteLine(grafo);
-            Console.WriteLine(grafo.RealizarBusca_DFS("1"));
-            Console.WriteLine(grafo.RealizarBusca_BFS("1"));
+
+            Console.WriteLine(grafo.ImprimirBusca_DFS("1"));
+            Console.WriteLine(grafo.ImprimirBusca_BFS("1"));
+            Console.WriteLine($"Possui Laço: {grafo.PossuiLaco()}");
+            Console.WriteLine($"É Conexo: {grafo.EhConexo()}");
+            Console.WriteLine();
         }
 
         public static void Testar_Grafo_v4() {
@@ -88,12 +100,16 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("8", "9");
 
             Console.WriteLine(grafo);
-            Console.WriteLine(grafo.RealizarBusca_DFS("1"));
-            Console.WriteLine(grafo.RealizarBusca_BFS("1"));
+
+            Console.WriteLine(grafo.ImprimirBusca_DFS("1"));
+            Console.WriteLine(grafo.ImprimirBusca_BFS("1"));
+            Console.WriteLine($"Possui Laço: {grafo.PossuiLaco()}");
+            Console.WriteLine($"É Conexo: {grafo.EhConexo()}");
+            Console.WriteLine($"É ciclico: {grafo.EhCiclico()}");
+            Console.WriteLine();
         }
 
         public static void Testar_Grafo_v5() {
-            // Questão 4 - Grafo 1
             var grafo = new Grafo(true);
             grafo.AdicionarVertices("1", "2", "3", "4", "5")
                 .AdicionarAresta("1", "2")
@@ -103,17 +119,11 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("5", "2");
 
             Console.WriteLine(grafo);
-            bool ehCiclico = grafo.EhCiclico();
-            if (ehCiclico) {
-                Console.WriteLine("O grafo é ciclico.\n");
-            }
-            else {
-                Console.WriteLine("O grafo é aciclico.\n");
-            }
+            Console.WriteLine($"É ciclico: {grafo.EhCiclico()}");
+            Console.WriteLine();
         }
 
         public static void Testar_Grafo_v6() {
-            // Questão 4 - Grafo 1
             var grafo = new Grafo(true);
             grafo.AdicionarVertices("1", "2", "3", "4", "5")
                 .AdicionarAresta("1", "2")
@@ -122,25 +132,20 @@ namespace grafos_lista_02_atv_06 {
                 .AdicionarAresta("4", "5");
 
             Console.WriteLine(grafo);
-            bool ehCiclico = grafo.EhCiclico();
-            if (ehCiclico) {
-                Console.WriteLine("O grafo é ciclico.\n");
-            }
-            else {
-                Console.WriteLine("O grafo é aciclico.\n");
-            }
+            Console.WriteLine($"É ciclico: {grafo.EhCiclico()}");
+            Console.WriteLine();
         }
-        */
 
         static void Main() {
-            // // DFS e BFS em grafo direcionado
-            // Testar_Grafo_v2();
-            // Testar_Grafo_v3();
-            // // DFS e BFS em grafo não direcionado
-            // Testar_Grafo_v4();
-            // // Eh Ciclico (ou !ciclico)
-            // Testar_Grafo_v5();
-            // Testar_Grafo_v6();
+            // DFS e BFS em grafo direcionado
+            Testar_Grafo_v2();
+            Testar_Grafo_v3();
+            // DFS e BFS em grafo não direcionado
+            Testar_Grafo_v4();
+            // Eh Ciclico (ou !ciclico)
+            Testar_Grafo_v5();
+            Testar_Grafo_v6();
+
             // var representacao = new MatrixAdjacencia();
             // var grafo = new Grafo(false, representacao, "H");
             // grafo.AdicionarVertices("v1", "v2", "v3", "v4", "v5");

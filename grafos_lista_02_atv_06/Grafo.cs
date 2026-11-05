@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     public class Grafo {
@@ -25,13 +23,50 @@ namespace grafos_lista_02_atv_06 {
             _representacao = new ListaAdjacencia();
         }
 
-        public Grafo(bool direcionado, IRepresentacaoGrafo representacao, string nome = "G") {
+        public Grafo(bool ehDirecionado, IRepresentacaoGrafo representacao, string nome = "G") {
             _vertices = [];
             _arestas = new LinkedList<(string, string)>();
-            _ehDirecionado = direcionado;
+            _ehDirecionado = ehDirecionado;
             _nome = nome;
             _representacao = representacao;
         }
+
+        private void ExecutarBusca(IBusca busca, string vInicial) {
+            Vertice ver = null;
+            if (vInicial != null && _vertices.TryGetValue(vInicial, out Vertice value)) {
+                ver = value;
+            }
+            if (ver != null) {
+                busca.BuscarPor(_representacao, ver);
+            }
+            else {
+                busca.Buscar(_representacao);
+            }
+        }
+
+        private IBusca BuscarViaProfundidade(string vInicial = null) {
+            IBusca busca = _ehDirecionado ? new DFSDir() : new DFSNdir();
+            ExecutarBusca(busca, vInicial);
+            return busca;
+        }
+
+        private IBusca BuscarViaLargura(string vInicial = null) {
+            IBusca busca = _ehDirecionado ? new BFSDir() : new BFSNdir();
+            ExecutarBusca(busca, vInicial);
+            return busca;
+        }
+
+        #region Ciclo
+
+        public bool EhCiclico() {
+            bool resposta;
+            IBusca busca = BuscarViaProfundidade();
+            // TODO: Solução porca?
+            resposta = busca.PossuiTipoAresta(EDFS_DIR_TipoAresta.Retorno) || busca.PossuiTipoAresta(EDFS_NDIR_TipoAresta.Retorno);
+            return resposta;
+        }
+
+        #endregion
 
         private Vertice GarantirExistenciaVertice(string vertice) {
             vertice = vertice.Trim();
@@ -82,6 +117,7 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public bool EhHamiltoniano() {
+            throw new NotImplementedException();
             if (_ehDirecionado) {
                 throw new NotImplementedException("Testes Hamiltoniano não foram implementados para grafos direcionados.");
             }
@@ -91,6 +127,12 @@ namespace grafos_lista_02_atv_06 {
             }
 
             return true;
+        }
+
+        public bool EhConexo() {
+            IBusca busca = _ehDirecionado ? new DFSDir() : new DFSNdir();
+            busca.Buscar(_representacao);
+            return busca.ClassificacaoConectiva() == EClassificacaoConectiva.Conexo;
         }
 
         #region Impressão de Informações
@@ -131,6 +173,42 @@ namespace grafos_lista_02_atv_06 {
             Vertice[] adj = _representacao.Sucessores(v);
             var adjs = adj.Select(a => a.ToString());
             return sb.AppendJoin(", ", adjs).AppendLine().ToString();
+        }
+
+        public string ImprimirBusca_DFS(string vInicial = null) {
+            IBusca busca = BuscarViaProfundidade(vInicial);
+            StringBuilder sb = new();
+            sb.Append("V:  ");
+            int n = _representacao.GetCount();
+            int i = 0;
+            _representacao.ForEach(v => {
+                if (i != 0 && i != n) {
+                    sb.Append(", ");
+                }
+                sb.Append(v.ToString().PadLeft(3));
+                i++;
+            });
+            sb.AppendLine();
+            sb.Append(busca.ToString());
+            return sb.ToString();
+        }
+
+        public string ImprimirBusca_BFS(string vInicial = null) {
+            IBusca busca = BuscarViaLargura(vInicial);
+            StringBuilder sb = new();
+            sb.Append("V: ");
+            int n = _representacao.GetCount();
+            int i = 0;
+            _representacao.ForEach(v => {
+                if (i != 0 && i != n) {
+                    sb.Append(", ");
+                }
+                sb.Append(v.ToString().PadLeft(3));
+                i++;
+            });
+            sb.AppendLine();
+            sb.Append(busca.ToString());
+            return sb.ToString();
         }
 
         #endregion

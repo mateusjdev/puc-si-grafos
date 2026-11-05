@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     public class ListaAdjacencia : IRepresentacaoGrafo {
+        private readonly DicionarioIndexado<Vertice> _dicionarioIndexado;
         private readonly Dictionary<Vertice, LinkedList<Vertice>> _lista;
 
         public ListaAdjacencia() {
             _lista = [];
+            _dicionarioIndexado = new DicionarioIndexado<Vertice>();
         }
 
         public void AdicionarAresta(Vertice v, Vertice w) {
@@ -22,6 +24,7 @@ namespace grafos_lista_02_atv_06 {
 
         public void AdicionarVertice(Vertice v) {
             if (!_lista.ContainsKey(v)) {
+                _dicionarioIndexado.Add(v);
                 _lista.Add(v, new LinkedList<Vertice>());
             }
         }
@@ -80,6 +83,14 @@ namespace grafos_lista_02_atv_06 {
 
         public int GetCount() {
             return _lista.Count;
+        }
+
+        public int IndexOf(Vertice v) {
+            return _dicionarioIndexado.IndexOf(v);
+        }
+
+        public void ForEach(Action<Vertice> action) {
+            _dicionarioIndexado.ForEach(action);
         }
     }
 }

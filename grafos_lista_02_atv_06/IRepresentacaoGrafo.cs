@@ -18,5 +18,9 @@ namespace grafos_lista_02_atv_06 {
         public int GetCount();
 
         public bool PossuiLaco();
+
+        public int IndexOf(Vertice v);
+
+        public void ForEach(Action<Vertice> action);
     }
 }

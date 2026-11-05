@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
-    internal enum EBFS_DIR_TipoAresta {
+    public enum EBFS_DIR_TipoAresta {
         Arvore,
         Retorno,
         Cruzamento

@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace grafos_lista_02_atv_06 {
+    // Busca em Largura (Não direcionada)
+    public class BFSNdir : BFSBase<EBFS_NDIR_TipoAresta> {
+        protected override void ExecutarBusca(IRepresentacaoGrafo representacao) {
+            while (fila.Count > 0) {
+                Vertice vertice = fila.Dequeue();
+                int iVertice = representacao.IndexOf(vertice);
+                var adjs = representacao.Sucessores(vertice);
+                foreach (var a in adjs) {
+                    int iAdjs = representacao.IndexOf(a);
+                    if (tempoDescoberta[iAdjs] == 0) {
+                        tempo++;
+                        tempoDescoberta[iAdjs] = tempo;
+                        nivelDescoberta[iAdjs] = nivelDescoberta[iVertice] + 1;
+                        pai[iAdjs] = vertice;
+                        fila.Enqueue(a);
+                        MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Pai);
+                    }
+                    else if (nivelDescoberta[iAdjs] == nivelDescoberta[iVertice] + 1) {
+                        MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Tio);
+                    }
+                    else if (nivelDescoberta[iVertice] == nivelDescoberta[iAdjs]
+                        && tempoDescoberta[iAdjs] > tempoDescoberta[iVertice]
+                        ) {
+                        if (pai[iVertice] == pai[iAdjs]) {
+                            MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Irmao);
+                        }
+                        else {
+                            MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Primo);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
