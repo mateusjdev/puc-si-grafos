@@ -17,40 +17,6 @@ namespace grafos_lista_02_atv_06 {
         private readonly OrderedDictionary<string, Vertice> _vertices;
         private readonly LinkedList<(string, string)> _arestas;
 
-        // Pesquisa em Profundidade (não direcionado)
-        private int dfs_ndir_Tempo;
-        private bool dfs_ndir_Atualizada;
-        private int[] dfs_ndir_TempoDescoberta;
-        private int[] dfs_ndir_TempoTermino;
-        private Vertice[] dfs_ndir_Pai;
-        private LinkedList<(Vertice, Vertice, EDFS_NDIR_TipoAresta)> dfs_ndir_TipoArestas;
-
-        // Pesquisa em Profundidade (direcionado)
-        private int dfs_dir_Tempo;
-        private bool dfs_dir_Atualizada;
-        private int[] dfs_dir_TempoDescoberta;
-        private int[] dfs_dir_TempoTermino;
-        private Vertice[] dfs_dir_Pai;
-        private LinkedList<(Vertice, Vertice, EDFS_DIR_TipoAresta)> dfs_dir_TipoArestas;
-
-        // Pesquisa em Largura (não direcionado)
-        private int bfs_ndir_Tempo;
-        private bool bfs_ndir_Atualizada;
-        private Queue<Vertice> bfs_ndir_Fila;
-        private int[] bfs_ndir_TempoDescoberta;
-        private int[] bfs_ndir_NiveilDescoberta;
-        private Vertice[] bfs_ndir_Pai;
-        private LinkedList<(Vertice, Vertice, EBFS_NDIR_TipoAresta)> bfs_ndir_TipoArestas;
-
-        // Pesquisa em Largura (direcionado)
-        private int bfs_dir_Tempo;
-        private bool bfs_dir_Atualizada;
-        private Queue<Vertice> bfs_dir_Fila;
-        private int[] bfs_dir_TempoDescoberta;
-        private int[] bfs_dir_NiveilDescoberta;
-        private Vertice[] bfs_dir_Pai;
-        private LinkedList<(Vertice, Vertice, EBFS_DIR_TipoAresta)> bfs_dir_bfsTipoArestas;
-
         public Grafo(bool ehDirecionado, string nome = "G") {
             _vertices = [];
             _arestas = new LinkedList<(string, string)>();
@@ -111,8 +77,8 @@ namespace grafos_lista_02_atv_06 {
             return sucessores.OrderBy(v => v.Chave).ToArray();
         }
 
-        public bool EhSimples() {
-            return EhConexo && !PossuiLaco;
+        public bool PossuiLaco() {
+            return _representacao.PossuiLaco();
         }
 
         public bool EhHamiltoniano() {

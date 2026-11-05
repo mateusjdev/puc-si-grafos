@@ -16,5 +16,7 @@ namespace grafos_lista_02_atv_06 {
         public int Grau(Vertice v);
 
         public int GetCount();
+
+        public bool PossuiLaco();
     }
 }

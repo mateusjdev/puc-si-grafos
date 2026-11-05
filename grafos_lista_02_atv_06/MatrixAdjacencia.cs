@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -77,6 +78,20 @@ namespace grafos_lista_02_atv_06 {
                 }
                 _representacaoAtualizada = true;
             }
+        }
+
+        public bool PossuiLaco() {
+            bool resultado = false;
+            GarantirRepresentacao();
+            int tamanho = _dicionarioIndexado.Count;
+            int i = 0;
+            while (i < tamanho && resultado == false) {
+                if (_matriz[i, i] >= 1) {
+                    resultado = true;
+                }
+                i++;
+            }
+            return resultado;
         }
 
         public override string ToString() {

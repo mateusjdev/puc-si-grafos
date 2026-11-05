@@ -48,6 +48,19 @@ namespace grafos_lista_02_atv_06 {
             return tmp.Count;
         }
 
+        public bool PossuiLaco() {
+            bool resultado = false;
+            foreach (var item in _lista) {
+                var key = item.Key;
+                var value = item.Value;
+                if (value.Contains(key)) {
+                    resultado = true;
+                    break;
+                }
+            }
+            return resultado;
+        }
+
         public override string ToString() {
             StringBuilder sb = new("Lista Adjacencia:\n");
             foreach (var vertice in _lista) {
@@ -65,8 +78,7 @@ namespace grafos_lista_02_atv_06 {
             return sb.ToString();
         }
 
-        public int GetCount()
-        {
+        public int GetCount() {
             return _lista.Count;
         }
     }

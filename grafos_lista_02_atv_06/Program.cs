@@ -27,9 +27,7 @@ namespace grafos_lista_02_atv_06 {
             Console.WriteLine(grafo.ImprimirVerticesAdjacentes("v3"));
         }
 
-
         /*
-
         public static void Testar_Grafo_v2() {
             // Questão 4 - Grafo 1
             var grafo = new Grafo(true, "Questão 4 - Grafo 1");
