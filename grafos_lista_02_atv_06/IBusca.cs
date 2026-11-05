@@ -5,13 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
-    public interface IBusca {
+    public interface IBusca<T> {
         public void Buscar(IRepresentacaoGrafo representacao);
 
         public void BuscarPor(IRepresentacaoGrafo representacao, Vertice v);
 
-        public EConectividade ClassificacaoConectiva();
-
-        public bool PossuiTipoAresta<T>(T tipo);
+        public bool PossuiTipoAresta(T tipo);
     }
 }

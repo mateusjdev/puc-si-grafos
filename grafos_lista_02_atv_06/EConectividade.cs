@@ -11,14 +11,4 @@ namespace grafos_lista_02_atv_06 {
         FortementeConexo,
         NaoDeterminado
     }
-
-    public static class ExtConectividade {
-        public static bool EhMinimamenteSemiFortementeConexo(this EConectividade valor) {
-            return valor == EConectividade.FortementeConexo || valor == EConectividade.SemiFortementeConexo;
-        }
-
-        public static bool EhMinimamenteSimplesmenteConexo(this EConectividade valor) {
-            return valor == EConectividade.SimplesmenteConexo || valor.EhMinimamenteSemiFortementeConexo();
-        }
-    }
 }

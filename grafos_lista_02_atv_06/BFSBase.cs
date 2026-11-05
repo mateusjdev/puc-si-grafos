@@ -21,7 +21,6 @@ namespace grafos_lista_02_atv_06 {
             representacao.ForEach(v => {
                 int iVertice = representacao.IndexOf(v);
                 if (tempoDescoberta[iVertice] == 0) {
-                    componentes++;
                     tempo++;
                     tempoDescoberta[iVertice] = tempo;
                     nivelDescoberta[iVertice] = 0;
@@ -37,7 +36,6 @@ namespace grafos_lista_02_atv_06 {
             }
             int iVertice = representacao.IndexOf(ver);
             if (tempoDescoberta[iVertice] == 0) {
-                componentes++;
                 tempo++;
                 tempoDescoberta[iVertice] = tempo;
                 nivelDescoberta[iVertice] = 0;

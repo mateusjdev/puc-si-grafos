@@ -20,7 +20,6 @@ namespace grafos_lista_02_atv_06 {
             representacao.ForEach(v => {
                 int iVertice = representacao.IndexOf(v);
                 if (tempoTermino[iVertice] == 0) {
-                    componentes++;
                     ExecutarBusca(representacao, v);
                 }
             });
@@ -33,7 +32,6 @@ namespace grafos_lista_02_atv_06 {
             int iVertice = representacao.IndexOf(ver);
             // TODO: necessário?
             if (tempoTermino[iVertice] == 0) {
-                componentes++;
                 ExecutarBusca(representacao, ver);
             }
             InicializarBusca(representacao);

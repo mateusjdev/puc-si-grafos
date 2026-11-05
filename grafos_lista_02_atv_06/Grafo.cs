@@ -130,9 +130,12 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public bool EhFortementeConexo(IBusca busca) {
-            if(busca is IConectividadeNdir) {
-                busca.;
+            bool resposta = false;
+            var t = busca as IConectividadeNdir;
+            if (t != null) { 
+                resposta = t.EhConexo();
             }
+            return resposta;
         }
 
         public bool EhConexo() {

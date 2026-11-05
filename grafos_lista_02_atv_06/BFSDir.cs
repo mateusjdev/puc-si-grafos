@@ -6,7 +6,22 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     // Busca em Largura (direcionada)
-    public class BFSDir : BFSBase<EBFS_DIR_TipoAresta> {
+    public class BFSDir : BFSBase<EBFS_DIR_TipoAresta>, IConectividadeDir {
+        public bool EhFortementeConexo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool EhSemiFortementeConexo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool EhSimplesmenteConexo()
+        {
+            return raizes == 1;
+        }
+
         protected override void ExecutarBusca(IRepresentacaoGrafo representacao) {
             while (fila.Count > 0) {
                 Vertice vertice = fila.Dequeue();
