@@ -7,4 +7,11 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Algorithms\Search\" />
+    <Folder Include="Console\" />
+    <Folder Include="Core\NewFolder\" />
+    <Folder Include="Tests\" />
+  </ItemGroup>
+
 </Project>

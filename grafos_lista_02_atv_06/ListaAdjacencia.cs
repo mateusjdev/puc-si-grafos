@@ -1,4 +1,6 @@
-﻿using System;
+﻿using grafos_lista_02_atv_06.Core.Interfaces;
+using grafos_lista_02_atv_06.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     public class ListaAdjacencia : IRepresentacaoGrafo {
-        private readonly DicionarioIndexado<Vertice> _dicionarioIndexado;
-        private readonly Dictionary<Vertice, LinkedList<Vertice>> _lista;
+        private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
+        private readonly Dictionary<IVertice, LinkedList<IVertice>> _lista;
 
         public ListaAdjacencia() {
             _lista = [];
-            _dicionarioIndexado = new DicionarioIndexado<Vertice>();
+            _dicionarioIndexado = new DicionarioIndexado<IVertice>();
         }
 
-        public void AdicionarAresta(Vertice v, Vertice w) {
+        public void AdicionarAresta(IVertice v, IVertice w) {
             AdicionarVertice(v);
             if (v != w) {
                 AdicionarVertice(w);
@@ -22,29 +24,29 @@ namespace grafos_lista_02_atv_06 {
             _lista[v].AddLast(w);
         }
 
-        public void AdicionarVertice(Vertice v) {
+        public void AdicionarVertice(IVertice v) {
             if (!_lista.ContainsKey(v)) {
                 _dicionarioIndexado.Add(v);
-                _lista.Add(v, new LinkedList<Vertice>());
+                _lista.Add(v, new LinkedList<IVertice>());
             }
         }
 
-        public Vertice[] Sucessores(Vertice v) {
+        public IVertice[] Sucessores(IVertice v) {
             if (!_lista.ContainsKey(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
-            _lista.TryGetValue(v, out LinkedList<Vertice> tmp);
+            _lista.TryGetValue(v, out LinkedList<IVertice> tmp);
             if (tmp == null) {
                 throw new InvalidOperationException();
             }
             return tmp.ToArray();
         }
 
-        public int Grau(Vertice v) {
+        public int Grau(IVertice v) {
             if (!_lista.ContainsKey(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
-            _lista.TryGetValue(v, out LinkedList<Vertice> tmp);
+            _lista.TryGetValue(v, out LinkedList<IVertice> tmp);
             if (tmp == null) {
                 throw new InvalidOperationException();
             }
@@ -85,11 +87,11 @@ namespace grafos_lista_02_atv_06 {
             return _lista.Count;
         }
 
-        public int IndexOf(Vertice v) {
+        public int IndexOf(IVertice v) {
             return _dicionarioIndexado.IndexOf(v);
         }
 
-        public void ForEach(Action<Vertice> action) {
+        public void ForEach(Action<IVertice> action) {
             _dicionarioIndexado.ForEach(action);
         }
     }

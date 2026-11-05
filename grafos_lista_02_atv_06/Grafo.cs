@@ -1,4 +1,6 @@
-﻿using System;
+﻿using grafos_lista_02_atv_06.Core.Interfaces;
+using grafos_lista_02_atv_06.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -109,7 +111,7 @@ namespace grafos_lista_02_atv_06 {
         public Vertice[] Sucessores(string vertice) {
             Vertice v = _vertices[vertice];
             var sucessores = _representacao.Sucessores(v);
-            return sucessores.OrderBy(v => v.Chave).ToArray();
+            return sucessores.OrderBy(v => v.GetIdentificador()).ToArray();
         }
 
         public bool PossuiLaco() {

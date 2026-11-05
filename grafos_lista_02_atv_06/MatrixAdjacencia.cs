@@ -1,4 +1,6 @@
-﻿using System;
+﻿using grafos_lista_02_atv_06.Core.Interfaces;
+using grafos_lista_02_atv_06.Core.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     internal class MatrixAdjacencia : IRepresentacaoGrafo {
-        private readonly DicionarioIndexado<Vertice> _dicionarioIndexado;
-        private readonly LinkedList<Aresta> _dicionarioIndexadoAresta;
+        private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
+        private readonly LinkedList<IAresta> _dicionarioIndexadoAresta;
         private int[,] _matriz;
         private bool _representacaoAtualizada;
 
         public MatrixAdjacencia() {
-            _dicionarioIndexado = new DicionarioIndexado<Vertice>();
-            _dicionarioIndexadoAresta = new LinkedList<Aresta>();
+            _dicionarioIndexado = new DicionarioIndexado<IVertice>();
+            _dicionarioIndexadoAresta = new LinkedList<IAresta>();
             _representacaoAtualizada = false;
         }
 
-        public void AdicionarAresta(Vertice v, Vertice w) {
+        public void AdicionarAresta(IVertice v, IVertice w) {
             AdicionarVertice(v);
             if (!v.Equals(w)) {
                 AdicionarVertice(w);
             }
-            Aresta vw = new Aresta(v, w);
+            IAresta vw = new Aresta(v, w);
             _dicionarioIndexadoAresta.AddLast(vw);
             _representacaoAtualizada = false;
         }
@@ -40,7 +42,7 @@ namespace grafos_lista_02_atv_06 {
             if (!_dicionarioIndexado.Contains(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
-            LinkedList<Vertice> tmp = new();
+            LinkedList<IVertice> tmp = new();
             int i = _dicionarioIndexado.IndexOf(v);
             int tamanho = _dicionarioIndexado.Count;
             for (int j = 0; j < tamanho; j++) {
@@ -51,7 +53,7 @@ namespace grafos_lista_02_atv_06 {
             return tmp.ToArray();
         }
 
-        public int Grau(Vertice v) {
+        public int Grau(IVertice v) {
             GarantirRepresentacao();
             if (!_dicionarioIndexado.Contains(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
@@ -72,8 +74,8 @@ namespace grafos_lista_02_atv_06 {
                 int tamanho = _dicionarioIndexado.Count;
                 _matriz = new int[tamanho, tamanho];
                 foreach (var aresta in _dicionarioIndexadoAresta) {
-                    int iv = _dicionarioIndexado.IndexOf(aresta.Origem);
-                    int iw = _dicionarioIndexado.IndexOf(aresta.Destino);
+                    int iv = _dicionarioIndexado.IndexOf(aresta.GetOrigem());
+                    int iw = _dicionarioIndexado.IndexOf(aresta.GetDestino);
                     _matriz[iv, iw] += 1;
                 }
                 _representacaoAtualizada = true;
