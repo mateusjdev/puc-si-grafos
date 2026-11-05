@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     // Busca em Largura (Não direcionada)
-    public class BFSNdir : BFSBase<EBFS_NDIR_TipoAresta> {
+    public class BFSNdir : BFSBase<EBFS_NDIR_TipoAresta>, IConectividadeNdir {
         protected override void ExecutarBusca(IRepresentacaoGrafo representacao) {
             while (fila.Count > 0) {
                 Vertice vertice = fila.Dequeue();
@@ -37,6 +37,10 @@ namespace grafos_lista_02_atv_06 {
                     }
                 }
             }
+        }
+
+        public bool EhConexo() {
+            return componentes <= 1;
         }
     }
 }

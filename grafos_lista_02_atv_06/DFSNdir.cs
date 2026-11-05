@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
     // Busca em Profundidade (Não direcionada)
-    public class DFSNdir : DFSBase<EDFS_NDIR_TipoAresta> {
-
+    public class DFSNdir : DFSBase<EDFS_NDIR_TipoAresta>, IConectividadeNdir {
         protected override void ExecutarBusca(IRepresentacaoGrafo representacao, Vertice vertice) {
             int iVertice = representacao.IndexOf(vertice);
             tempo++;
@@ -26,6 +25,10 @@ namespace grafos_lista_02_atv_06 {
             }
             tempo++;
             tempoTermino[iVertice] = tempo;
+        }
+
+        public bool EhConexo() {
+            return componentes <= 1;
         }
     }
 }

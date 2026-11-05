@@ -17,23 +17,13 @@ namespace grafos_lista_02_atv_06 {
         }
 
         protected override void InicializarBusca(IRepresentacaoGrafo representacao) {
-            int i = 0;
             representacao.ForEach(v => {
                 int iVertice = representacao.IndexOf(v);
                 if (tempoTermino[iVertice] == 0) {
-                    i++;
+                    componentes++;
                     ExecutarBusca(representacao, v);
                 }
             });
-            if (i == 1) {
-                conexo = EClassificacaoConectiva.Conexo;
-            }
-            else if (i > 1) {
-                conexo = EClassificacaoConectiva.NaoConexo;
-            }
-            else {
-                conexo = EClassificacaoConectiva.NaoDeterminado;
-            }
         }
 
         protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, Vertice ver) {
@@ -41,26 +31,12 @@ namespace grafos_lista_02_atv_06 {
                 throw new ArgumentException("O vértice não pode ser nulo!");
             }
             int iVertice = representacao.IndexOf(ver);
+            // TODO: necessário?
             if (tempoTermino[iVertice] == 0) {
+                componentes++;
                 ExecutarBusca(representacao, ver);
             }
-            int i = 1;
-            representacao.ForEach(v => {
-                int iVertice = representacao.IndexOf(v);
-                if (tempoTermino[iVertice] == 0) {
-                    i++;
-                    ExecutarBusca(representacao, v);
-                }
-            });
-            if (i == 1) {
-                conexo = EClassificacaoConectiva.Conexo;
-            }
-            else if (i > 1) {
-                conexo = EClassificacaoConectiva.NaoConexo;
-            }
-            else {
-                conexo = EClassificacaoConectiva.NaoDeterminado;
-            }
+            InicializarBusca(representacao);
         }
 
         public override string ToString() {

@@ -129,10 +129,16 @@ namespace grafos_lista_02_atv_06 {
             return true;
         }
 
+        public bool EhFortementeConexo(IBusca busca) {
+            if(busca is IConectividadeNdir) {
+                busca.;
+            }
+        }
+
         public bool EhConexo() {
             IBusca busca = _ehDirecionado ? new DFSDir() : new DFSNdir();
             busca.Buscar(_representacao);
-            return busca.ClassificacaoConectiva() == EClassificacaoConectiva.Conexo;
+            return busca.ClassificacaoConectiva() == EConectividade.Conexo;
         }
 
         #region Impressão de Informações

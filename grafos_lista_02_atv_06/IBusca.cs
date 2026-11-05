@@ -10,7 +10,7 @@ namespace grafos_lista_02_atv_06 {
 
         public void BuscarPor(IRepresentacaoGrafo representacao, Vertice v);
 
-        public EClassificacaoConectiva ClassificacaoConectiva();
+        public EConectividade ClassificacaoConectiva();
 
         public bool PossuiTipoAresta<T>(T tipo);
     }

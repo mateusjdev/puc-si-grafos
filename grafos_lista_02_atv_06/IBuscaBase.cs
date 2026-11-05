@@ -12,19 +12,21 @@ namespace grafos_lista_02_atv_06 {
         protected int[] tempoDescoberta;
         protected Vertice[] pai;
         protected private LinkedList<(Vertice, Vertice, T)> tipoAresta;
+        protected int componentes;
 
         // Resultado
-        protected EClassificacaoConectiva conexo;
+        // protected EConectividade conexo;
 
         protected virtual void InicializarValores(int nVertices) {
             tempo = 0;
+            componentes = 0;
             atualizada = false;
             tempoDescoberta = new int[nVertices];
             pai = new Vertice[nVertices];
             tipoAresta = new LinkedList<(Vertice, Vertice, T)>();
 
             // resultado
-            conexo = EClassificacaoConectiva.NaoDeterminado;
+            // conexo = EConectividade.NaoDeterminado;
         }
 
         protected abstract void InicializarBusca(IRepresentacaoGrafo representacao);
@@ -47,7 +49,7 @@ namespace grafos_lista_02_atv_06 {
             tipoAresta.AddLast((u, v, tipo));
         }
 
-        public EClassificacaoConectiva ClassificacaoConectiva() {
+        public EConectividade ClassificacaoConectiva() {
             return conexo;
         }
 
