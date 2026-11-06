@@ -1,12 +1,11 @@
-﻿using System;
+﻿using grafos_lista_02_atv_06.Core.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06 {
-    internal class DicionarioIndexado<T> {
+namespace grafos_lista_02_atv_06.Core.Models {
+    internal class DicionarioIndexado<T>: IDicionarioIndexado<T>, IEnumerable<T> {
         private readonly List<T> _lista;
         private readonly Dictionary<T, int> _tabela;
 
@@ -47,6 +46,16 @@ namespace grafos_lista_02_atv_06 {
             foreach (var item in _lista) {
                 action.Invoke(item);
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _lista.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

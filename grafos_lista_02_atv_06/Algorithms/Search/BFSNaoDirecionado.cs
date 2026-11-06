@@ -1,21 +1,16 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
+using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
+using grafos_lista_02_atv_06.Core.Interfaces;
 
-namespace grafos_lista_02_atv_06
+namespace grafos_lista_02_atv_06.Algorithms.Search
 {
     // Busca em Largura (Não direcionada)
-    public class BFSNdir : BFSBase<EBFS_NDIR_TipoAresta>
-    {
-        protected override void ExecutarBusca(IRepresentacaoGrafo representacao)
-        {
+    public class BFSNaoDirecionado : BFS<EBFS_NDIR_TipoAresta>, IComponentesConexos {
+
+        protected override void ExecutarBusca(IRepresentacaoGrafo representacao) {
             while (fila.Count > 0)
             {
-                Vertice vertice = fila.Dequeue();
+                IVertice vertice = fila.Dequeue();
                 int iVertice = representacao.IndexOf(vertice);
                 var adjs = representacao.Sucessores(vertice);
                 foreach (var a in adjs)
@@ -51,7 +46,7 @@ namespace grafos_lista_02_atv_06
             }
         }
 
-        private int QuantidadeComponentes()
+        public int QuantidadeComponentes()
         {
             int quant = 0;
             foreach (var item in pai)

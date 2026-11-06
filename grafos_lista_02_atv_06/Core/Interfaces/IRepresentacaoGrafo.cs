@@ -10,7 +10,7 @@ namespace grafos_lista_02_atv_06.Core.Interfaces {
 
         public int Grau(IVertice v);
 
-        public int GetCount();
+        public int GetVerticeCount();
 
         public bool PossuiLaco();
 

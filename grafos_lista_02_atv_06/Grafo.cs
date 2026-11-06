@@ -1,9 +1,12 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
+using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
+using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using grafos_lista_02_atv_06.Algorithms.Search;
 
 namespace grafos_lista_02_atv_06 {
     public class Grafo {
@@ -47,13 +50,13 @@ namespace grafos_lista_02_atv_06 {
         }
 
         private IBusca BuscarViaProfundidade(string vInicial = null) {
-            IBusca busca = _ehDirecionado ? new DFSDir() : new DFSNdir();
+            IBusca busca = _ehDirecionado ? new DFSDirecionado() : new DFSNaoDirecionado();
             ExecutarBusca(busca, vInicial);
             return busca;
         }
 
         private IBusca BuscarViaLargura(string vInicial = null) {
-            IBusca busca = _ehDirecionado ? new BFSDir() : new BFSNdir();
+            IBusca busca = _ehDirecionado ? new BFSDirecionado() : new BFSNaoDirecionado();
             ExecutarBusca(busca, vInicial);
             return busca;
         }
@@ -108,8 +111,8 @@ namespace grafos_lista_02_atv_06 {
             return this;
         }
 
-        public Vertice[] Sucessores(string vertice) {
-            Vertice v = _vertices[vertice];
+        public IVertice[] Sucessores(string vertice) {
+            IVertice v = _vertices[vertice];
             var sucessores = _representacao.Sucessores(v);
             return sucessores.OrderBy(v => v.GetIdentificador()).ToArray();
         }
@@ -131,6 +134,8 @@ namespace grafos_lista_02_atv_06 {
             return true;
         }
 
+        /*
+
         public bool EhFortementeConexo(IBusca busca) {
             bool resposta = false;
             var t = busca as IConectividadeNdir;
@@ -141,11 +146,11 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public bool EhConexo() {
-            IBusca busca = _ehDirecionado ? new DFSDir() : new DFSNdir();
+            IBusca busca = _ehDirecionado ? new DFSDirecionado() : new DFSNaoDirecionado();
             busca.Buscar(_representacao);
             return busca.ClassificacaoConectiva() == EConectividade.Conexo;
         }
-
+        */
         #region Impressão de Informações
 
         public override string ToString() {
@@ -181,7 +186,7 @@ namespace grafos_lista_02_atv_06 {
         public string ImprimirVerticesAdjacentes(string vertice) {
             StringBuilder sb = new("Adjacencias:");
             Vertice v = _vertices[vertice];
-            Vertice[] adj = _representacao.Sucessores(v);
+            IVertice[] adj = _representacao.Sucessores(v);
             var adjs = adj.Select(a => a.ToString());
             return sb.AppendJoin(", ", adjs).AppendLine().ToString();
         }
@@ -190,7 +195,7 @@ namespace grafos_lista_02_atv_06 {
             IBusca busca = BuscarViaProfundidade(vInicial);
             StringBuilder sb = new();
             sb.Append("V:  ");
-            int n = _representacao.GetCount();
+            int n = _representacao.GetVerticeCount();
             int i = 0;
             _representacao.ForEach(v => {
                 if (i != 0 && i != n) {
@@ -208,7 +213,7 @@ namespace grafos_lista_02_atv_06 {
             IBusca busca = BuscarViaLargura(vInicial);
             StringBuilder sb = new();
             sb.Append("V: ");
-            int n = _representacao.GetCount();
+            int n = _representacao.GetVerticeCount();
             int i = 0;
             _representacao.ForEach(v => {
                 if (i != 0 && i != n) {

@@ -1,4 +1,5 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
+using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06 {
+namespace grafos_lista_02_atv_06.Algorithms.Search {
     // Busca em Profundidade (direcionada)
-    public class DFSDir : DFSBase<EDFS_DIR_TipoAresta> {
+    public class DFSDirecionado : DFS<EDFS_DIR_TipoAresta> {
 
-        protected override void ExecutarBusca(IRepresentacaoGrafo representacao, Vertice vertice) {
+        protected override void ExecutarBusca(IRepresentacaoGrafo representacao, IVertice vertice) {
             int iVertice = representacao.IndexOf(vertice);
             tempo++;
             tempoDescoberta[iVertice] = tempo;

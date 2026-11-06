@@ -1,19 +1,18 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06 {
+namespace grafos_lista_02_atv_06.Core.Models {
     public class ListaAdjacencia : IRepresentacaoGrafo {
         private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
         private readonly Dictionary<IVertice, LinkedList<IVertice>> _lista;
 
         public ListaAdjacencia() {
             _lista = [];
-            _dicionarioIndexado = new DicionarioIndexado<IVertice>();
+            _dicionarioIndexado = [];
         }
 
         public void AdicionarAresta(IVertice v, IVertice w) {
@@ -83,8 +82,8 @@ namespace grafos_lista_02_atv_06 {
             return sb.ToString();
         }
 
-        public int GetCount() {
-            return _lista.Count;
+        public int GetVerticeCount() {
+            return _dicionarioIndexado.Count;
         }
 
         public int IndexOf(IVertice v) {
@@ -92,7 +91,9 @@ namespace grafos_lista_02_atv_06 {
         }
 
         public void ForEach(Action<IVertice> action) {
-            _dicionarioIndexado.ForEach(action);
+            foreach (var item in _dicionarioIndexado) {
+                action.Invoke(item);
+            }
         }
     }
 }

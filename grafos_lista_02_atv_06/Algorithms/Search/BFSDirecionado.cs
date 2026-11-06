@@ -1,32 +1,12 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
+using grafos_lista_02_atv_06.Core.Interfaces;
 
-namespace grafos_lista_02_atv_06 {
+namespace grafos_lista_02_atv_06.Algorithms.Search {
     // Busca em Largura (direcionada)
-    public class BFSDir : BFSBase<EBFS_DIR_TipoAresta>, IConectividadeDir {
-        public bool EhFortementeConexo()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool EhSemiFortementeConexo()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool EhSimplesmenteConexo()
-        {
-            return raizes == 1;
-        }
-
+    public class BFSDirecionado : BFS<EBFS_DIR_TipoAresta> {
         protected override void ExecutarBusca(IRepresentacaoGrafo representacao) {
             while (fila.Count > 0) {
-                Vertice vertice = fila.Dequeue();
+                IVertice vertice = fila.Dequeue();
                 int iVertice = representacao.IndexOf(vertice);
                 var adjs = representacao.Sucessores(vertice);
                 foreach (var a in adjs) {

@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Algorithms\Search\" />
-    <Folder Include="Console\" />
-    <Folder Include="Core\NewFolder\" />
-    <Folder Include="Tests\" />
+    <Compile Remove="Core\NewFolder\**" />
+    <Compile Remove="Tests\**" />
+    <EmbeddedResource Remove="Core\NewFolder\**" />
+    <EmbeddedResource Remove="Tests\**" />
+    <None Remove="Core\NewFolder\**" />
+    <None Remove="Tests\**" />
   </ItemGroup>
 
 </Project>

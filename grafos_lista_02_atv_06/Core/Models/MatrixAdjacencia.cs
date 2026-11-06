@@ -1,5 +1,4 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06 {
+namespace grafos_lista_02_atv_06.Core.Models {
     internal class MatrixAdjacencia : IRepresentacaoGrafo {
         private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
         private readonly LinkedList<IAresta> _dicionarioIndexadoAresta;
@@ -30,14 +29,14 @@ namespace grafos_lista_02_atv_06 {
             _representacaoAtualizada = false;
         }
 
-        public void AdicionarVertice(Vertice v) {
+        public void AdicionarVertice(IVertice v) {
             if (!_dicionarioIndexado.Contains(v)) {
                 _dicionarioIndexado.Add(v);
                 _representacaoAtualizada = false;
             }
         }
 
-        public Vertice[] Sucessores(Vertice v) {
+        public IVertice[] Sucessores(IVertice v) {
             GarantirRepresentacao();
             if (!_dicionarioIndexado.Contains(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
@@ -75,7 +74,7 @@ namespace grafos_lista_02_atv_06 {
                 _matriz = new int[tamanho, tamanho];
                 foreach (var aresta in _dicionarioIndexadoAresta) {
                     int iv = _dicionarioIndexado.IndexOf(aresta.GetOrigem());
-                    int iw = _dicionarioIndexado.IndexOf(aresta.GetDestino);
+                    int iw = _dicionarioIndexado.IndexOf(aresta.GetDestino());
                     _matriz[iv, iw] += 1;
                 }
                 _representacaoAtualizada = true;
@@ -112,7 +111,7 @@ namespace grafos_lista_02_atv_06 {
             return sb.ToString();
         }
 
-        public int GetCount() {
+        public int GetVerticeCount() {
             return _dicionarioIndexado.Count;
         }
 
@@ -132,14 +131,14 @@ namespace grafos_lista_02_atv_06 {
             return maior;
         }
 
-        public int IndexOf(Vertice v) {
+        public int IndexOf(IVertice v) {
             if (!_dicionarioIndexado.Contains(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
             return _dicionarioIndexado.IndexOf(v);
         }
 
-        public void ForEach(Action<Vertice> action) {
+        public void ForEach(Action<IVertice> action) {
             _dicionarioIndexado.ForEach(action);
         }
     }

@@ -6,12 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06 {
-    public interface IBusca<T> {
+namespace grafos_lista_02_atv_06.Algorithms.Search.Interfaces {
+    public interface IBusca {
         public void Buscar(IRepresentacaoGrafo representacao);
 
-        public void BuscarPor(IRepresentacaoGrafo representacao, Vertice v);
+        public void BuscarPor(IRepresentacaoGrafo representacao, IVertice v);
+    }
 
+    public interface IBusca<T> : IBusca
+    {
         public bool PossuiTipoAresta(T tipo);
     }
 }

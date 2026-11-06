@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06 {
-    public abstract class BFSBase<T> : IBuscaBase<T> {
+namespace grafos_lista_02_atv_06.Algorithms.Search {
+    public abstract class BFS<T> : Busca<T> {
         protected int[] nivelDescoberta;
-        protected Queue<Vertice> fila;
+        protected Queue<IVertice> fila;
 
         protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao);
 
         protected override void InicializarValores(int nVertices) {
             nivelDescoberta = new int[nVertices];
-            fila = new Queue<Vertice>(nVertices);
+            fila = new Queue<IVertice>(nVertices);
             base.InicializarValores(nVertices);
         }
 
@@ -32,7 +32,7 @@ namespace grafos_lista_02_atv_06 {
             });
         }
 
-        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, Vertice ver) {
+        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver) {
             if (ver == null) {
                 throw new ArgumentException("O vértice não pode ser nulo!");
             }

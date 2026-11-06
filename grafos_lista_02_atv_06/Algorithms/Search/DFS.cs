@@ -1,17 +1,14 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 
-namespace grafos_lista_02_atv_06 {
-    public abstract class DFSBase<T> : IBuscaBase<T> {
+namespace grafos_lista_02_atv_06.Algorithms.Search {
+    public abstract class DFS<T> : Busca<T> {
         protected int[] tempoTermino;
 
-        protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao, Vertice vertice);
+        protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao, IVertice vertice);
 
         protected override void InicializarValores(int nVertices) {
             tempoTermino = new int[nVertices];
@@ -27,7 +24,7 @@ namespace grafos_lista_02_atv_06 {
             });
         }
 
-        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, Vertice ver) {
+        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver) {
             if (ver == null) {
                 throw new ArgumentException("O vértice não pode ser nulo!");
             }
