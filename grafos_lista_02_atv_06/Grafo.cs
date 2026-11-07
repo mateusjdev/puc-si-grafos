@@ -122,16 +122,18 @@ namespace grafos_lista_02_atv_06 {
             return _representacao.PossuiLaco();
         }
 
+        public bool EhSimples() {
+            bool possuiArestaParalela = true;
+            return PossuiLaco() && possuiArestaParalela;
+        }
+
         public bool EhHamiltoniano() {
-            throw new NotImplementedException();
             if (_ehDirecionado) {
                 throw new NotImplementedException("Testes Hamiltoniano não foram implementados para grafos direcionados.");
             }
-            bool ehSimples = true;
-            if (ehSimples) {
+            if (!EhSimples()) {
                 return false;
             }
-
             return true;
         }
 
