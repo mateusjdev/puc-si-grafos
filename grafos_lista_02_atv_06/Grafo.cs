@@ -64,10 +64,11 @@ namespace grafos_lista_02_atv_06 {
         #region Ciclo
 
         public bool EhCiclico() {
-            bool resposta;
-            IBusca busca = BuscarViaProfundidade();
-            // TODO: Solução porca?
-            resposta = busca.PossuiTipoAresta(EDFS_DIR_TipoAresta.Retorno) || busca.PossuiTipoAresta(EDFS_NDIR_TipoAresta.Retorno);
+            bool resposta = false;
+            IDFS busca = BuscarViaProfundidade() as IDFS;
+            if (busca != null) {
+                resposta = busca.PossuiArestaDeRetorno();
+            }
             return resposta;
         }
 

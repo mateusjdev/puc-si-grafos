@@ -1,4 +1,5 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
+using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
 using System;
@@ -10,7 +11,6 @@ using System.Threading.Tasks;
 namespace grafos_lista_02_atv_06.Algorithms.Search {
     // Busca em Profundidade (direcionada)
     public class DFSDirecionado : DFS<EDFS_DIR_TipoAresta> {
-
         protected override void ExecutarBusca(IRepresentacaoGrafo representacao, IVertice vertice) {
             int iVertice = representacao.IndexOf(vertice);
             tempo++;
@@ -35,6 +35,10 @@ namespace grafos_lista_02_atv_06.Algorithms.Search {
             }
             tempo++;
             tempoTermino[iVertice] = tempo;
+        }
+
+        public override bool PossuiArestaDeRetorno() {
+            return tipoAresta.Any(a => a.Item3 == EDFS_DIR_TipoAresta.Retorno);
         }
     }
 }

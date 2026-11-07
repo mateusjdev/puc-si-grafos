@@ -1,11 +1,13 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
+using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
+using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
 using System.Linq;
 using System.Text;
 
 
 namespace grafos_lista_02_atv_06.Algorithms.Search {
-    public abstract class DFS<T> : Busca<T> {
+    public abstract class DFS<T> : Busca<T>, IDFS {
         protected int[] tempoTermino;
 
         protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao, IVertice vertice);
@@ -53,5 +55,7 @@ namespace grafos_lista_02_atv_06.Algorithms.Search {
                 .AppendLine();
             return sb.ToString();
         }
+
+        public abstract bool PossuiArestaDeRetorno();
     }
 }

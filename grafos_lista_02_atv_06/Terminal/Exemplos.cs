@@ -76,7 +76,7 @@ namespace grafos_lista_02_atv_06.Terminal
         }
 
         public static void Grafo_Ciclico() {
-            var grafo = new Grafo(true);
+            var grafo = new Grafo(true, "G cíclico");
             grafo.AdicionarVertices("1", "2", "3", "4", "5")
                 .AdicionarAresta("1", "2")
                 .AdicionarAresta("2", "3")
@@ -85,12 +85,12 @@ namespace grafos_lista_02_atv_06.Terminal
                 .AdicionarAresta("5", "2");
 
             Console.WriteLine(grafo);
-            Console.WriteLine($"É ciclico: {grafo.EhCiclico()}");
+            Console.WriteLine($"É cíclico: {grafo.EhCiclico()}");
             Console.WriteLine();
         }
 
         public static void Grafo_Aciclico() {
-            var grafo = new Grafo(true);
+            var grafo = new Grafo(true, "G acíclico");
             grafo.AdicionarVertices("1", "2", "3", "4", "5")
                 .AdicionarAresta("1", "2")
                 .AdicionarAresta("2", "3")
@@ -98,7 +98,7 @@ namespace grafos_lista_02_atv_06.Terminal
                 .AdicionarAresta("4", "5");
 
             Console.WriteLine(grafo);
-            Console.WriteLine($"É ciclico: {grafo.EhCiclico()}");
+            Console.WriteLine($"É cíclico: {grafo.EhCiclico()}");
             Console.WriteLine();
         }
     }

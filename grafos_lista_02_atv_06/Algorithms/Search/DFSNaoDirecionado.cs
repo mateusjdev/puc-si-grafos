@@ -49,5 +49,9 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
             }
             return quant;
         }
+
+        public override  bool PossuiArestaDeRetorno() {
+            return tipoAresta.Any(a => a.Item3 == EDFS_NDIR_TipoAresta.Retorno);
+        }
     }
 }
