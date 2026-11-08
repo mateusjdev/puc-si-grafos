@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06 {
-    internal class GrafoDijkstra {
+    public class GrafoDijkstra {
         private readonly string _nome;
 
         private int _identificadorVertice = 0;
