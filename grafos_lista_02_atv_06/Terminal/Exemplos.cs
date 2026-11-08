@@ -181,7 +181,7 @@ namespace grafos_lista_02_atv_06.Terminal {
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
-        public static string TesteV5() {
+        public static string TesteCaminhoMinimo() {
             var grafoDijkstra = new GrafoDijkstra("v4 - ZigZag - Dijkstra");
             var grafoBMSSP = new GrafoBMSSP("v4 - ZigZag - BMSSP");
 
@@ -196,7 +196,7 @@ namespace grafos_lista_02_atv_06.Terminal {
 
             // Horizontal
             Random random = new Random();
-            int iter = 1_000;
+            int iter = 1_000_000;
             for (int i = 1, j = 2; i < iter; i++, j++) {
                 var v = $"{i}";
                 var w = $"{j}";
@@ -217,6 +217,7 @@ namespace grafos_lista_02_atv_06.Terminal {
             }
 
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Caminho minimo de V({1}) a V({iter}) entre {iter} vertices encontrado.");
             sb.Append("Tempo de Conclusão (Dijkstra): \t")
                 .AppendLine(Debug.Profile(() => {
                     var caminho = grafoDijkstra.CaminhoMinimo("1", $"{iter}");

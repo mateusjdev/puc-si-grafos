@@ -1,6 +1,7 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,9 @@ namespace grafos_lista_02_atv_06 {
 
         private int _identificadorVertice = 0;
 
-        private Dictionary<string, IVertice> _vertices;
+        private readonly Dictionary<string, IVertice> _vertices;
 
-        private ListaAdjacenciaV2 _representacao;
+        private readonly ListaAdjacenciaV2 _representacao;
 
         private Dictionary<IVertice, double> _distancia;
         private Dictionary<IVertice, IVertice> _predecessor;
@@ -113,59 +114,59 @@ namespace grafos_lista_02_atv_06 {
         /// <summary>
         /// Recursive BMSSP subroutine: BMSSP(level, Bound, Sources)
         /// </summary>
-        private (double NewBound, HashSet<IVertice> Visited) BMSSP(int l, double B, HashSet<IVertice> S, int k, int t) {
+        private (double NewBound, HashSet<IVertice> Visited, HashSet<IVertice> Relaxed) BMSSP(
+    int l, double B, HashSet<IVertice> S, int k, int t) {
             var visitedNodes = new HashSet<IVertice>();
+            var relaxedNodes = new HashSet<IVertice>(); // Rastrea nós relaxados nesta chamada
 
-            // --- Base Case: Level 0 (Bounded Mini-Dijkstra) ---
+            // --- Base Case ---
             if (l == 0 || S.Count == 0) {
-                return BaseCaseBoundedDijkstra(S, B, k, visitedNodes);
+                return BaseCaseBoundedDijkstra(S, B, k, visitedNodes); // Atualizar o BaseCase para retornar relaxedNodes também
             }
 
-            // --- Step 1: Pivot Selection ---
             var (pivots, discoveredNodes) = EncontrarPivos(S, k, B);
-
-            // --- Step 2: Divide and Conquer across Pivots ---
-            // Bucket queue to manage frontier vertices by distance bounds
             var activeSources = new HashSet<IVertice>(discoveredNodes);
 
             while (activeSources.Count > 0) {
                 var currentBatch = activeSources.Take(k).ToHashSet();
                 activeSources.ExceptWith(currentBatch);
 
-                // Snapshot das distâncias ANTES da sub-chamada
-                var distBefore = _vertices.Values.ToDictionary(v => v, v => _distancia[v]);
-
-                var (subBound, subVisited) = BMSSP(l - 1, B, currentBatch, k, t);
+                // --- SUB-CHAMADA (Retorna também os nós que foram relaxados no nível l - 1) ---
+                var (subBound, subVisited, subRelaxed) = BMSSP(l - 1, B, currentBatch, k, t);
 
                 foreach (var v in subVisited) {
                     visitedNodes.Add(v);
                 }
 
-                // *** CORREÇÃO 4 ***
-                // Nós cuja distância melhorou DENTRO da sub-chamada (inclusive dentro de
-                // BaseCaseBoundedDijkstra recursivo) mas que NÃO foram finalizados por ela:
-                foreach (var v in _vertices.Values) {
-                    if (_distancia[v] < distBefore[v] && !subVisited.Contains(v)) {
-                        visitedNodes.Remove(v);  // cancela eventual finalização anterior (absorve Correção 1)
-                        activeSources.Add(v);   // reagenda para processamento
+                // OTIMIZAÇÃO: Itera APENAS nos nós que realmente tiveram a distância reduzida
+                foreach (var v in subRelaxed) {
+                    relaxedNodes.Add(v); // Propaga para o nível superior
+
+                    if (!subVisited.Contains(v)) {
+                        visitedNodes.Remove(v);
+                        activeSources.Add(v);
                     }
                 }
 
-                // Relaxamento externo dos nós que a sub-chamada finalizou
+                // Relaxamento externo dos nós finalizados
                 foreach (var u in subVisited) {
                     foreach (var aresta in _representacao.ArestasAdjacentes(u)) {
                         var destino = aresta.GetDestino();
                         var peso = aresta.GetPeso();
+
                         if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B) {
                             _distancia[destino] = _distancia[u] + peso;
                             _predecessor[destino] = u;
+
+                            relaxedNodes.Add(destino); // Registra relaxamento
                             visitedNodes.Remove(destino);
                             activeSources.Add(destino);
                         }
                     }
                 }
             }
-            return (B, visitedNodes);
+
+            return (B, visitedNodes, relaxedNodes);
         }
 
         /// <summary>
@@ -227,13 +228,14 @@ namespace grafos_lista_02_atv_06 {
         /// <summary>
         /// Base case solver using a priority-queue bounded by element limit (k) or distance limit (B).
         /// </summary>
-        private (double NewBound, HashSet<IVertice> Visited) BaseCaseBoundedDijkstra(
+        private (double NewBound, HashSet<IVertice> Visited, HashSet<IVertice> Relaxed) BaseCaseBoundedDijkstra(
             HashSet<IVertice> S,
             double B,
             int maxNodes,
             HashSet<IVertice> visited
             ) {
             var pq = new PriorityQueue<IVertice, double>();
+            var relaxed = new HashSet<IVertice>();
 
             foreach (var s in S) {
                 if (_distancia[s] < B) {
@@ -257,13 +259,13 @@ namespace grafos_lista_02_atv_06 {
                     if (newDist < _distancia[v] && newDist < B) {
                         _distancia[v] = newDist;
                         _predecessor[v] = u;
+                        relaxed.Add(v);
                         pq.Enqueue(v, newDist);
                     }
                 }
             }
 
-            return (maxVisitedDist, visited);
-
+            return (maxVisitedDist, visited, relaxed);
         }
 
         #region Impressão de Informações

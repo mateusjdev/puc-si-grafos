@@ -9,6 +9,7 @@ using System.Text;
 namespace grafos_lista_02_atv_06 {
     public class Program {
         static void Main() {
+            Console.WriteLine("Iniciando testes...");
             // // DFS e BFS em grafo direcionado
             // Console.WriteLine(Exemplos.Lista02_Questao04_Grafo01());
             // Console.WriteLine(Exemplos.Lista02_Questao04_Grafo02());
@@ -17,7 +18,7 @@ namespace grafos_lista_02_atv_06 {
             // // Eh Ciclico (ou !ciclico)
             // Console.WriteLine(Exemplos.Grafo_Ciclico());
             // Console.WriteLine(Exemplos.Grafo_Aciclico());
-            Console.WriteLine(Exemplos.TesteV5());
+            Console.WriteLine(Exemplos.TesteCaminhoMinimo());
         }
     }
 }
