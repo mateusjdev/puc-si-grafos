@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace grafos_caminho_minimo {
     public class GrafoBMSSP {
@@ -79,10 +74,18 @@ namespace grafos_caminho_minimo {
 
             // Algorithm parameters based on graph size n
             int n = _vertices.Count;
-            int k = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log(n + 1, 2), 1.0 / 3.0)));
             // int k = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log(n + 1, 2), 1.0 / 3.0)));
-            int t = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log(n + 1, 2), 2.0 / 3.0)));
-            int levels = Math.Max(1, (int)Math.Ceiling(Math.Log(n + 1, 2) / Math.Max(1, t)));
+            // int t = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log(n + 1, 2), 2.0 / 3.0)));
+            // int levels = Math.Max(1, (int)Math.Ceiling(Math.Log(n + 1, 2) / Math.Max(1, t)));
+
+            // int logN = Math.Max(2, (int)Math.Ceiling(Math.Log(n + 1, 2)));
+            // int k = Math.Max(3, (int)Math.Floor(Math.Pow(logN, 1.0 / 3.0)));
+            // int t = Math.Max(3, (int)Math.Floor(Math.Pow(logN, 2.0 / 3.0)));
+            // int levels = Math.Max(1, (int)Math.Ceiling((double)logN / t));
+
+            var k = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log2(n), 1.0 / 3.0)));
+            var t = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log2(n), 2.0 / 3.0)));
+            var levels = (int)Math.Ceiling(Math.Log2(n) / t);
 
             var initialSources = new HashSet<Vertice> { refOrigem };
             double initialBound = double.PositiveInfinity;
@@ -93,7 +96,12 @@ namespace grafos_caminho_minimo {
             LinkedList<Vertice> caminho = new LinkedList<Vertice>();
             caminho.AddFirst(refDestino);
             while (caminho.First.Value != refOrigem) {
-                caminho.AddFirst(_predecessor[caminho.First.Value]);
+                var pred = _predecessor[caminho.First.Value];
+                if (pred == null) {
+                    caminho.Clear();
+                    break;
+                }
+                caminho.AddFirst(pred);
             }
             return caminho.ToArray();
         }
@@ -117,18 +125,29 @@ namespace grafos_caminho_minimo {
             var activeSources = new HashSet<Vertice>(discoveredNodes);
 
             while (activeSources.Count > 0) {
-                // Select sub-batch from active pivots
                 var currentBatch = activeSources.Take(k).ToHashSet();
                 activeSources.ExceptWith(currentBatch);
 
-                // Recursive call at level l - 1
+                // Snapshot das distâncias ANTES da sub-chamada
+                var distBefore = _vertices.Values.ToDictionary(v => v, v => _distancia[v]);
+
                 var (subBound, subVisited) = BMSSP(l - 1, B, currentBatch, k, t);
 
                 foreach (var v in subVisited) {
                     visitedNodes.Add(v);
                 }
 
-                // Relax outgoing edges from the processed sub-graph to update frontier
+                // *** CORREÇÃO 4 ***
+                // Nós cuja distância melhorou DENTRO da sub-chamada (inclusive dentro de
+                // BaseCaseBoundedDijkstra recursivo) mas que NÃO foram finalizados por ela:
+                foreach (var v in _vertices.Values) {
+                    if (_distancia[v] < distBefore[v] && !subVisited.Contains(v)) {
+                        visitedNodes.Remove(v);  // cancela eventual finalização anterior (absorve Correção 1)
+                        activeSources.Add(v);   // reagenda para processamento
+                    }
+                }
+
+                // Relaxamento externo dos nós que a sub-chamada finalizou
                 foreach (var u in subVisited) {
                     foreach (var aresta in _representacao.ArestasAdjacentes(u)) {
                         var destino = aresta.GetDestino();
@@ -136,15 +155,12 @@ namespace grafos_caminho_minimo {
                         if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B) {
                             _distancia[destino] = _distancia[u] + peso;
                             _predecessor[destino] = u;
-                            // Re-insert into dynamic frontier if updated
-                            if (!visitedNodes.Contains(destino)) {
-                                activeSources.Add(destino);
-                            }
+                            visitedNodes.Remove(destino);
+                            activeSources.Add(destino);
                         }
                     }
                 }
             }
-
             return (B, visitedNodes);
         }
 
