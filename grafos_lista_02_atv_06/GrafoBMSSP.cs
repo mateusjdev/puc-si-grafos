@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06 {
-    public class GrafoBMSSP {
+namespace grafos_lista_02_atv_06
+{
+    public class GrafoBMSSP
+    {
         private readonly string _nome;
 
         private int _identificadorVertice = 0;
@@ -20,13 +22,15 @@ namespace grafos_lista_02_atv_06 {
         private Dictionary<IVertice, double> _distancia;
         private Dictionary<IVertice, IVertice> _predecessor;
 
-        public GrafoBMSSP() {
+        public GrafoBMSSP()
+        {
             _nome = "G";
             _vertices = new Dictionary<string, IVertice>();
             _representacao = new ListaAdjacenciaV2();
         }
 
-        public GrafoBMSSP(string nome) {
+        public GrafoBMSSP(string nome)
+        {
             _nome = nome.Trim();
             _vertices = new Dictionary<string, IVertice>();
             _representacao = new ListaAdjacenciaV2();
@@ -34,8 +38,10 @@ namespace grafos_lista_02_atv_06 {
 
         #region Representação
 
-        public IVertice GarantirExistenciaVertice(string vertice) {
-            if (_vertices.TryGetValue(vertice, out IVertice v1)) {
+        public IVertice GarantirExistenciaVertice(string vertice)
+        {
+            if (_vertices.TryGetValue(vertice, out IVertice v1))
+            {
                 return v1;
             }
             var v2 = new VerticeIndexado(vertice, _identificadorVertice);
@@ -44,14 +50,17 @@ namespace grafos_lista_02_atv_06 {
             return v2;
         }
 
-        public GrafoBMSSP AdicionarVertice(string vertice) {
+        public GrafoBMSSP AdicionarVertice(string vertice)
+        {
             var v = GarantirExistenciaVertice(vertice);
             _representacao.AdicionarVertice(v);
             return this;
         }
 
-        public GrafoBMSSP AdicionarAresta(string v, string w, double peso) {
-            if (peso < 0) {
+        public GrafoBMSSP AdicionarAresta(string v, string w, double peso)
+        {
+            if (peso < 0)
+            {
                 throw new ArgumentException("Os pesos não podem ser negativos!");
             }
             var refv = GarantirExistenciaVertice(v);
@@ -65,29 +74,21 @@ namespace grafos_lista_02_atv_06 {
         /// <summary>
         /// Solves the Single-Source Shortest Path problem using BMSSP framework.
         /// </summary>
-        public IEnumerable<IVertice> CaminhoMinimo(string origem, string destino) {
+        public IEnumerable<IVertice> CaminhoMinimo(string origem, string destino)
+        {
             var refOrigem = _vertices[origem];
             var refDestino = _vertices[destino];
 
             _distancia = new Dictionary<IVertice, double>();
             _predecessor = new Dictionary<IVertice, IVertice>();
-            foreach (var vertice in _vertices.Values) {
+            foreach (var vertice in _vertices.Values)
+            {
                 _distancia[vertice] = double.PositiveInfinity;
                 _predecessor[vertice] = null;
             }
             _distancia[refOrigem] = 0;
 
-            // Algorithm parameters based on graph size n
             int n = _vertices.Count;
-            // int k = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log(n + 1, 2), 1.0 / 3.0)));
-            // int t = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log(n + 1, 2), 2.0 / 3.0)));
-            // int levels = Math.Max(1, (int)Math.Ceiling(Math.Log(n + 1, 2) / Math.Max(1, t)));
-
-            // int logN = Math.Max(2, (int)Math.Ceiling(Math.Log(n + 1, 2)));
-            // int k = Math.Max(3, (int)Math.Floor(Math.Pow(logN, 1.0 / 3.0)));
-            // int t = Math.Max(3, (int)Math.Floor(Math.Pow(logN, 2.0 / 3.0)));
-            // int levels = Math.Max(1, (int)Math.Ceiling((double)logN / t));
-
             var k = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log2(n), 1.0 / 3.0)));
             var t = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log2(n), 2.0 / 3.0)));
             var levels = (int)Math.Ceiling(Math.Log2(n) / t);
@@ -95,14 +96,15 @@ namespace grafos_lista_02_atv_06 {
             var initialSources = new HashSet<IVertice> { refOrigem };
             double initialBound = double.PositiveInfinity;
 
-            // Execute recursive BMSSP algorithm
             BMSSP(l: levels, B: initialBound, S: initialSources, k: k, t: t);
 
             LinkedList<IVertice> caminho = new LinkedList<IVertice>();
             caminho.AddFirst(refDestino);
-            while (caminho.First.Value != refOrigem) {
+            while (caminho.First.Value != refOrigem)
+            {
                 var pred = _predecessor[caminho.First.Value];
-                if (pred == null) {
+                if (pred == null)
+                {
                     caminho.Clear();
                     break;
                 }
@@ -115,50 +117,62 @@ namespace grafos_lista_02_atv_06 {
         /// Recursive BMSSP subroutine: BMSSP(level, Bound, Sources)
         /// </summary>
         private (double NewBound, HashSet<IVertice> Visited, HashSet<IVertice> Relaxed) BMSSP(
-    int l, double B, HashSet<IVertice> S, int k, int t) {
+    int l, double B, HashSet<IVertice> S, int k, int t)
+        {
             var visitedNodes = new HashSet<IVertice>();
-            var relaxedNodes = new HashSet<IVertice>(); // Rastrea nós relaxados nesta chamada
+            var relaxedNodes = new HashSet<IVertice>();
 
             // --- Base Case ---
-            if (l == 0 || S.Count == 0) {
-                return BaseCaseBoundedDijkstra(S, B, k, visitedNodes); // Atualizar o BaseCase para retornar relaxedNodes também
+            if (l == 0 || S.Count == 0)
+            {
+                // Atualizar o BaseCase para retornar relaxedNodes também
+                return BaseCaseBoundedDijkstra(S, B, k, visitedNodes);
             }
 
             var (pivots, discoveredNodes) = EncontrarPivos(S, k, B);
             var activeSources = new HashSet<IVertice>(discoveredNodes);
 
-            while (activeSources.Count > 0) {
+            while (activeSources.Count > 0)
+            {
                 var currentBatch = activeSources.Take(k).ToHashSet();
                 activeSources.ExceptWith(currentBatch);
 
-                // --- SUB-CHAMADA (Retorna também os nós que foram relaxados no nível l - 1) ---
+                // Retorna também os nós que foram relaxados no nível l - 1
                 var (subBound, subVisited, subRelaxed) = BMSSP(l - 1, B, currentBatch, k, t);
 
-                foreach (var v in subVisited) {
+                foreach (var v in subVisited)
+                {
                     visitedNodes.Add(v);
                 }
 
-                // OTIMIZAÇÃO: Itera APENAS nos nós que realmente tiveram a distância reduzida
-                foreach (var v in subRelaxed) {
-                    relaxedNodes.Add(v); // Propaga para o nível superior
+                // Itera apenas nos nós que realmente tiveram a distância reduzida
+                foreach (var v in subRelaxed)
+                {
+                    // Propaga para o nível superior
+                    relaxedNodes.Add(v);
 
-                    if (!subVisited.Contains(v)) {
+                    if (!subVisited.Contains(v))
+                    {
                         visitedNodes.Remove(v);
                         activeSources.Add(v);
                     }
                 }
 
                 // Relaxamento externo dos nós finalizados
-                foreach (var u in subVisited) {
-                    foreach (var aresta in _representacao.ArestasAdjacentes(u)) {
+                foreach (var u in subVisited)
+                {
+                    foreach (var aresta in _representacao.ArestasAdjacentes(u))
+                    {
                         var destino = aresta.GetDestino();
                         var peso = aresta.GetPeso();
 
-                        if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B) {
+                        if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B)
+                        {
                             _distancia[destino] = _distancia[u] + peso;
                             _predecessor[destino] = u;
 
-                            relaxedNodes.Add(destino); // Registra relaxamento
+                            // Registra relaxamento
+                            relaxedNodes.Add(destino);
                             visitedNodes.Remove(destino);
                             activeSources.Add(destino);
                         }
@@ -172,18 +186,23 @@ namespace grafos_lista_02_atv_06 {
         /// <summary>
         /// Identifies key "pivot" nodes using a bounded Bellman-Ford step relaxation sequence.
         /// </summary>
-        private (HashSet<IVertice> Pivots, HashSet<IVertice> Reached) EncontrarPivos(HashSet<IVertice> S, int k, double B) {
+        private (HashSet<IVertice> Pivots, HashSet<IVertice> Reached) EncontrarPivos(HashSet<IVertice> S, int k, double B)
+        {
             var W = new HashSet<IVertice>(S);
             var frontier = new HashSet<IVertice>(S);
 
             // Perform k-step bounded relaxations
-            for (int step = 0; step < k; step++) {
+            for (int step = 0; step < k; step++)
+            {
                 var nextFrontier = new HashSet<IVertice>();
-                foreach (var u in frontier) {
-                    foreach (var aresta in _representacao.ArestasAdjacentes(u)) {
+                foreach (var u in frontier)
+                {
+                    foreach (var aresta in _representacao.ArestasAdjacentes(u))
+                    {
                         var destino = aresta.GetDestino();
                         var peso = aresta.GetPeso();
-                        if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B) {
+                        if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B)
+                        {
                             _distancia[destino] = _distancia[u] + peso;
                             _predecessor[destino] = u;
                             nextFrontier.Add(destino);
@@ -196,7 +215,8 @@ namespace grafos_lista_02_atv_06 {
                 if (frontier.Count == 0) break;
 
                 // Early exit condition: graph expands too rapidly
-                if (W.Count > k * S.Count) {
+                if (W.Count > k * S.Count)
+                {
                     return (new HashSet<IVertice>(S), W);
                 }
             }
@@ -205,11 +225,14 @@ namespace grafos_lista_02_atv_06 {
             var pivots = new HashSet<IVertice>();
             var childCounts = new Dictionary<IVertice, int>();
 
-            foreach (var node in W) {
+            foreach (var node in W)
+            {
                 IVertice current = node;
-                while (current != null && !S.Contains(current)) {
+                while (current != null && !S.Contains(current))
+                {
                     childCounts[current] = childCounts.GetValueOrDefault(current, 0) + 1;
-                    if (childCounts[current] >= k) {
+                    if (childCounts[current] >= k)
+                    {
                         pivots.Add(current);
                         break;
                     }
@@ -218,7 +241,8 @@ namespace grafos_lista_02_atv_06 {
             }
 
             // If no heavy nodes are found, default pivots to original source set
-            if (pivots.Count == 0) {
+            if (pivots.Count == 0)
+            {
                 pivots = new HashSet<IVertice>(S);
             }
 
@@ -233,30 +257,36 @@ namespace grafos_lista_02_atv_06 {
             double B,
             int maxNodes,
             HashSet<IVertice> visited
-            ) {
+            )
+        {
             var pq = new PriorityQueue<IVertice, double>();
             var relaxed = new HashSet<IVertice>();
 
-            foreach (var s in S) {
-                if (_distancia[s] < B) {
+            foreach (var s in S)
+            {
+                if (_distancia[s] < B)
+                {
                     pq.Enqueue(s, _distancia[s]);
                 }
             }
 
             double maxVisitedDist = 0;
 
-            while (pq.Count > 0 && visited.Count < maxNodes) {
+            while (pq.Count > 0 && visited.Count < maxNodes)
+            {
                 IVertice u = pq.Dequeue();
 
                 if (visited.Contains(u)) continue;
                 visited.Add(u);
                 maxVisitedDist = Math.Max(maxVisitedDist, _distancia[u]);
 
-                foreach (var aresta in _representacao.ArestasAdjacentes(u)) {
+                foreach (var aresta in _representacao.ArestasAdjacentes(u))
+                {
                     var v = aresta.GetDestino();
                     var peso = aresta.GetPeso();
                     double newDist = _distancia[u] + peso;
-                    if (newDist < _distancia[v] && newDist < B) {
+                    if (newDist < _distancia[v] && newDist < B)
+                    {
                         _distancia[v] = newDist;
                         _predecessor[v] = u;
                         relaxed.Add(v);
@@ -270,7 +300,8 @@ namespace grafos_lista_02_atv_06 {
 
         #region Impressão de Informações
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return $"Grafo {_nome}";
         }
 
