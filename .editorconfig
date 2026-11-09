@@ -4,4 +4,14 @@
 csharp_style_prefer_primary_constructors = false
 
 # IDE0028: Simplify collection initialization
-dotnet_style_collection_initializer = false
+dotnet_style_collection_initializer = true
+dotnet_diagnostic.IDE0028.severity = none
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = none
+
+# IDE0306: Simplify collection initialization
+dotnet_diagnostic.IDE0306.severity = none
+
+# IDE0090: Use 'new(...)'
+dotnet_diagnostic.IDE0090.severity = none
