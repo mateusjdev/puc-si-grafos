@@ -189,7 +189,7 @@ namespace grafos_lista_02_atv_06 {
         public string ImprimirVerticesAdjacentes(string vertice) {
             StringBuilder sb = new("Adjacencias:");
             Vertice v = _vertices[vertice];
-            IVertice[] adj = _representacao.Sucessores(v);
+            IReadOnlyList<IVertice> adj = _representacao.Sucessores(v);
             var adjs = adj.Select(a => a.ToString());
             return sb.AppendJoin(", ", adjs).AppendLine().ToString();
         }

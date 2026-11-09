@@ -13,16 +13,18 @@ namespace grafos_lista_02_atv_06.Core.Models {
             _lista = [];
         }
 
+        private void GarantirListaVertices(IVertice v) {
+            if (!_lista.ContainsKey(v)) {
+                _lista.Add(v, new LinkedList<ArestaPonderada>());
+            }
+        }
+
         public void AdicionarAresta(IVertice v, IVertice w, double peso) {
             if (v == w) {
                 throw new InvalidOperationException("Laços não são suportados!");
             }
-            if (!_lista.ContainsKey(v)) {
-                AdicionarVertice(v);
-            }
-            if (!_lista.ContainsKey(w)) {
-                AdicionarVertice(w);
-            }
+            GarantirListaVertices(v);
+            GarantirListaVertices(w);
             var aresta = new ArestaPonderada(v, w, peso);
             _lista[v].AddLast(aresta);
         }
@@ -34,25 +36,29 @@ namespace grafos_lista_02_atv_06.Core.Models {
             _lista.Add(v, new LinkedList<ArestaPonderada>());
         }
 
-        public IEnumerable<IVertice> Sucessores(IVertice v) {
+        private LinkedList<ArestaPonderada> ListaDeArestas(IVertice v) {
             if (!_lista.ContainsKey(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
-            _lista.TryGetValue(v, out LinkedList<ArestaPonderada> tmp);
-            if (tmp == null) {
-                throw new InvalidOperationException();
-            }
+            return _lista[v];
+        }
+
+        public IReadOnlyList<IVertice> Sucessores(IVertice v) {
+            var tmp = ListaDeArestas(v);
             return tmp.Select(x => x.GetDestino()).ToArray();
         }
 
-        public IEnumerable<ArestaPonderada> ArestasAdjacentes(IVertice v) {
-            if (!_lista.ContainsKey(v)) {
-                throw new InvalidOperationException("O vértice não pertente ao grafo.");
-            }
-            _lista.TryGetValue(v, out LinkedList<ArestaPonderada> tmp);
-            if (tmp == null) {
-                throw new InvalidOperationException();
-            }
+        public int Grau(IVertice v) {
+            var tmp = ListaDeArestas(v);
+            return tmp.Count;
+        }
+
+        public bool PossuiLaco() {
+            return _lista.Any(l => l.Value.Any(a => a.EhLaco()));
+        }
+
+        public IReadOnlyList<ArestaPonderada> ArestasAdjacentes(IVertice v) {
+            var tmp = ListaDeArestas(v);
             return tmp.ToArray();
         }
 
@@ -64,6 +70,27 @@ namespace grafos_lista_02_atv_06.Core.Models {
                 }
             }
             return arestas.ToArray();
+        }
+
+        public override string ToString() {
+            StringBuilder sb = new("Lista Adjacencia:\n");
+            foreach (var vertice in _lista) {
+                sb.Append($"{vertice.Key}: ");
+                var adj = vertice.Value.First;
+                while (adj != null) {
+                    sb.Append(adj.Value);
+                    adj = adj.Next;
+                    if (adj != null) {
+                        sb.Append(", ");
+                    }
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+        public int GetVerticeCount() {
+            return _lista.Count;
         }
     }
 }

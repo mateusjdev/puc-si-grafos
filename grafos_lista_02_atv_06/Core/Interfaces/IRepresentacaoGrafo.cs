@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace grafos_lista_02_atv_06.Core.Interfaces {
     public interface IRepresentacaoGrafo {
@@ -6,7 +7,7 @@ namespace grafos_lista_02_atv_06.Core.Interfaces {
 
         public void AdicionarAresta(IVertice v, IVertice w);
 
-        public IVertice[] Sucessores(IVertice v);
+        public IReadOnlyList<IVertice> Sucessores(IVertice v);
 
         public int Grau(IVertice v);
 

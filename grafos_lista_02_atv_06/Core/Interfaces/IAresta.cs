@@ -3,5 +3,7 @@
         public IVertice GetOrigem();
 
         public IVertice GetDestino();
+
+        public bool EhLaco();
     }
 }

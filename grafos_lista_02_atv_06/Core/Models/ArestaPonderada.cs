@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06.Core.Models {
-    public class ArestaPonderada: IAresta {
+    public class ArestaPonderada: IArestaPonderada, IEquatable<ArestaPonderada> {
 
         private readonly IVertice _origem;
         private readonly IVertice _destino;
@@ -16,6 +16,18 @@ namespace grafos_lista_02_atv_06.Core.Models {
             _origem = origem;
             _destino = destino;
             _peso = peso;
+        }
+
+        public bool Equals(ArestaPonderada other) {
+            return other == this;
+        }
+
+        public override bool Equals(object obj) {
+            return Equals(obj as ArestaPonderada);
+        }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(_origem, _destino, _peso);
         }
 
         public IVertice GetOrigem() {
@@ -28,6 +40,10 @@ namespace grafos_lista_02_atv_06.Core.Models {
 
         public double GetPeso() {
             return _peso;
+        }
+
+        public bool EhLaco() {
+            return _origem.Equals(_destino);
         }
     }
 }

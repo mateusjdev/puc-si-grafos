@@ -36,7 +36,7 @@ namespace grafos_lista_02_atv_06.Core.Models {
             }
         }
 
-        public IVertice[] Sucessores(IVertice v) {
+        public IReadOnlyList<IVertice> Sucessores(IVertice v) {
             GarantirRepresentacao();
             if (!_dicionarioIndexado.Contains(v)) {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");

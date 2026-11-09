@@ -30,5 +30,9 @@ namespace grafos_lista_02_atv_06.Core.Models {
         public IVertice GetDestino() {
             return _destino;
         }
+
+        public bool EhLaco() {
+            return _origem.Equals(_destino);
+        }
     }
 }
