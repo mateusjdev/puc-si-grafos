@@ -207,7 +207,9 @@ namespace grafos_lista_02_atv_06.Terminal
         public static string TesteCaminhoMinimo()
         {
             var grafoDijkstra = new GrafoDijkstra("v4 - ZigZag - Dijkstra");
+            var grafoBellmanFord = new GrafoBMSSP("v4 - ZigZag - BellmanFord");
             var grafoBMSSP = new GrafoBMSSP("v4 - ZigZag - BMSSP");
+            
 
             // Exemplo:
             // A 1→ B 5→ C 2→ D 10→ E
@@ -227,6 +229,7 @@ namespace grafos_lista_02_atv_06.Terminal
                 var w = $"{j}";
                 var peso = random.Next(1, 20);
                 grafoDijkstra.AdicionarAresta(v, w, peso);
+                grafoBellmanFord.AdicionarAresta(v, w, peso);
                 grafoBMSSP.AdicionarAresta(v, w, peso);
             }
 
@@ -239,6 +242,7 @@ namespace grafos_lista_02_atv_06.Terminal
                 var w = $"{j}";
                 var peso = random.Next(200, 1000);
                 grafoDijkstra.AdicionarAresta(v, w, peso);
+                grafoBellmanFord.AdicionarAresta(v, w, peso);
                 grafoBMSSP.AdicionarAresta(v, w, peso);
             }
 
@@ -252,6 +256,15 @@ namespace grafos_lista_02_atv_06.Terminal
                     var caminho = grafoDijkstra.CaminhoMinimo(v);
                     Console.WriteLine(caminho.ToString());
                     // Console.WriteLine($"{grafoDijkstra}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
+                }));
+            sb.Append("Tempo de Conclusão (BellmanFord): \t")
+                .AppendLine(Debug.Profile(() =>
+                {
+                    var v = grafoBellmanFord.Vertice("1");
+                    var w = grafoBellmanFord.Vertice($"{iter}");
+                    var caminho = grafoBellmanFord.CaminhoMinimo(v);
+                    Console.WriteLine(caminho.ToString());
+                    // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));
             sb.Append("Tempo de Conclusão (BMSSP): \t")
                 .AppendLine(Debug.Profile(() =>
