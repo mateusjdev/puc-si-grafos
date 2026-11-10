@@ -1,4 +1,5 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo;
+using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -71,11 +72,8 @@ namespace grafos_lista_02_atv_06
         /// <summary>
         /// Solves the Single-Source Shortest Path problem using BMSSP framework.
         /// </summary>
-        public IEnumerable<IVertice> CaminhoMinimo(string origem, string destino)
+        public ResultadoCaminhoMinimo CaminhoMinimo(IVertice origem)
         {
-            var refOrigem = _vertices[origem];
-            var refDestino = _vertices[destino];
-
             _distancia = new Dictionary<IVertice, double>();
             _predecessor = new Dictionary<IVertice, IVertice>();
             foreach (var vertice in _vertices.Values)
@@ -83,31 +81,25 @@ namespace grafos_lista_02_atv_06
                 _distancia[vertice] = double.PositiveInfinity;
                 _predecessor[vertice] = null;
             }
-            _distancia[refOrigem] = 0;
+            _distancia[origem] = 0;
 
             int n = _vertices.Count;
             var k = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log2(n), 1.0 / 3.0)));
             var t = Math.Max(1, (int)Math.Floor(Math.Pow(Math.Log2(n), 2.0 / 3.0)));
             var levels = (int)Math.Ceiling(Math.Log2(n) / t);
 
-            var initialSources = new HashSet<IVertice> { refOrigem };
+            var initialSources = new HashSet<IVertice> { origem };
             double initialBound = double.PositiveInfinity;
 
             BMSSP(l: levels, B: initialBound, S: initialSources, k: k, t: t);
 
-            LinkedList<IVertice> caminho = new LinkedList<IVertice>();
-            caminho.AddFirst(refDestino);
-            while (caminho.First.Value != refOrigem)
+            return new ResultadoCaminhoMinimo
             {
-                var pred = _predecessor[caminho.First.Value];
-                if (pred == null)
-                {
-                    caminho.Clear();
-                    break;
-                }
-                caminho.AddFirst(pred);
-            }
-            return caminho.ToArray();
+                Vertices = _vertices.Values.ToArray(),
+                Distancia = _distancia,
+                Predecessor = _predecessor,
+                Origem = origem,
+            };
         }
 
         /// <summary>
@@ -292,6 +284,11 @@ namespace grafos_lista_02_atv_06
             }
 
             return (maxVisitedDist, visited, relaxed);
+        }
+
+        public IVertice Vertice(string v)
+        {
+            return _vertices[v];
         }
 
         #region Impressão de Informações

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using grafos_lista_02_atv_06.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -129,7 +130,9 @@ namespace grafos_lista_02_atv_06.Terminal
                 .AdicionarAresta("2", "3", 2)
                 .AdicionarAresta("1", "4", 10)
                 .AdicionarAresta("4", "3", 3);
-            var caminho = grafo.CaminhoMinimo("1", "3");
+            var v = grafo.Vertice("1");
+            var w = grafo.Vertice("3");
+            var caminho = grafo.CaminhoMinimo(v).Ate(w);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
@@ -144,7 +147,9 @@ namespace grafos_lista_02_atv_06.Terminal
                 .AdicionarAresta("2", "3", 200)
                 .AdicionarAresta("1", "4", 10)
                 .AdicionarAresta("4", "3", 3);
-            var caminho = grafo.CaminhoMinimo("1", "3");
+            var v = grafo.Vertice("1");
+            var w = grafo.Vertice("3");
+            var caminho = grafo.CaminhoMinimo(v).Ate(w);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
@@ -159,7 +164,9 @@ namespace grafos_lista_02_atv_06.Terminal
                 .AdicionarAresta("2", "3", 200)
                 .AdicionarAresta("1", "4", 10)
                 .AdicionarAresta("4", "3", 3);
-            var caminho = grafo.CaminhoMinimo("1", "3");
+            var v = grafo.Vertice("1");
+            var w = grafo.Vertice("3");
+            var caminho = grafo.CaminhoMinimo(v).Ate(w);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
@@ -174,7 +181,9 @@ namespace grafos_lista_02_atv_06.Terminal
                 .AdicionarAresta("3", "4", 1)
                 .AdicionarAresta("3", "5", 6)
                 .AdicionarAresta("4", "5", 2);
-            var caminho = grafo.CaminhoMinimo("1", "3");
+            var v = grafo.Vertice("1");
+            var w = grafo.Vertice("3");
+            var caminho = grafo.CaminhoMinimo(v).Ate(w);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
@@ -189,7 +198,9 @@ namespace grafos_lista_02_atv_06.Terminal
                 .AdicionarAresta("3", "4", 1)
                 .AdicionarAresta("3", "5", 6)
                 .AdicionarAresta("4", "5", 2);
-            var caminho = grafo.CaminhoMinimo("1", "3");
+            var v = grafo.Vertice("1");
+            var w = grafo.Vertice("3");
+            var caminho = grafo.CaminhoMinimo(v).Ate(w);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
@@ -209,7 +220,7 @@ namespace grafos_lista_02_atv_06.Terminal
 
             // Horizontal
             Random random = new Random();
-            int iter = 1_000_000;
+            int iter = 10;
             for (int i = 1, j = 2; i < iter; i++, j++)
             {
                 var v = $"{i}";
@@ -219,7 +230,7 @@ namespace grafos_lista_02_atv_06.Terminal
                 grafoBMSSP.AdicionarAresta(v, w, peso);
             }
 
-            int jump = 10;
+            int jump = 5;
 
             // Vertical
             for (int i = 1, j = jump; j < iter; i += jump, j += jump)
@@ -236,13 +247,19 @@ namespace grafos_lista_02_atv_06.Terminal
             sb.Append("Tempo de Conclusão (Dijkstra): \t")
                 .AppendLine(Debug.Profile(() =>
                 {
-                    var caminho = grafoDijkstra.CaminhoMinimo("1", $"{iter}");
+                    var v = grafoDijkstra.Vertice("1");
+                    var w = grafoDijkstra.Vertice($"{iter}");
+                    var caminho = grafoDijkstra.CaminhoMinimo(v);
+                    Console.WriteLine(caminho.ToString());
                     // Console.WriteLine($"{grafoDijkstra}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));
             sb.Append("Tempo de Conclusão (BMSSP): \t")
                 .AppendLine(Debug.Profile(() =>
                 {
-                    var caminho = grafoBMSSP.CaminhoMinimo("1", $"{iter}");
+                    var v = grafoBMSSP.Vertice("1");
+                    var w = grafoBMSSP.Vertice($"{iter}");
+                    var caminho = grafoBMSSP.CaminhoMinimo(v);
+                    Console.WriteLine(caminho.ToString());
                     // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));
             return sb.AppendLine().ToString();

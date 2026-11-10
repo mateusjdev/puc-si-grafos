@@ -1,4 +1,5 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo;
+using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -67,27 +68,22 @@ namespace grafos_lista_02_atv_06
 
         #region Dijkstra
 
-        private Dictionary<IVertice, double> _distancia;
-        private Dictionary<IVertice, IVertice> _predecessor;
-        private HashSet<IVertice> _visitados;
-
-        public IEnumerable<IVertice> CaminhoMinimo(string origem, string destino)
+        public ResultadoCaminhoMinimo CaminhoMinimo(IVertice origem)
         {
-            var refOrigem = _vertices[origem];
-            var refDestino = _vertices[destino];
+            Dictionary<IVertice, double> _distancia = new Dictionary<IVertice, double>();
+            Dictionary<IVertice, IVertice> _predecessor = new Dictionary<IVertice, IVertice>(); ;
+            HashSet<IVertice> _visitados = new HashSet<IVertice>();
 
-            _distancia = new Dictionary<IVertice, double>();
-            _predecessor = new Dictionary<IVertice, IVertice>();
             foreach (var vertice in _vertices.Values)
             {
                 _distancia[vertice] = double.PositiveInfinity;
                 _predecessor[vertice] = null;
             }
-            _distancia[refOrigem] = 0;
 
-            _visitados = new HashSet<IVertice>();
+            _distancia[origem] = 0;
+
             var filaPrioridade = new PriorityQueue<IVertice, double>();
-            filaPrioridade.Enqueue(refOrigem, 0);
+            filaPrioridade.Enqueue(origem, 0);
 
             while (filaPrioridade.Count > 0)
             {
@@ -113,13 +109,18 @@ namespace grafos_lista_02_atv_06
                 }
             }
 
-            LinkedList<IVertice> caminho = new LinkedList<IVertice>();
-            caminho.AddFirst(refDestino);
-            while (caminho.First.Value != refOrigem)
+            return new ResultadoCaminhoMinimo
             {
-                caminho.AddFirst(_predecessor[caminho.First.Value]);
-            }
-            return caminho.ToArray();
+                Vertices = _vertices.Values.ToArray(),
+                Distancia = _distancia,
+                Predecessor = _predecessor,
+                Origem = origem,
+            };
+        }
+
+        public IVertice Vertice(string v)
+        {
+            return _vertices[v];
         }
 
         #endregion
