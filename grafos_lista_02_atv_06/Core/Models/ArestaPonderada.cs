@@ -1,48 +1,54 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06.Core.Models {
-    public class ArestaPonderada: IArestaPonderada, IEquatable<ArestaPonderada> {
+namespace grafos_lista_02_atv_06.Core.Models
+{
+    public class ArestaPonderada : IArestaPonderada, IEquatable<ArestaPonderada>
+    {
 
         private readonly IVertice _origem;
         private readonly IVertice _destino;
         private readonly double _peso;
 
-        public ArestaPonderada(IVertice origem, IVertice destino, double peso) {
+        public ArestaPonderada(IVertice origem, IVertice destino, double peso)
+        {
             _origem = origem;
             _destino = destino;
             _peso = peso;
         }
 
-        public bool Equals(ArestaPonderada other) {
+        public bool Equals(ArestaPonderada other)
+        {
             return other == this;
         }
 
-        public override bool Equals(object obj) {
+        public override bool Equals(object obj)
+        {
             return Equals(obj as ArestaPonderada);
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             return HashCode.Combine(_origem, _destino, _peso);
         }
 
-        public IVertice GetOrigem() {
+        public IVertice GetOrigem()
+        {
             return _origem;
         }
 
-        public IVertice GetDestino() {
+        public IVertice GetDestino()
+        {
             return _destino;
         }
 
-        public double GetPeso() {
+        public double GetPeso()
+        {
             return _peso;
         }
 
-        public bool EhLaco() {
+        public bool EhLaco()
+        {
             return _origem.Equals(_destino);
         }
     }

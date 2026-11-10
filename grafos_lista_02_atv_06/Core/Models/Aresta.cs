@@ -1,37 +1,46 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
 
-namespace grafos_lista_02_atv_06.Core.Models {
-    internal class Aresta : IAresta, IEquatable<Aresta> {
+namespace grafos_lista_02_atv_06.Core.Models
+{
+    internal class Aresta : IAresta, IEquatable<Aresta>
+    {
         private readonly IVertice _origem;
         private readonly IVertice _destino;
 
-        public Aresta(IVertice origem, IVertice destino) {
+        public Aresta(IVertice origem, IVertice destino)
+        {
             _origem = origem;
             _destino = destino;
         }
 
-        public bool Equals(Aresta other) {
+        public bool Equals(Aresta other)
+        {
             return other == this;
         }
 
-        public override bool Equals(object obj) {
+        public override bool Equals(object obj)
+        {
             return Equals(obj as Aresta);
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             return HashCode.Combine(_origem, _destino);
         }
 
-        public IVertice GetOrigem() {
+        public IVertice GetOrigem()
+        {
             return _origem;
         }
 
-        public IVertice GetDestino() {
+        public IVertice GetDestino()
+        {
             return _destino;
         }
 
-        public bool EhLaco() {
+        public bool EhLaco()
+        {
             return _origem.Equals(_destino);
         }
     }

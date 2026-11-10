@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06.Terminal {
-    internal class Exemplos {
+namespace grafos_lista_02_atv_06.Terminal
+{
+    internal class Exemplos
+    {
         #region Lista 02
 
-        public static string Lista02_Questao04_Grafo01() {
+        public static string Lista02_Questao04_Grafo01()
+        {
             var grafo = new Grafo(true, "Questão 4 - Grafo 1");
             grafo.AdicionarVertices("1", "2", "3", "4", "5", "6", "7", "8", "9")
                 .AdicionarAresta("1", "2")
@@ -29,7 +32,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return sb.AppendLine().ToString();
         }
 
-        public static string Lista02_Questao04_Grafo02() {
+        public static string Lista02_Questao04_Grafo02()
+        {
             var grafo = new Grafo(true, "Questão 4 - Grafo 2");
             grafo.AdicionarVertices("1", "2", "3", "4", "5", "6", "7", "8", "9")
                 .AdicionarAresta("1", "2")
@@ -53,7 +57,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return sb.AppendLine().ToString();
         }
 
-        public static string Lista02_Questao04_Grafo03() {
+        public static string Lista02_Questao04_Grafo03()
+        {
             var grafo = new Grafo(false, "Questão 4 - Grafo 3");
             grafo.AdicionarVertices("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
                 .AdicionarAresta("0", "1")
@@ -75,7 +80,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return sb.AppendLine().ToString();
         }
 
-        public static string Grafo_Ciclico() {
+        public static string Grafo_Ciclico()
+        {
             var grafo = new Grafo(true, "G cíclico");
             grafo.AdicionarVertices("1", "2", "3", "4", "5")
                 .AdicionarAresta("1", "2")
@@ -92,7 +98,8 @@ namespace grafos_lista_02_atv_06.Terminal {
 
         }
 
-        public static string Grafo_Aciclico() {
+        public static string Grafo_Aciclico()
+        {
             var grafo = new Grafo(true, "G acíclico");
             grafo.AdicionarVertices("1", "2", "3", "4", "5")
                 .AdicionarAresta("1", "2")
@@ -111,7 +118,8 @@ namespace grafos_lista_02_atv_06.Terminal {
 
         #region Caminho Minimo
 
-        public static string TesteV1() {
+        public static string TesteV1()
+        {
             var grafo = new GrafoDijkstra("v1");
             grafo.AdicionarVertice("1")
                 .AdicionarVertice("2")
@@ -125,7 +133,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
-        public static string TesteV2_Dijkstra() {
+        public static string TesteV2_Dijkstra()
+        {
             var grafo = new GrafoDijkstra("v2 - Dijkstra");
             grafo.AdicionarVertice("1")
                 .AdicionarVertice("2")
@@ -139,7 +148,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
-        public static string TesteV2_BMSSP() {
+        public static string TesteV2_BMSSP()
+        {
             var grafo = new GrafoBMSSP("v2 - BMSSP");
             grafo.AdicionarVertice("1")
                 .AdicionarVertice("2")
@@ -153,7 +163,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
-        public static string TesteV3_Dijkstra() {
+        public static string TesteV3_Dijkstra()
+        {
             var grafo = new GrafoDijkstra("v3 - Dijkstra");
             grafo.AdicionarAresta("0", "1", 3)
                 .AdicionarAresta("0", "2", 8)
@@ -167,7 +178,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
-        public static string TesteV3_BMSSP() {
+        public static string TesteV3_BMSSP()
+        {
             var grafo = new GrafoBMSSP("v3 - BMSSP");
             grafo.AdicionarAresta("0", "1", 3)
                 .AdicionarAresta("0", "2", 8)
@@ -181,7 +193,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
-        public static string TesteCaminhoMinimo() {
+        public static string TesteCaminhoMinimo()
+        {
             var grafoDijkstra = new GrafoDijkstra("v4 - ZigZag - Dijkstra");
             var grafoBMSSP = new GrafoBMSSP("v4 - ZigZag - BMSSP");
 
@@ -197,7 +210,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             // Horizontal
             Random random = new Random();
             int iter = 1_000_000;
-            for (int i = 1, j = 2; i < iter; i++, j++) {
+            for (int i = 1, j = 2; i < iter; i++, j++)
+            {
                 var v = $"{i}";
                 var w = $"{j}";
                 var peso = random.Next(1, 20);
@@ -208,7 +222,8 @@ namespace grafos_lista_02_atv_06.Terminal {
             int jump = 10;
 
             // Vertical
-            for (int i = 1, j = jump; j < iter; i += jump, j += jump) {
+            for (int i = 1, j = jump; j < iter; i += jump, j += jump)
+            {
                 var v = $"{i}";
                 var w = $"{j}";
                 var peso = random.Next(200, 1000);
@@ -219,12 +234,14 @@ namespace grafos_lista_02_atv_06.Terminal {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Caminho minimo de V({1}) a V({iter}) entre {iter} vertices encontrado.");
             sb.Append("Tempo de Conclusão (Dijkstra): \t")
-                .AppendLine(Debug.Profile(() => {
+                .AppendLine(Debug.Profile(() =>
+                {
                     var caminho = grafoDijkstra.CaminhoMinimo("1", $"{iter}");
                     // Console.WriteLine($"{grafoDijkstra}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));
             sb.Append("Tempo de Conclusão (BMSSP): \t")
-                .AppendLine(Debug.Profile(() => {
+                .AppendLine(Debug.Profile(() =>
+                {
                     var caminho = grafoBMSSP.CaminhoMinimo("1", $"{iter}");
                     // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));

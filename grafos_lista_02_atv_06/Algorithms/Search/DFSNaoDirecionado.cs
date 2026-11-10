@@ -1,12 +1,7 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
 using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
@@ -50,7 +45,8 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
             return quant;
         }
 
-        public override  bool PossuiArestaDeRetorno() {
+        public override bool PossuiArestaDeRetorno()
+        {
             return tipoAresta.Any(a => a.Item3 == EDFS_NDIR_TipoAresta.Retorno);
         }
     }

@@ -1,28 +1,32 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06.Algorithms.Search {
-    public abstract class BFS<T> : Busca<T> {
+namespace grafos_lista_02_atv_06.Algorithms.Search
+{
+    public abstract class BFS<T> : Busca<T>
+    {
         protected int[] nivelDescoberta;
         protected Queue<IVertice> fila;
 
         protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao);
 
-        protected override void InicializarValores(int nVertices) {
+        protected override void InicializarValores(int nVertices)
+        {
             nivelDescoberta = new int[nVertices];
             fila = new Queue<IVertice>(nVertices);
             base.InicializarValores(nVertices);
         }
 
-        protected override void InicializarBusca(IRepresentacaoGrafo representacao) {
-            representacao.ForEach(v => {
+        protected override void InicializarBusca(IRepresentacaoGrafo representacao)
+        {
+            representacao.ForEach(v =>
+            {
                 int iVertice = representacao.IndexOf(v);
-                if (tempoDescoberta[iVertice] == 0) {
+                if (tempoDescoberta[iVertice] == 0)
+                {
                     tempo++;
                     tempoDescoberta[iVertice] = tempo;
                     nivelDescoberta[iVertice] = 0;
@@ -32,12 +36,15 @@ namespace grafos_lista_02_atv_06.Algorithms.Search {
             });
         }
 
-        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver) {
-            if (ver == null) {
+        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver)
+        {
+            if (ver == null)
+            {
                 throw new ArgumentException("O vértice não pode ser nulo!");
             }
             int iVertice = representacao.IndexOf(ver);
-            if (tempoDescoberta[iVertice] == 0) {
+            if (tempoDescoberta[iVertice] == 0)
+            {
                 tempo++;
                 tempoDescoberta[iVertice] = tempo;
                 nivelDescoberta[iVertice] = 0;
@@ -47,7 +54,8 @@ namespace grafos_lista_02_atv_06.Algorithms.Search {
             InicializarBusca(representacao);
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             StringBuilder sb = new();
             sb.AppendLine("Busca por Largura")
                 // .Append("V: ")

@@ -4,18 +4,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace grafos_lista_02_atv_06.Core.Models {
-    internal class DicionarioIndexado<T>: IDicionarioIndexado<T>, IEnumerable<T> {
+namespace grafos_lista_02_atv_06.Core.Models
+{
+    internal class DicionarioIndexado<T> : IDicionarioIndexado<T>, IEnumerable<T>
+    {
         private readonly List<T> _lista;
         private readonly Dictionary<T, int> _tabela;
 
-        public DicionarioIndexado() {
+        public DicionarioIndexado()
+        {
             _lista = [];
             _tabela = [];
         }
 
-        public int Add(T item) {
-            if (_tabela.ContainsKey(item)) {
+        public int Add(T item)
+        {
+            if (_tabela.ContainsKey(item))
+            {
                 throw new ArgumentException("Já contem o vértice.");
             }
             int i = _lista.Count;
@@ -24,7 +29,8 @@ namespace grafos_lista_02_atv_06.Core.Models {
             return i;
         }
 
-        public int IndexOf(T item) {
+        public int IndexOf(T item)
+        {
             return _tabela.TryGetValue(item, out int index) ? index : -1;
         }
 
@@ -34,16 +40,20 @@ namespace grafos_lista_02_atv_06.Core.Models {
 
         public int Count => _lista.Count;
 
-        public override string ToString() {
+        public override string ToString()
+        {
             StringBuilder sb = new StringBuilder();
-            foreach (var item in _lista) {
+            foreach (var item in _lista)
+            {
                 sb.AppendLine(item.ToString());
             }
             return sb.ToString();
         }
 
-        public void ForEach(Action<T> action) {
-            foreach (var item in _lista) {
+        public void ForEach(Action<T> action)
+        {
+            foreach (var item in _lista)
+            {
                 action.Invoke(item);
             }
         }

@@ -6,11 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06.Tests {
+namespace grafos_lista_02_atv_06.Tests
+{
     [TestClass()]
-    public class GrafoBMSSPTests {
+    public class GrafoBMSSPTests
+    {
         [TestMethod()]
-        public void CaminhoMinimoZigZagBasico() {
+        public void CaminhoMinimoZigZagBasico()
+        {
             var grafo = new GrafoBMSSP();
             // A 1→ B 5→ C 2→ D 10→ E
             // ↓1000               ↓3

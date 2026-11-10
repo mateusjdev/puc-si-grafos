@@ -5,9 +5,11 @@ using grafos_lista_02_atv_06.Core.Interfaces;
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
     // Busca em Largura (Não direcionada)
-    public class BFSNaoDirecionado : BFS<EBFS_NDIR_TipoAresta>, IComponentesConexos {
+    public class BFSNaoDirecionado : BFS<EBFS_NDIR_TipoAresta>, IComponentesConexos
+    {
 
-        protected override void ExecutarBusca(IRepresentacaoGrafo representacao) {
+        protected override void ExecutarBusca(IRepresentacaoGrafo representacao)
+        {
             while (fila.Count > 0)
             {
                 IVertice vertice = fila.Dequeue();

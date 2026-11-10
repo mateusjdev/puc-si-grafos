@@ -1,11 +1,8 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06
 {
@@ -116,8 +113,7 @@ namespace grafos_lista_02_atv_06
         /// <summary>
         /// Recursive BMSSP subroutine: BMSSP(level, Bound, Sources)
         /// </summary>
-        private (double NewBound, HashSet<IVertice> Visited, HashSet<IVertice> Relaxed) BMSSP(
-    int l, double B, HashSet<IVertice> S, int k, int t)
+        private (double NewBound, HashSet<IVertice> Visited, HashSet<IVertice> Relaxed) BMSSP(int l, double B, HashSet<IVertice> S, int k, int t)
         {
             var visitedNodes = new HashSet<IVertice>();
             var relaxedNodes = new HashSet<IVertice>();

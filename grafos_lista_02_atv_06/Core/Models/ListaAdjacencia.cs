@@ -3,63 +3,78 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace grafos_lista_02_atv_06.Core.Models {
-    public class ListaAdjacencia : IRepresentacaoGrafo {
+namespace grafos_lista_02_atv_06.Core.Models
+{
+    public class ListaAdjacencia : IRepresentacaoGrafo
+    {
         private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
         private readonly Dictionary<IVertice, LinkedList<IVertice>> _lista;
 
-        public ListaAdjacencia() {
+        public ListaAdjacencia()
+        {
             _lista = [];
             _dicionarioIndexado = [];
         }
 
-        public void AdicionarAresta(IVertice v, IVertice w) {
+        public void AdicionarAresta(IVertice v, IVertice w)
+        {
             AdicionarVertice(v);
-            if (v != w) {
+            if (v != w)
+            {
                 AdicionarVertice(w);
             }
             _lista[v].AddLast(w);
         }
 
-        public void AdicionarVertice(IVertice v) {
-            if (!_lista.ContainsKey(v)) {
+        public void AdicionarVertice(IVertice v)
+        {
+            if (!_lista.ContainsKey(v))
+            {
                 _dicionarioIndexado.Add(v);
                 _lista.Add(v, new LinkedList<IVertice>());
             }
         }
 
-        private LinkedList<IVertice> ListaDeArestas(IVertice v) {
-            if (!_lista.ContainsKey(v)) {
+        private LinkedList<IVertice> ListaDeArestas(IVertice v)
+        {
+            if (!_lista.ContainsKey(v))
+            {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
             return _lista[v];
         }
 
-        public IReadOnlyList<IVertice> Sucessores(IVertice v) {
+        public IReadOnlyList<IVertice> Sucessores(IVertice v)
+        {
             var tmp = ListaDeArestas(v);
             return tmp.ToArray();
         }
 
-        public int Grau(IVertice v) {
+        public int Grau(IVertice v)
+        {
             var tmp = ListaDeArestas(v);
             return tmp.Count;
         }
 
-        public bool PossuiLaco() {
+        public bool PossuiLaco()
+        {
             return _lista.Any(l => l.Value.Any(a => a == l.Key));
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             StringBuilder sb = new("Lista Adjacencia:\n");
-            foreach (var vertice in _lista) {
+            foreach (var vertice in _lista)
+            {
                 sb.Append($"{vertice.Key}: ");
                 var adj = vertice.Value.First;
-                while (adj != null) {
+                while (adj != null)
+                {
                     sb.Append(adj.Value);
                     adj = adj.Next;
-                    if (adj != null) {
+                    if (adj != null)
+                    {
                         sb.Append(", ");
                     }
                 }
@@ -68,16 +83,20 @@ namespace grafos_lista_02_atv_06.Core.Models {
             return sb.ToString();
         }
 
-        public int GetVerticeCount() {
+        public int GetVerticeCount()
+        {
             return _dicionarioIndexado.Count;
         }
 
-        public int IndexOf(IVertice v) {
+        public int IndexOf(IVertice v)
+        {
             return _dicionarioIndexado.IndexOf(v);
         }
 
-        public void ForEach(Action<IVertice> action) {
-            foreach (var item in _dicionarioIndexado) {
+        public void ForEach(Action<IVertice> action)
+        {
+            foreach (var item in _dicionarioIndexado)
+            {
                 action.Invoke(item);
             }
         }

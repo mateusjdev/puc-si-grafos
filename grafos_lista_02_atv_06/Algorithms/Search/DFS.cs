@@ -1,44 +1,52 @@
-﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
-using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
+﻿using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
 using System.Linq;
 using System.Text;
 
-
-namespace grafos_lista_02_atv_06.Algorithms.Search {
-    public abstract class DFS<T> : Busca<T>, IDFS {
+namespace grafos_lista_02_atv_06.Algorithms.Search
+{
+    public abstract class DFS<T> : Busca<T>, IDFS
+    {
         protected int[] tempoTermino;
 
         protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao, IVertice vertice);
 
-        protected override void InicializarValores(int nVertices) {
+        protected override void InicializarValores(int nVertices)
+        {
             tempoTermino = new int[nVertices];
             base.InicializarValores(nVertices);
         }
 
-        protected override void InicializarBusca(IRepresentacaoGrafo representacao) {
-            representacao.ForEach(v => {
+        protected override void InicializarBusca(IRepresentacaoGrafo representacao)
+        {
+            representacao.ForEach(v =>
+            {
                 int iVertice = representacao.IndexOf(v);
-                if (tempoTermino[iVertice] == 0) {
+                if (tempoTermino[iVertice] == 0)
+                {
                     ExecutarBusca(representacao, v);
                 }
             });
         }
 
-        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver) {
-            if (ver == null) {
+        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver)
+        {
+            if (ver == null)
+            {
                 throw new ArgumentException("O vértice não pode ser nulo!");
             }
             int iVertice = representacao.IndexOf(ver);
             // TODO: necessário?
-            if (tempoTermino[iVertice] == 0) {
+            if (tempoTermino[iVertice] == 0)
+            {
                 ExecutarBusca(representacao, ver);
             }
             InicializarBusca(representacao);
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             StringBuilder sb = new();
             sb.AppendLine("Busca por Profundidade")
                 // .Append("V:  ")

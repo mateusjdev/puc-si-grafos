@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace grafos_lista_02_atv_06.Core.Interfaces {
-    public interface IRepresentacaoGrafo {
+namespace grafos_lista_02_atv_06.Core.Interfaces
+{
+    public interface IRepresentacaoGrafo
+    {
         public void AdicionarVertice(IVertice v);
 
         public void AdicionarAresta(IVertice v, IVertice w);
