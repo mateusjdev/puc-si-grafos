@@ -16,7 +16,10 @@ namespace grafos_lista_02_atv_06
             // // Eh Ciclico (ou !ciclico)
             // Console.WriteLine(Exemplos.Grafo_Ciclico());
             // Console.WriteLine(Exemplos.Grafo_Aciclico());
-            Console.WriteLine(Exemplos.TesteCaminhoMinimo());
+            // Console.WriteLine(ExecExemplos.TesteCaminhoMinimo(10_000, false));
+            Console.WriteLine(ExecExemplos.Aula14());
+            Console.WriteLine(ExecExemplos.Lista03_Questao07());
+
         }
     }
 }

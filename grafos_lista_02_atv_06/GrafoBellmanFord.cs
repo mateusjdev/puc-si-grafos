@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace grafos_lista_02_atv_06
 {
-    public class GrafoBellmanFord
+    public class GrafoBellmanFord: IGrafoPonderadoDirecionado
     {
         private readonly string _nome;
 
@@ -45,19 +45,15 @@ namespace grafos_lista_02_atv_06
             return v2;
         }
 
-        public GrafoBellmanFord AdicionarVertice(string vertice)
+        public IGrafoPonderadoDirecionado AdicionarVertice(string vertice)
         {
             var v = GarantirExistenciaVertice(vertice);
             _representacao.AdicionarVertice(v);
             return this;
         }
 
-        public GrafoBellmanFord AdicionarAresta(string v, string w, double peso)
+        public IGrafoPonderadoDirecionado AdicionarAresta(string v, string w, double peso)
         {
-            if (peso < 0)
-            {
-                throw new ArgumentException("Os pesos não podem ser negativos!");
-            }
             var refv = GarantirExistenciaVertice(v);
             var refw = GarantirExistenciaVertice(w);
             _representacao.AdicionarAresta(refv, refw, peso);
@@ -73,6 +69,7 @@ namespace grafos_lista_02_atv_06
             Dictionary<IVertice, double> _distancia = new Dictionary<IVertice, double>();
             Dictionary<IVertice, IVertice> _predecessor = new Dictionary<IVertice, IVertice>(); ;
 
+            // BUG: Se os vertices não estiverem ordenados pode dar problema
             foreach (var vertice in _vertices.Values)
             {
                 _distancia[vertice] = double.PositiveInfinity;
@@ -81,10 +78,12 @@ namespace grafos_lista_02_atv_06
 
             _distancia[origem] = 0;
 
-            bool alterado = false;
+            bool alterado = true;
             int i = 1;
-            while (i < _vertices.Count && !alterado)
+            Console.WriteLine(string.Join(", ", _distancia.Select(x => x.Key.ToString().PadLeft(4))));
+            while (i < _vertices.Count && alterado)
             {
+                alterado = false;
                 foreach (var vertice in _vertices.Values)
                 {
                     foreach (var aresta in _representacao.ArestasAdjacentes(vertice))
@@ -100,7 +99,7 @@ namespace grafos_lista_02_atv_06
                         }
                     }
                 }
-                alterado = false;
+                Console.WriteLine(string.Join(", ", _distancia.Select(x => x.Value.ToString().PadLeft(4))));
                 i++;
             }
 

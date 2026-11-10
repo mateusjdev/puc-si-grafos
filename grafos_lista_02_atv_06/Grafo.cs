@@ -9,7 +9,7 @@ using grafos_lista_02_atv_06.Algorithms.Search;
 
 namespace grafos_lista_02_atv_06
 {
-    public class Grafo
+    public class Grafo: IGrafo
     {
         // Grafo
         private readonly string _nome;
@@ -20,6 +20,8 @@ namespace grafos_lista_02_atv_06
 
         private readonly OrderedDictionary<string, Vertice> _vertices;
         private readonly LinkedList<(string, string)> _arestas;
+
+        public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
 
         public Grafo(bool ehDirecionado, string nome = "G")
         {
@@ -268,6 +270,11 @@ namespace grafos_lista_02_atv_06
             sb.AppendLine();
             sb.Append(busca.ToString());
             return sb.ToString();
+        }
+
+        public IVertice Vertice(string vertice)
+        {
+            return _vertices[vertice];
         }
 
         #endregion

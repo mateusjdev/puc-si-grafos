@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06.Core.Interfaces
 {
-    public interface IGrafo<A> where A: IAresta
+    public interface IGrafo
     {
         public IReadOnlyList<IVertice> Vertices { get; }
 

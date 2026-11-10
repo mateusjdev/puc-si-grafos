@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace grafos_lista_02_atv_06
 {
-    public class GrafoBMSSP
+    public class GrafoBMSSP: IGrafoPonderadoDirecionado
     {
         private readonly string _nome;
 
@@ -48,14 +48,14 @@ namespace grafos_lista_02_atv_06
             return v2;
         }
 
-        public GrafoBMSSP AdicionarVertice(string vertice)
+        public IGrafoPonderadoDirecionado AdicionarVertice(string vertice)
         {
             var v = GarantirExistenciaVertice(vertice);
             _representacao.AdicionarVertice(v);
             return this;
         }
 
-        public GrafoBMSSP AdicionarAresta(string v, string w, double peso)
+        public IGrafoPonderadoDirecionado AdicionarAresta(string v, string w, double peso)
         {
             if (peso < 0)
             {
