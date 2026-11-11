@@ -1,37 +1,36 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
 using grafos_lista_02_atv_06.Core.Interfaces;
+using System.Collections.Generic;
 
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
     // Busca em Largura (direcionada)
     public class BFSDirecionado : BFS<EBFS_DIR_TipoAresta>
     {
-        protected override void ExecutarBusca(IRepresentacaoGrafo representacao)
+        protected override void ExecutarBusca(IGrafo grafo)
         {
             while (fila.Count > 0)
             {
-                IVertice vertice = fila.Dequeue();
-                int iVertice = representacao.IndexOf(vertice);
-                var adjs = representacao.Sucessores(vertice);
-                foreach (var a in adjs)
+                IVertice v = fila.Dequeue();
+                var verticesAdjacentes = grafo.Sucessores(v);
+                foreach (var w in verticesAdjacentes)
                 {
-                    int iAdjs = representacao.IndexOf(a);
-                    if (tempoDescoberta[iAdjs] == 0)
+                    if (tempoDescoberta.GetValueOrDefault(w, 0) == 0)
                     {
                         tempo++;
-                        tempoDescoberta[iAdjs] = tempo;
-                        nivelDescoberta[iAdjs] = nivelDescoberta[iVertice] + 1;
-                        pai[iAdjs] = vertice;
-                        fila.Enqueue(a);
-                        MarcarAresta(vertice, a, EBFS_DIR_TipoAresta.Arvore);
+                        tempoDescoberta[w] = tempo;
+                        nivelDescoberta[w] = nivelDescoberta[v] + 1;
+                        pai[w] = v;
+                        fila.Enqueue(w);
+                        MarcarAresta(v, w, EBFS_DIR_TipoAresta.Arvore);
                     }
-                    else if (pai[iVertice] != a && nivelDescoberta[iVertice] > nivelDescoberta[iAdjs])
+                    else if (pai[v] != w && nivelDescoberta[v] > nivelDescoberta[w])
                     {
-                        MarcarAresta(vertice, a, EBFS_DIR_TipoAresta.Retorno);
+                        MarcarAresta(v, w, EBFS_DIR_TipoAresta.Retorno);
                     }
                     else
                     {
-                        MarcarAresta(vertice, a, EBFS_DIR_TipoAresta.Cruzamento);
+                        MarcarAresta(v, w, EBFS_DIR_TipoAresta.Cruzamento);
                     }
                 }
             }

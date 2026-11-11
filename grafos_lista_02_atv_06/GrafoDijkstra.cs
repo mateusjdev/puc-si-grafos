@@ -13,9 +13,11 @@ namespace grafos_lista_02_atv_06
 
         private int _identificadorVertice = 0;
 
-        private Dictionary<string, VerticeIndexado> _vertices;
+        private readonly Dictionary<string, VerticeIndexado> _vertices;
 
-        private ListaAdjacenciaV2 _representacao;
+        private readonly ListaAdjacenciaV2 _representacao;
+
+        public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
 
         public GrafoDijkstra()
         {
@@ -74,7 +76,9 @@ namespace grafos_lista_02_atv_06
             Dictionary<IVertice, IVertice> _predecessor = new Dictionary<IVertice, IVertice>(); ;
             HashSet<IVertice> _visitados = new HashSet<IVertice>();
 
-            foreach (var vertice in _vertices.Values)
+            IGrafoPonderadoDirecionado grafo = this;
+
+            foreach (var vertice in grafo.Vertices)
             {
                 _distancia[vertice] = double.PositiveInfinity;
                 _predecessor[vertice] = null;
@@ -88,30 +92,26 @@ namespace grafos_lista_02_atv_06
             while (filaPrioridade.Count > 0)
             {
                 IVertice u = filaPrioridade.Dequeue();
-                if (_visitados.Contains(u))
+                if (_visitados.Add(u))
                 {
-                    continue;
-                }
-
-                _visitados.Add(u);
-
-                var arestas = _representacao.ArestasAdjacentes(u);
-                foreach (var aresta in arestas)
-                {
-                    var v = aresta.GetDestino();
-                    var peso = aresta.GetPeso();
-                    if (!_visitados.Contains(v) && _distancia[u] + peso < _distancia[v])
+                    var arestas = _representacao.ArestasAdjacentes(u);
+                    foreach (var aresta in arestas)
                     {
-                        _distancia[v] = _distancia[u] + peso;
-                        _predecessor[v] = u;
-                        filaPrioridade.Enqueue(v, _distancia[v]);
+                        var v = aresta.GetDestino();
+                        var peso = aresta.GetPeso();
+                        if (!_visitados.Contains(v) && _distancia[u] + peso < _distancia[v])
+                        {
+                            _distancia[v] = _distancia[u] + peso;
+                            _predecessor[v] = u;
+                            filaPrioridade.Enqueue(v, _distancia[v]);
+                        }
                     }
                 }
             }
 
             return new ResultadoCaminhoMinimo
             {
-                Vertices = _vertices.Values.ToArray(),
+                Vertices = Vertices,
                 Distancia = _distancia,
                 Predecessor = _predecessor,
                 Origem = origem,

@@ -4,9 +4,9 @@ namespace grafos_lista_02_atv_06.Algorithms.Search.Interfaces
 {
     public interface IBusca
     {
-        public void Buscar(IRepresentacaoGrafo representacao);
+        public ResultadoBusca Buscar(IGrafo grafo);
 
-        public void BuscarPor(IRepresentacaoGrafo representacao, IVertice v);
+        public ResultadoBusca BuscarPor(IGrafo grafo, IVertice v);
     }
 
     public interface IBusca<T> : IBusca

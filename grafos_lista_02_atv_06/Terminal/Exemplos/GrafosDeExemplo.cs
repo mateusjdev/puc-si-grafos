@@ -171,6 +171,32 @@ namespace grafos_lista_02_atv_06.Terminal.Exemplos
 
         #region Lista 03
 
+        public static IGrafo Lista03_Questao04_Grafo01()
+        {
+            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
+            grafo.AdicionarAresta("1", "2");
+            grafo.AdicionarAresta("1", "4");
+            grafo.AdicionarAresta("2", "4");
+            grafo.AdicionarAresta("3", "4");
+            grafo.AdicionarAresta("4", "5");
+            return grafo;
+        }
+
+        public static IGrafo Lista03_Questao04_Grafo02()
+        {
+            var grafo = new Grafo(true, "Questão 4 - Grafo 2");
+            grafo.AdicionarAresta("A", "B");
+            grafo.AdicionarAresta("A", "D");
+            grafo.AdicionarAresta("B", "C");
+            grafo.AdicionarAresta("B", "D");
+            grafo.AdicionarAresta("C", "E");
+            grafo.AdicionarAresta("D", "E");
+            grafo.AdicionarAresta("D", "F");
+            grafo.AdicionarAresta("E", "G");
+            grafo.AdicionarAresta("F", "G");
+            return grafo;
+        }
+
         public static void PrepararAula14(params IGrafoPonderadoDirecionado[] grafos)
         {
             foreach (var grafo in grafos)

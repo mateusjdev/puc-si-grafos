@@ -11,35 +11,35 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
 
         protected int tempo;
         protected bool atualizada;
-        protected int[] tempoDescoberta;
-        protected IVertice[] pai;
+        protected Dictionary<IVertice, int> tempoDescoberta;
+        protected Dictionary<IVertice, IVertice> pai;
         protected private LinkedList<(IVertice, IVertice, T)> tipoAresta;
 
         protected virtual void InicializarValores(int nVertices)
         {
             tempo = 0;
             atualizada = false;
-            tempoDescoberta = new int[nVertices];
-            pai = new Vertice[nVertices];
+            tempoDescoberta = new Dictionary<IVertice, int>(nVertices);
+            pai = new Dictionary<IVertice, IVertice>();
             tipoAresta = new LinkedList<(IVertice, IVertice, T)>();
         }
 
-        protected abstract void InicializarBusca(IRepresentacaoGrafo representacao);
+        protected abstract ResultadoBusca InicializarBusca(IGrafo grafo);
 
-        protected abstract void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice v);
+        protected abstract ResultadoBusca InicializarBuscaPor(IGrafo grafo, IVertice v);
 
-        public void Buscar(IRepresentacaoGrafo representacao)
+        public ResultadoBusca Buscar(IGrafo grafo)
         {
-            int nVertices = representacao.GetVerticeCount();
+            int nVertices = grafo.VerticeCount;
             InicializarValores(nVertices);
-            InicializarBusca(representacao);
+            return InicializarBusca(grafo);
         }
 
-        public void BuscarPor(IRepresentacaoGrafo representacao, IVertice v)
+        public ResultadoBusca BuscarPor(IGrafo grafo, IVertice v)
         {
-            int nVertices = representacao.GetVerticeCount();
+            int nVertices = grafo.VerticeCount;
             InicializarValores(nVertices);
-            InicializarBuscaPor(representacao, v);
+            return InicializarBuscaPor(grafo, v);
         }
 
         protected void MarcarAresta(IVertice u, IVertice v, T tipo)

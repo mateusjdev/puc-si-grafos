@@ -8,69 +8,64 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
 {
     public abstract class BFS<T> : Busca<T>
     {
-        protected int[] nivelDescoberta;
+        protected Dictionary<IVertice, int> nivelDescoberta;
         protected Queue<IVertice> fila;
 
-        protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao);
+        protected abstract void ExecutarBusca(IGrafo grafo);
 
         protected override void InicializarValores(int nVertices)
         {
-            nivelDescoberta = new int[nVertices];
+            nivelDescoberta = new Dictionary<IVertice, int>(nVertices);
             fila = new Queue<IVertice>(nVertices);
             base.InicializarValores(nVertices);
         }
 
-        protected override void InicializarBusca(IRepresentacaoGrafo representacao)
+        protected override ResultadoBusca InicializarBusca(IGrafo grafo)
         {
-            representacao.ForEach(v =>
+            var vertices = grafo.Vertices;
+            foreach (var v in vertices)
             {
-                int iVertice = representacao.IndexOf(v);
-                if (tempoDescoberta[iVertice] == 0)
+                if (tempoDescoberta.GetValueOrDefault(v, 0) == 0)
                 {
                     tempo++;
-                    tempoDescoberta[iVertice] = tempo;
-                    nivelDescoberta[iVertice] = 0;
+                    tempoDescoberta[v] = tempo;
+                    nivelDescoberta[v] = 0;
                     fila.Enqueue(v);
-                    ExecutarBusca(representacao);
+                    ExecutarBusca(grafo);
                 }
-            });
+            };
+            return new ResultadoBFS
+            {
+                Nivel = nivelDescoberta,
+                Origem = vertices[0],
+                Pais = pai,
+                TemposDescoberta = tempoDescoberta,
+                Vertices = grafo.Vertices
+            };
         }
 
-        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver)
+        protected override ResultadoBusca InicializarBuscaPor(IGrafo grafo, IVertice ver)
         {
             if (ver == null)
             {
                 throw new ArgumentException("O vértice não pode ser nulo!");
             }
-            int iVertice = representacao.IndexOf(ver);
-            if (tempoDescoberta[iVertice] == 0)
+            if (tempoDescoberta.GetValueOrDefault(ver, 0) == 0)
             {
                 tempo++;
-                tempoDescoberta[iVertice] = tempo;
-                nivelDescoberta[iVertice] = 0;
+                tempoDescoberta[ver] = tempo;
+                nivelDescoberta[ver] = 0;
                 fila.Enqueue(ver);
-                ExecutarBusca(representacao);
+                ExecutarBusca(grafo);
             }
-            InicializarBusca(representacao);
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new();
-            sb.AppendLine("Busca por Largura")
-                // .Append("V: ")
-                // .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
-                // .AppendLine()
-                .Append("L: ")
-                .AppendJoin(", ", tempoDescoberta.Select(x => x.ToString().PadLeft(3)))
-                .AppendLine()
-                .Append("N: ")
-                .AppendJoin(", ", nivelDescoberta.Select(x => x.ToString().PadLeft(3)))
-                .AppendLine()
-                .Append("P: ")
-                .AppendJoin(", ", pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
-                .AppendLine();
-            return sb.ToString();
+            return new ResultadoBFS
+            {
+                Nivel = nivelDescoberta,
+                Origem = ver,
+                Pais = pai,
+                TemposDescoberta = tempoDescoberta,
+                Vertices = grafo.Vertices
+            };
         }
     }
 }

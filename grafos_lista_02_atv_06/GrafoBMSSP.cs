@@ -20,6 +20,8 @@ namespace grafos_lista_02_atv_06
         private Dictionary<IVertice, double> _distancia;
         private Dictionary<IVertice, IVertice> _predecessor;
 
+        public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
+
         public GrafoBMSSP()
         {
             _nome = "G";

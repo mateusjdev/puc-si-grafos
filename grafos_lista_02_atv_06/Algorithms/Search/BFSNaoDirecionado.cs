@@ -1,64 +1,47 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
 using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
+using System.Collections.Generic;
 
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
     // Busca em Largura (Não direcionada)
-    public class BFSNaoDirecionado : BFS<EBFS_NDIR_TipoAresta>, IComponentesConexos
+    public class BFSNaoDirecionado : BFS<EBFS_NDIR_TipoAresta>
     {
-
-        protected override void ExecutarBusca(IRepresentacaoGrafo representacao)
+        protected override void ExecutarBusca(IGrafo grafo)
         {
             while (fila.Count > 0)
             {
-                IVertice vertice = fila.Dequeue();
-                int iVertice = representacao.IndexOf(vertice);
-                var adjs = representacao.Sucessores(vertice);
-                foreach (var a in adjs)
+                IVertice v = fila.Dequeue();
+                var verticesAdjacentes = grafo.Sucessores(v);
+                foreach (var w in verticesAdjacentes)
                 {
-                    int iAdjs = representacao.IndexOf(a);
-                    if (tempoDescoberta[iAdjs] == 0)
+                    if (tempoDescoberta.GetValueOrDefault(w, 0) == 0)
                     {
                         tempo++;
-                        tempoDescoberta[iAdjs] = tempo;
-                        nivelDescoberta[iAdjs] = nivelDescoberta[iVertice] + 1;
-                        pai[iAdjs] = vertice;
-                        fila.Enqueue(a);
-                        MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Pai);
+                        tempoDescoberta[w] = tempo;
+                        nivelDescoberta[w] = nivelDescoberta[v] + 1;
+                        pai[w] = v;
+                        fila.Enqueue(w);
+                        MarcarAresta(v, w, EBFS_NDIR_TipoAresta.Pai);
                     }
-                    else if (nivelDescoberta[iAdjs] == nivelDescoberta[iVertice] + 1)
+                    else if (nivelDescoberta[w] == nivelDescoberta[v] + 1)
                     {
-                        MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Tio);
+                        MarcarAresta(v, w, EBFS_NDIR_TipoAresta.Tio);
                     }
-                    else if (nivelDescoberta[iVertice] == nivelDescoberta[iAdjs]
-                        && tempoDescoberta[iAdjs] > tempoDescoberta[iVertice]
-                        )
+                    else if (nivelDescoberta[v] == nivelDescoberta[w] && tempoDescoberta[w] > tempoDescoberta[v])
                     {
-                        if (pai[iVertice] == pai[iAdjs])
+                        if (pai[v] == pai[w])
                         {
-                            MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Irmao);
+                            MarcarAresta(v, w, EBFS_NDIR_TipoAresta.Irmao);
                         }
                         else
                         {
-                            MarcarAresta(vertice, a, EBFS_NDIR_TipoAresta.Primo);
+                            MarcarAresta(v, w, EBFS_NDIR_TipoAresta.Primo);
                         }
                     }
                 }
             }
-        }
-
-        public int QuantidadeComponentes()
-        {
-            int quant = 0;
-            foreach (var item in pai)
-            {
-                if (item == null)
-                {
-                    quant++;
-                }
-            }
-            return quant;
         }
     }
 }

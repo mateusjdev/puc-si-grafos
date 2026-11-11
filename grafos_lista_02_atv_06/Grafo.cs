@@ -9,7 +9,7 @@ using grafos_lista_02_atv_06.Algorithms.Search;
 
 namespace grafos_lista_02_atv_06
 {
-    public class Grafo: IGrafo
+    public class Grafo : IGrafo
     {
         // Grafo
         private readonly string _nome;
@@ -22,6 +22,8 @@ namespace grafos_lista_02_atv_06
         private readonly LinkedList<(string, string)> _arestas;
 
         public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
+
+        public int VerticeCount => _vertices.Count;
 
         public Grafo(bool ehDirecionado, string nome = "G")
         {
@@ -50,11 +52,11 @@ namespace grafos_lista_02_atv_06
             }
             if (ver != null)
             {
-                busca.BuscarPor(_representacao, ver);
+                busca.BuscarPor(this, ver);
             }
             else
             {
-                busca.Buscar(_representacao);
+                busca.Buscar(this);
             }
         }
 
@@ -133,10 +135,20 @@ namespace grafos_lista_02_atv_06
             return this;
         }
 
-        public IVertice[] Sucessores(string vertice)
+        public IReadOnlyList<IVertice> Sucessores(string vertice)
         {
-            IVertice v = _vertices[vertice];
+            IVertice v = _vertices.GetValueOrDefault(vertice, null);
+            if (v == null)
+            {
+                throw new ArgumentNullException("O vértice não existe no grafo.");
+            }
             var sucessores = _representacao.Sucessores(v);
+            return sucessores.OrderBy(v => v.GetIdentificador()).ToArray();
+        }
+
+        public IReadOnlyList<IVertice> Sucessores(IVertice vertice)
+        {
+            var sucessores = _representacao.Sucessores(vertice);
             return sucessores.OrderBy(v => v.GetIdentificador()).ToArray();
         }
 
@@ -233,43 +245,13 @@ namespace grafos_lista_02_atv_06
         public string ImprimirBusca_DFS(string vInicial = null)
         {
             IBusca busca = BuscarViaProfundidade(vInicial);
-            StringBuilder sb = new();
-            sb.Append("V:  ");
-            int n = _representacao.GetVerticeCount();
-            int i = 0;
-            _representacao.ForEach(v =>
-            {
-                if (i != 0 && i != n)
-                {
-                    sb.Append(", ");
-                }
-                sb.Append(v.ToString().PadLeft(3));
-                i++;
-            });
-            sb.AppendLine();
-            sb.Append(busca.ToString());
-            return sb.ToString();
+            return busca.ToString();
         }
 
         public string ImprimirBusca_BFS(string vInicial = null)
         {
             IBusca busca = BuscarViaLargura(vInicial);
-            StringBuilder sb = new();
-            sb.Append("V: ");
-            int n = _representacao.GetVerticeCount();
-            int i = 0;
-            _representacao.ForEach(v =>
-            {
-                if (i != 0 && i != n)
-                {
-                    sb.Append(", ");
-                }
-                sb.Append(v.ToString().PadLeft(3));
-                i++;
-            });
-            sb.AppendLine();
-            sb.Append(busca.ToString());
-            return sb.ToString();
+            return busca.ToString();
         }
 
         public IVertice Vertice(string vertice)

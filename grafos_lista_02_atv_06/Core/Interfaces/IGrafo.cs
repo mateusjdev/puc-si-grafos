@@ -1,4 +1,5 @@
-﻿using System;
+﻿using grafos_lista_02_atv_06.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,9 @@ namespace grafos_lista_02_atv_06.Core.Interfaces
         public IReadOnlyList<IVertice> Vertices { get; }
 
         public IVertice Vertice(string vertice);
+
+        public IReadOnlyList<IVertice> Sucessores(IVertice vertice);
+
+        public int VerticeCount { get; }
     }
 }

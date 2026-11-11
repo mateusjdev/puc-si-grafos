@@ -145,6 +145,13 @@ namespace grafos_lista_02_atv_06.Terminal
 
         #region Lista 03
 
+        public static string Lista03_Questao04()
+        {
+            StringBuilder sb = new StringBuilder();
+            // TODO:
+            return sb.ToString();
+        }
+
         public static string Aula14()
         {
             var grafoBellmanFord = new GrafoBellmanFord("v4 - ZigZag - BellmanFord");

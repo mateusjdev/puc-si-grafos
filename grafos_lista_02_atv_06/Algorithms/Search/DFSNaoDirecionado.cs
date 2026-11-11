@@ -1,48 +1,35 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search.Classification;
 using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
     // Busca em Profundidade (Não direcionada)
-    public class DFSNaoDirecionado : DFS<EDFS_NDIR_TipoAresta>, IComponentesConexos
+    public class DFSNaoDirecionado : DFS<EDFS_NDIR_TipoAresta>
     {
-        protected override void ExecutarBusca(IRepresentacaoGrafo representacao, IVertice vertice)
+        protected override void ExecutarBusca(IGrafo grafo, IVertice vertice)
         {
-            int iVertice = representacao.IndexOf(vertice);
+            var v = vertice;
             tempo++;
-            tempoDescoberta[iVertice] = tempo;
-            var adjs = representacao.Sucessores(vertice);
-            foreach (var a in adjs)
+            tempoDescoberta[vertice] = tempo;
+            var verticesAdjacentes = grafo.Sucessores(vertice);
+            foreach (var w in verticesAdjacentes)
             {
-                var iAdjs = representacao.IndexOf(a);
-                if (tempoDescoberta[iAdjs] == 0)
+                if (tempoDescoberta.GetValueOrDefault(w, 0) == 0)
                 {
-                    pai[iAdjs] = vertice;
-                    MarcarAresta(vertice, a, EDFS_NDIR_TipoAresta.Arvore);
-                    ExecutarBusca(representacao, a);
+                    pai[w] = vertice;
+                    MarcarAresta(vertice, w, EDFS_NDIR_TipoAresta.Arvore);
+                    ExecutarBusca(grafo, w);
                 }
-                else if (tempoTermino[iAdjs] == 0 && a != pai[iVertice])
+                else if (tempoTermino[w] == 0 && w != pai[v])
                 {
-                    MarcarAresta(vertice, a, EDFS_NDIR_TipoAresta.Retorno);
+                    MarcarAresta(vertice, w, EDFS_NDIR_TipoAresta.Retorno);
                 }
             }
             tempo++;
-            tempoTermino[iVertice] = tempo;
-        }
-
-        public int QuantidadeComponentes()
-        {
-            int quant = 0;
-            foreach (var item in pai)
-            {
-                if (item == null)
-                {
-                    quant++;
-                }
-            }
-            return quant;
+            tempoTermino[v] = tempo;
         }
 
         public override bool PossuiArestaDeRetorno()

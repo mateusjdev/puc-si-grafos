@@ -17,6 +17,8 @@ namespace grafos_lista_02_atv_06
 
         private ListaAdjacenciaV2 _representacao;
 
+        public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
+
         public GrafoBellmanFord()
         {
             _nome = "G";

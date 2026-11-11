@@ -1,6 +1,7 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -8,60 +9,56 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
 {
     public abstract class DFS<T> : Busca<T>, IDFS
     {
-        protected int[] tempoTermino;
+        protected Dictionary<IVertice, int> tempoTermino;
 
-        protected abstract void ExecutarBusca(IRepresentacaoGrafo representacao, IVertice vertice);
+        protected abstract void ExecutarBusca(IGrafo grafo, IVertice vertice);
 
         protected override void InicializarValores(int nVertices)
         {
-            tempoTermino = new int[nVertices];
+            tempoTermino = new Dictionary<IVertice, int>(nVertices);
             base.InicializarValores(nVertices);
         }
 
-        protected override void InicializarBusca(IRepresentacaoGrafo representacao)
+        protected override ResultadoBusca InicializarBusca(IGrafo grafo)
         {
-            representacao.ForEach(v =>
+            var vertices = grafo.Vertices;
+            foreach (var v in vertices)
             {
-                int iVertice = representacao.IndexOf(v);
-                if (tempoTermino[iVertice] == 0)
+                if (tempoTermino.GetValueOrDefault(v, 0) == 0)
                 {
-                    ExecutarBusca(representacao, v);
+                    ExecutarBusca(grafo, v);
                 }
-            });
+            };
+            return new ResultadoDFS
+            {
+                TemposTermino = tempoTermino,
+                Origem = vertices[0],
+                Pais = pai,
+                TemposDescoberta = tempoDescoberta,
+                Vertices = vertices
+            };
         }
 
-        protected override void InicializarBuscaPor(IRepresentacaoGrafo representacao, IVertice ver)
+        protected override ResultadoBusca InicializarBuscaPor(IGrafo grafo, IVertice ver)
         {
             if (ver == null)
             {
                 throw new ArgumentException("O vértice não pode ser nulo!");
             }
-            int iVertice = representacao.IndexOf(ver);
             // TODO: necessário?
-            if (tempoTermino[iVertice] == 0)
+            if (tempoTermino.GetValueOrDefault(ver, 0) == 0)
             {
-                ExecutarBusca(representacao, ver);
+                ExecutarBusca(grafo, ver);
             }
-            InicializarBusca(representacao);
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new();
-            sb.AppendLine("Busca por Profundidade")
-                // .Append("V:  ")
-                // .AppendJoin(", ", _vertices.Values.Select(x => x.ToString().PadLeft(3)))
-                // .AppendLine()
-                .Append("TD: ")
-                .AppendJoin(", ", tempoDescoberta.Select(x => x.ToString().PadLeft(3)))
-                .AppendLine()
-                .Append("TT: ")
-                .AppendJoin(", ", tempoTermino.Select(x => x.ToString().PadLeft(3)))
-                .AppendLine()
-                .Append("P:  ")
-                .AppendJoin(", ", pai.Select(x => x != null ? x.ToString().PadLeft(3) : "∅".PadLeft(3)))
-                .AppendLine();
-            return sb.ToString();
+            InicializarBusca(grafo);
+            return new ResultadoDFS
+            {
+                TemposTermino = tempoTermino,
+                Origem = ver,
+                Pais = pai,
+                TemposDescoberta = tempoDescoberta,
+                Vertices = grafo.Vertices
+            };
         }
 
         public abstract bool PossuiArestaDeRetorno();
