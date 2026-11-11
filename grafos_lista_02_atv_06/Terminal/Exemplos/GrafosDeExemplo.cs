@@ -250,6 +250,31 @@ namespace grafos_lista_02_atv_06.Terminal.Exemplos
             return grafo;
         }
 
+        public static GrafoBellmanFord Lista03_Questao08()
+        {
+            var grafo = new GrafoBellmanFord("Questão 4 - Grafo 2");
+            grafo.AdicionarAresta("A", "B", 3);
+            grafo.AdicionarAresta("D", "A", 7);
+            grafo.AdicionarAresta("A", "C", 8);
+            grafo.AdicionarAresta("F", "B", 4);
+            grafo.AdicionarAresta("B", "D", 10);
+            grafo.AdicionarAresta("D", "C", 2);
+            grafo.AdicionarAresta("C", "E", 2);
+            grafo.AdicionarAresta("F", "D", 8);
+            grafo.AdicionarAresta("D", "E", -1);
+            grafo.AdicionarAresta("E", "F", -3);
+            grafo.AdicionarAresta("F", "H", -1);
+            grafo.AdicionarAresta("G", "F", 2);
+            grafo.AdicionarAresta("E", "G", 1);
+            grafo.AdicionarAresta("I", "E", 8);
+            grafo.AdicionarAresta("G", "H", 3);
+            grafo.AdicionarAresta("J", "G", 5);
+            grafo.AdicionarAresta("G", "I", -1);
+            grafo.AdicionarAresta("J", "H", 9);
+            grafo.AdicionarAresta("I", "J", 2);
+            return grafo;
+        }
+
         public static void PrepararAula14(params IGrafoPonderadoDirecionado[] grafos)
         {
             foreach (var grafo in grafos)

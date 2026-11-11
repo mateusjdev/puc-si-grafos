@@ -21,8 +21,9 @@ namespace grafos_lista_02_atv_06
             // Console.WriteLine(ExecExemplos.Lista03_Questao07());
             // Console.WriteLine(ExecExemplos.Lista03_Questao15());
             // Console.WriteLine(ExecExemplos.Aula09_Kosaraju());
-            Console.WriteLine(ExecExemplos.Lista03_Questao03_Grafo01());
-            Console.WriteLine(ExecExemplos.Lista03_Questao03_Grafo02());
+            // Console.WriteLine(ExecExemplos.Lista03_Questao03_Grafo01());
+            // Console.WriteLine(ExecExemplos.Lista03_Questao03_Grafo02());
+            Console.WriteLine(ExecExemplos.Lista03_Questao08());
         }
     }
 }

@@ -176,6 +176,12 @@ namespace grafos_lista_02_atv_06.Terminal
             return sb.ToString();
         }
 
+        public static string Lista03_Questao08()
+        {
+            var grafo = GrafosDeExemplo.Lista03_Questao08();
+            return grafo.CaminhoMinimo(grafo.Vertice("A")).ToString();
+        }
+
         public static string Aula14()
         {
             var grafoBellmanFord = new GrafoBellmanFord("v4 - ZigZag - BellmanFord");
