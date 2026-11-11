@@ -158,13 +158,26 @@ namespace grafos_lista_02_atv_06.Terminal
             });
         }
 
-        public static string Lista03_Questao07()
+        public static string   Lista03_Questao07()
         {
             var grafoBellmanFord = new GrafoBellmanFord("v4 - ZigZag - BellmanFord");
             GrafosDeExemplo.PrepararLista03_Questao07(grafoBellmanFord);
             return Debug.Profile(() =>
             {
                 var v = grafoBellmanFord.Vertice("1");
+                var caminho = grafoBellmanFord.CaminhoMinimo(v);
+                return caminho.ToString();
+                // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
+            });
+        }
+
+        public static string Lista03_Questao15()
+        {
+            var grafoBellmanFord = new GrafoBellmanFord("v4 - BellmanFord");
+            GrafosDeExemplo.PrepararLista03_Questao15(grafoBellmanFord);
+            return Debug.Profile(() =>
+            {
+                var v = grafoBellmanFord.Vertice("USD");
                 var caminho = grafoBellmanFord.CaminhoMinimo(v);
                 return caminho.ToString();
                 // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");

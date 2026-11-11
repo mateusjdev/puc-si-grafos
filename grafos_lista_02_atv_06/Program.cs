@@ -17,8 +17,9 @@ namespace grafos_lista_02_atv_06
             // Console.WriteLine(Exemplos.Grafo_Ciclico());
             // Console.WriteLine(Exemplos.Grafo_Aciclico());
             // Console.WriteLine(ExecExemplos.TesteCaminhoMinimo(10_000, false));
-            Console.WriteLine(ExecExemplos.Aula14());
-            Console.WriteLine(ExecExemplos.Lista03_Questao07());
+            // Console.WriteLine(ExecExemplos.Aula14());
+            // Console.WriteLine(ExecExemplos.Lista03_Questao07());
+            Console.WriteLine(ExecExemplos.Lista03_Questao15());
 
         }
     }

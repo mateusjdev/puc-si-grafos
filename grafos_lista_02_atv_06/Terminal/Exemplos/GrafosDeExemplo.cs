@@ -205,6 +205,26 @@ namespace grafos_lista_02_atv_06.Terminal.Exemplos
             }
         }
 
+        public static void PrepararLista03_Questao15(params IGrafoPonderadoDirecionado[] grafos)
+        {
+            foreach (var grafo in grafos)
+            {
+                grafo.AdicionarVertice("USD");
+                grafo.AdicionarVertice("EUR");
+                grafo.AdicionarVertice("JPY");
+                grafo.AdicionarVertice("GBP");
+                grafo.AdicionarVertice("AUD");
+                grafo.AdicionarAresta("USD", "EUR", -0.2);
+                grafo.AdicionarAresta("USD", "JPY", -0.05);
+                grafo.AdicionarAresta("EUR", "JPY", -0.1);
+                grafo.AdicionarAresta("JPY", "GBP", -0.3);
+                grafo.AdicionarAresta("GBP", "AUD", -0.2);
+                grafo.AdicionarAresta("AUD", "USD", -0.15);
+                grafo.AdicionarAresta("EUR", "GBP", -0.25);
+                grafo.AdicionarAresta("JPY", "AUD", -0.2);
+            }
+        }
+
         #endregion
     }
 }
