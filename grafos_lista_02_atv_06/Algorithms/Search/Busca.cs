@@ -28,6 +28,8 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
 
         protected abstract ResultadoBusca InicializarBuscaPor(IGrafo grafo, IVertice v);
 
+        protected abstract ResultadoBusca InicializarBuscaPorOrdem(IGrafo grafo, Stack<IVertice> v);
+
         public ResultadoBusca Buscar(IGrafo grafo)
         {
             int nVertices = grafo.VerticeCount;
@@ -40,6 +42,13 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
             int nVertices = grafo.VerticeCount;
             InicializarValores(nVertices);
             return InicializarBuscaPor(grafo, v);
+        }
+
+        public ResultadoBusca BuscarPorOrdem(IGrafo grafo, Stack<IVertice> ordem)
+        {
+            int nVertices = grafo.VerticeCount;
+            InicializarValores(nVertices);
+            return InicializarBuscaPorOrdem(grafo, ordem);
         }
 
         protected void MarcarAresta(IVertice u, IVertice v, T tipo)

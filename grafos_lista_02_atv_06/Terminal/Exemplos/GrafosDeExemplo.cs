@@ -86,6 +86,28 @@ namespace grafos_lista_02_atv_06.Terminal.Exemplos
 
         #endregion
 
+        #region Aulas
+
+        public static IGrafo Aula09_Kosaraju()
+        {
+            var grafo = new Grafo(true, "Kosaraju");
+            grafo.AdicionarAresta("1", "2");
+            grafo.AdicionarAresta("1", "4");
+            grafo.AdicionarAresta("2", "5");
+            grafo.AdicionarAresta("3", "1");
+
+            grafo.AdicionarAresta("3", "6");
+            grafo.AdicionarAresta("4", "6");
+            grafo.AdicionarAresta("5", "3");
+            grafo.AdicionarAresta("5", "7");
+
+            grafo.AdicionarAresta("6", "7");
+            grafo.AdicionarAresta("7", "6");
+            return grafo;
+        }
+
+        #endregion
+
         #region Caminho Minimo
 
         public static void PrepararCaminhoV01(IGrafoPonderadoDirecionado grafo)
@@ -170,6 +192,37 @@ namespace grafos_lista_02_atv_06.Terminal.Exemplos
         #endregion
 
         #region Lista 03
+
+        public static IGrafo Lista03_Questao03_Grafo01()
+        {
+            var grafo = new Grafo(true, "Questão 4 - Grafo 1");
+            grafo.AdicionarAresta("A", "E");
+            grafo.AdicionarAresta("B", "A");
+            grafo.AdicionarAresta("B", "C");
+            grafo.AdicionarAresta("D", "C");
+            grafo.AdicionarAresta("D", "E");
+            grafo.AdicionarAresta("D", "B");
+            grafo.AdicionarAresta("E", "B");
+            return grafo;
+        }
+
+        public static IGrafo Lista03_Questao03_Grafo02()
+        {
+            var grafo = new Grafo(true, "Questão 4 - Grafo 2");
+            grafo.AdicionarAresta("A", "B");
+            grafo.AdicionarAresta("B", "C");
+            grafo.AdicionarAresta("B", "H");
+            grafo.AdicionarAresta("C", "D");
+            grafo.AdicionarAresta("D", "E");
+            grafo.AdicionarAresta("D", "F");
+            grafo.AdicionarAresta("F", "E");
+            grafo.AdicionarAresta("F", "G");
+            grafo.AdicionarAresta("G", "C");
+            grafo.AdicionarAresta("G", "H");
+            grafo.AdicionarAresta("H", "I");
+            grafo.AdicionarAresta("I", "A");
+            return grafo;
+        }
 
         public static IGrafo Lista03_Questao04_Grafo01()
         {

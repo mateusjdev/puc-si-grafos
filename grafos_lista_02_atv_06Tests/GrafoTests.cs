@@ -19,7 +19,7 @@ namespace grafos_lista_02_atv_06.Tests
             grafo.AdicionarAresta("2", "3");
             grafo.AdicionarAresta("3", "4");
             grafo.AdicionarAresta("4", "1");
-            var transposto = grafo.Tranposto();
+            var transposto = grafo.Transpor();
             Assert.AreEqual(transposto.Sucessores(transposto.Vertice("2"))[0], transposto.Vertice("1"));
             Assert.AreEqual(transposto.Sucessores(transposto.Vertice("3"))[0], transposto.Vertice("2"));
             Assert.AreEqual(transposto.Sucessores(transposto.Vertice("4"))[0], transposto.Vertice("3"));

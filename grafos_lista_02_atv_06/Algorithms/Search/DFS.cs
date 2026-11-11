@@ -61,6 +61,28 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
             };
         }
 
+        protected override ResultadoBusca InicializarBuscaPorOrdem(IGrafo grafo, Stack<IVertice> ordem)
+        {
+            var vertices = grafo.Vertices;
+            while(ordem.Count > 0)
+            {
+                var v = ordem.Pop();
+                if (tempoTermino.GetValueOrDefault(v, 0) == 0)
+                {
+                    ExecutarBusca(grafo, v);
+                }
+            }
+            InicializarBusca(grafo);
+            return new ResultadoDFS
+            {
+                TemposTermino = tempoTermino,
+                Origem = vertices[0],
+                Pais = pai,
+                TemposDescoberta = tempoDescoberta,
+                Vertices = vertices
+            };
+        }
+
         public abstract bool PossuiArestaDeRetorno();
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace grafos_lista_02_atv_06.Core.Models
 {
-    internal class MatrixAdjacencia : IRepresentacaoGrafo
+    public class MatrixAdjacencia : IRepresentacaoGrafo
     {
         private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
         private readonly LinkedList<IAresta> _dicionarioIndexadoAresta;

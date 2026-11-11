@@ -23,7 +23,7 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
                     MarcarAresta(vertice, w, EDFS_NDIR_TipoAresta.Arvore);
                     ExecutarBusca(grafo, w);
                 }
-                else if (tempoTermino[w] == 0 && w != pai[v])
+                else if (tempoTermino.GetValueOrDefault(w, 0) == 0 && w != pai[v])
                 {
                     MarcarAresta(vertice, w, EDFS_NDIR_TipoAresta.Retorno);
                 }

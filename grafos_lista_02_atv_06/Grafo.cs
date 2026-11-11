@@ -119,6 +119,7 @@ namespace grafos_lista_02_atv_06
                 throw new ArgumentException("O grafo já possui um vertice com um nome/identificador igual.");
             }
             _vertices.Add(vertice.GetIdentificador(), vertice);
+            _representacao.AdicionarVertice(vertice);
             return this;
         }
 
@@ -186,19 +187,39 @@ namespace grafos_lista_02_atv_06
             return true;
         }
 
-        public IGrafo Tranposto()
+        public IGrafo Transpor()
         {
             if (!_ehDirecionado)
             {
-                return this;
+                throw new InvalidOperationException("Não é possível transpor um grafo não direcionado.");
             }
             var rep = _representacao.Transpor();
-            var grafo = new Grafo(true, rep, $"{_nome} - Transposto");
+            var transposto = new Grafo(true, rep, $"{_nome} - Transposto");
             foreach (var vertice in _vertices.Values)
             {
-                grafo.AdicionarVertice(vertice);
+                transposto.AdicionarVertice(vertice);
             }
-            return grafo;
+            return transposto;
+        }
+
+        public string Kosaraju()
+        {
+            if (!_ehDirecionado)
+            {
+                throw new InvalidOperationException("Não é necessário executar o Kosaraju em grafos não direcionados.");
+            }
+            var resultadoDFS = BuscarViaProfundidade().Buscar(this) as ResultadoDFS;
+            var pilha = new Stack<IVertice>();
+            foreach (var vertice in resultadoDFS.TemposTermino.OrderBy(t => t.Value))
+            {
+                pilha.Push(vertice.Key);
+            }
+            var transposto = Transpor();
+            var resultadoDFS_Gt = BuscarViaProfundidade().BuscarPorOrdem(transposto, pilha) as ResultadoDFS;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(resultadoDFS.ToString());
+            sb.AppendLine(resultadoDFS_Gt.ToString());
+            return sb.ToString();
         }
 
         /*

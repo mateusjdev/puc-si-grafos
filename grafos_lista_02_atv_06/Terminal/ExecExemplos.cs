@@ -44,6 +44,16 @@ namespace grafos_lista_02_atv_06.Terminal
 
         #endregion
 
+        #region Aulas
+
+        public static string Aula09_Kosaraju()
+        {
+            var grafo = GrafosDeExemplo.Aula09_Kosaraju() as Grafo;
+            return grafo.Kosaraju();
+        }
+
+        #endregion
+
         #region Caminho Minimo
 
         public static string TesteV1()
@@ -144,6 +154,20 @@ namespace grafos_lista_02_atv_06.Terminal
         #endregion
 
         #region Lista 03
+
+        public static string Lista03_Questao03_Grafo01()
+        {
+            StringBuilder sb = new StringBuilder();
+            var grafo = GrafosDeExemplo.Lista03_Questao03_Grafo01() as Grafo;
+            return grafo.Kosaraju();
+        }
+
+        public static string Lista03_Questao03_Grafo02()
+        {
+            StringBuilder sb = new StringBuilder();
+            var grafo = GrafosDeExemplo.Lista03_Questao03_Grafo02() as Grafo;
+            return grafo.Kosaraju();
+        }
 
         public static string Lista03_Questao04()
         {
