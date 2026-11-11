@@ -1,5 +1,6 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -171,6 +172,16 @@ namespace grafos_lista_02_atv_06.Core.Models
         public void ForEach(Action<IVertice> action)
         {
             _dicionarioIndexado.ForEach(action);
+        }
+
+        public IRepresentacaoGrafo Transpor()
+        {
+            var t = new MatrixAdjacencia();
+            foreach (var aresta in _dicionarioIndexadoAresta)
+            {
+                t.AdicionarAresta(aresta.GetDestino(), aresta.GetOrigem());
+            }
+            return t;
         }
     }
 }

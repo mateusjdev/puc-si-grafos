@@ -59,7 +59,9 @@ namespace grafos_lista_02_atv_06.Tests
             grafo.AdicionarAresta("R", "Q", 6);
             grafo.AdicionarAresta("Q", "P", 7);
 
-            var caminho = grafo.CaminhoMinimo("A", "P");
+            var origem = grafo.Vertice("A");
+            var destino = grafo.Vertice("P");
+            var caminho = grafo.CaminhoMinimo(origem).Ate(destino);
             var output = $"{string.Join(", ", caminho.Select(x => x.ToString()))}";
             var expected = "A, B, C, D, E, J, I, H, G, F, K, L, M, N, O, T, S, R, Q, P";
 

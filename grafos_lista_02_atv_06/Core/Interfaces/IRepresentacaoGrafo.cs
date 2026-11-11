@@ -20,5 +20,7 @@ namespace grafos_lista_02_atv_06.Core.Interfaces
         public int IndexOf(IVertice v);
 
         public void ForEach(Action<IVertice> action);
+
+        public IRepresentacaoGrafo Transpor();
     }
 }

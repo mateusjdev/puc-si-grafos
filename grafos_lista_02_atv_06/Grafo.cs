@@ -112,6 +112,16 @@ namespace grafos_lista_02_atv_06
             return this;
         }
 
+        public Grafo AdicionarVertice(Vertice vertice)
+        {
+            if (_vertices.ContainsKey(vertice.GetIdentificador()))
+            {
+                throw new ArgumentException("O grafo já possui um vertice com um nome/identificador igual.");
+            }
+            _vertices.Add(vertice.GetIdentificador(), vertice);
+            return this;
+        }
+
         public Grafo AdicionarVertices(params string[] vertices)
         {
             foreach (var vertice in vertices)
@@ -174,6 +184,21 @@ namespace grafos_lista_02_atv_06
                 return false;
             }
             return true;
+        }
+
+        public IGrafo Tranposto()
+        {
+            if (!_ehDirecionado)
+            {
+                return this;
+            }
+            var rep = _representacao.Transpor();
+            var grafo = new Grafo(true, rep, $"{_nome} - Transposto");
+            foreach (var vertice in _vertices.Values)
+            {
+                grafo.AdicionarVertice(vertice);
+            }
+            return grafo;
         }
 
         /*

@@ -100,5 +100,19 @@ namespace grafos_lista_02_atv_06.Core.Models
                 action.Invoke(item);
             }
         }
+
+        public IRepresentacaoGrafo Transpor()
+        {
+            var t = new ListaAdjacencia();
+            foreach (var lista in _lista)
+            {
+                var origem = lista.Key;
+                foreach (var aresta in lista.Value)
+                {
+                    t.AdicionarAresta(aresta, origem);
+                }
+            }
+            return t;
+        }
     }
 }
