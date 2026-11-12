@@ -292,6 +292,25 @@ namespace grafos_lista_02_atv_06.Terminal.Exemplos
             }
         }
 
+        public static GrafoAGM PrepararAula12()
+        {
+            var grafo = new GrafoAGM("AGM");
+            grafo.AdicionarAresta("A", "C", 9)
+                .AdicionarAresta("A", "D", 6)
+                .AdicionarAresta("A", "B", 7)
+                .AdicionarAresta("B", "E", 1)
+                .AdicionarAresta("C", "F", 5)
+                .AdicionarAresta("C", "D", 8)
+                .AdicionarAresta("D", "G", 1)
+                .AdicionarAresta("D", "E", 2)
+                .AdicionarAresta("E", "I", 5)
+                .AdicionarAresta("F", "H", 1)
+                .AdicionarAresta("F", "G", 7)
+                .AdicionarAresta("G", "I", 4)
+                .AdicionarAresta("H", "I", 5);
+            return grafo;
+        }
+
         public static void PrepararLista03_Questao07(params IGrafoPonderadoDirecionado[] grafos)
         {
             foreach (var grafo in grafos)

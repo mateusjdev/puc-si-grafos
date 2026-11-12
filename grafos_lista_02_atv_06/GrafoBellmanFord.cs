@@ -82,7 +82,8 @@ namespace grafos_lista_02_atv_06
 
             bool alterado = true;
             int i = 1;
-            Console.WriteLine(string.Join(", ", _distancia.Select(x => x.Key.ToString().PadLeft(8))));
+            Console.WriteLine(string.Join(", ", _distancia.Select(x => x.Key.ToString().PadLeft(4))));
+            // Console.WriteLine(string.Join(", ", _distancia.Select(x => x.Key.ToString().PadLeft(8))));
             while (i < _vertices.Count && alterado)
             {
                 alterado = false;
@@ -101,7 +102,8 @@ namespace grafos_lista_02_atv_06
                         }
                     }
                 }
-                Console.WriteLine(string.Join(", ", _distancia.Select(x => $"{x.Value:F2}".PadLeft(8))));
+                Console.WriteLine(string.Join(", ", _distancia.Select(x => $"{x.Value}".PadLeft(4))));
+                // Console.WriteLine(string.Join(", ", _distancia.Select(x => $"{x.Value:F2}".PadLeft(8))));
                 i++;
             }
 

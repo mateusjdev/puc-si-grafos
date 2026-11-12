@@ -195,9 +195,22 @@ namespace grafos_lista_02_atv_06.Terminal
             });
         }
 
+        public static string Aula12()
+        {
+            var grafo = GrafosDeExemplo.PrepararAula12();
+            return Debug.Profile(() =>
+            {
+                var kruskal = grafo.Kruskal();
+                var prim = grafo.Prim();
+
+                return $"{kruskal.ToString()}\n{prim.ToString()}";
+                // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
+            });
+        }
+
         public static string   Lista03_Questao07()
         {
-            var grafoBellmanFord = new GrafoBellmanFord("v4 - ZigZag - BellmanFord");
+            var grafoBellmanFord = new GrafoBellmanFord("BellmanFord");
             GrafosDeExemplo.PrepararLista03_Questao07(grafoBellmanFord);
             return Debug.Profile(() =>
             {
