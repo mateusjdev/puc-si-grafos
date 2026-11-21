@@ -15,7 +15,7 @@ namespace grafos_lista_02_atv_06
 
         private readonly Dictionary<string, VerticeIndexado> _vertices;
 
-        private readonly ListaAdjacenciaV2 _representacao;
+        private readonly ListaAdjacencia _representacao;
 
         public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
 
@@ -23,14 +23,14 @@ namespace grafos_lista_02_atv_06
         {
             _nome = "G";
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         public GrafoDijkstra(string nome)
         {
             _nome = nome.Trim();
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         #region Representação
@@ -97,7 +97,7 @@ namespace grafos_lista_02_atv_06
                     var arestas = _representacao.ArestasAdjacentes(u);
                     foreach (var aresta in arestas)
                     {
-                        var v = aresta.GetDestino();
+                        var v = aresta.GetVerticeV();
                         var peso = aresta.GetPeso();
                         if (!_visitados.Contains(v) && _distancia[u] + peso < _distancia[v])
                         {

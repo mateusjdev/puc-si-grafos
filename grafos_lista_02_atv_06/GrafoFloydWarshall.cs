@@ -125,7 +125,7 @@ namespace grafos_lista_02_atv_06
 
         private readonly Dictionary<string, VerticeIndexado> _vertices;
 
-        private readonly ListaAdjacenciaV2 _representacao;
+        private readonly ListaAdjacencia _representacao;
 
         public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
 
@@ -133,14 +133,14 @@ namespace grafos_lista_02_atv_06
         {
             _nome = "G";
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         public GrafoFloydWarshall(string nome)
         {
             _nome = nome.Trim();
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         #region Representação
@@ -233,7 +233,7 @@ namespace grafos_lista_02_atv_06
                 int i = mapaIndices[u];
                 foreach (var aresta in _representacao.ArestasAdjacentes(u))
                 {
-                    var v = aresta.GetDestino();
+                    var v = aresta.GetVerticeV();
                     if (mapaIndices.TryGetValue(v, out int j))
                     {
                         double peso = aresta.GetPeso();

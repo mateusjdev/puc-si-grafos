@@ -32,12 +32,12 @@ namespace grafos_lista_02_atv_06.Core.Models
             return HashCode.Combine(_origem, _destino, _peso);
         }
 
-        public IVertice GetOrigem()
+        public IVertice GetVerticeU()
         {
             return _origem;
         }
 
-        public IVertice GetDestino()
+        public IVertice GetVerticeV()
         {
             return _destino;
         }
@@ -50,6 +50,11 @@ namespace grafos_lista_02_atv_06.Core.Models
         public bool EhLaco()
         {
             return _origem.Equals(_destino);
+        }
+
+        public IAresta Transpor()
+        {
+            return new ArestaPonderada(_destino, _origem, _peso);
         }
     }
 }

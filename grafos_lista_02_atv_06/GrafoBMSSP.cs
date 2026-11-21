@@ -15,7 +15,7 @@ namespace grafos_lista_02_atv_06
 
         private readonly Dictionary<string, IVertice> _vertices;
 
-        private readonly ListaAdjacenciaV2 _representacao;
+        private readonly ListaAdjacencia _representacao;
 
         private Dictionary<IVertice, double> _distancia;
         private Dictionary<IVertice, IVertice> _predecessor;
@@ -26,14 +26,14 @@ namespace grafos_lista_02_atv_06
         {
             _nome = "G";
             _vertices = new Dictionary<string, IVertice>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         public GrafoBMSSP(string nome)
         {
             _nome = nome.Trim();
             _vertices = new Dictionary<string, IVertice>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         #region Representação
@@ -153,7 +153,7 @@ namespace grafos_lista_02_atv_06
                 {
                     foreach (var aresta in _representacao.ArestasAdjacentes(u))
                     {
-                        var destino = aresta.GetDestino();
+                        var destino = aresta.GetVerticeV();
                         var peso = aresta.GetPeso();
 
                         if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B)
@@ -189,7 +189,7 @@ namespace grafos_lista_02_atv_06
                 {
                     foreach (var aresta in _representacao.ArestasAdjacentes(u))
                     {
-                        var destino = aresta.GetDestino();
+                        var destino = aresta.GetVerticeV();
                         var peso = aresta.GetPeso();
                         if (_distancia[u] + peso < _distancia[destino] && _distancia[u] + peso < B)
                         {
@@ -272,7 +272,7 @@ namespace grafos_lista_02_atv_06
 
                 foreach (var aresta in _representacao.ArestasAdjacentes(u))
                 {
-                    var v = aresta.GetDestino();
+                    var v = aresta.GetVerticeV();
                     var peso = aresta.GetPeso();
                     double newDist = _distancia[u] + peso;
                     if (newDist < _distancia[v] && newDist < B)

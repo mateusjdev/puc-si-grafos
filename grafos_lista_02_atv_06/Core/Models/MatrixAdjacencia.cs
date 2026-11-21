@@ -1,4 +1,5 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Core.Exceptions;
+using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,29 +8,33 @@ using System.Text;
 
 namespace grafos_lista_02_atv_06.Core.Models
 {
-    public class MatrixAdjacencia : IRepresentacaoGrafo
+    public class MatrixAdjacencia<Aresta> : IRepresentacaoGrafo<Aresta> where Aresta : IAresta
     {
         private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
-        private readonly LinkedList<IAresta> _dicionarioIndexadoAresta;
+        private readonly LinkedList<Aresta> _dicionarioIndexadoAresta;
         private int[,] _matriz;
         private bool _representacaoAtualizada;
 
         public MatrixAdjacencia()
         {
             _dicionarioIndexado = new DicionarioIndexado<IVertice>();
-            _dicionarioIndexadoAresta = new LinkedList<IAresta>();
+            _dicionarioIndexadoAresta = new LinkedList<Aresta>();
             _representacaoAtualizada = false;
         }
 
-        public void AdicionarAresta(IVertice v, IVertice w)
+        public void AdicionarAresta(Aresta aresta)
         {
-            AdicionarVertice(v);
-            if (!v.Equals(w))
+            if (aresta.EhLaco())
             {
-                AdicionarVertice(w);
+                throw new LacoNaoSuportadoException();
             }
+            _dicionarioIndexadoAresta.AddLast(aresta);
+
+            GarantirListaVertices(aresta.GetVerticeU());
+            GarantirListaVertices(aresta.GetVerticeV());
+            _listaAdjacencias[aresta.GetVerticeU()].AddLast(aresta);
             IAresta vw = new Aresta(v, w);
-            _dicionarioIndexadoAresta.AddLast(vw);
+            
             _representacaoAtualizada = false;
         }
 
@@ -90,8 +95,8 @@ namespace grafos_lista_02_atv_06.Core.Models
                 _matriz = new int[tamanho, tamanho];
                 foreach (var aresta in _dicionarioIndexadoAresta)
                 {
-                    int iv = _dicionarioIndexado.IndexOf(aresta.GetOrigem());
-                    int iw = _dicionarioIndexado.IndexOf(aresta.GetDestino());
+                    int iv = _dicionarioIndexado.IndexOf(aresta.GetVerticeU());
+                    int iw = _dicionarioIndexado.IndexOf(aresta.GetVerticeV());
                     _matriz[iv, iw] += 1;
                 }
                 _representacaoAtualizada = true;
@@ -174,12 +179,12 @@ namespace grafos_lista_02_atv_06.Core.Models
             _dicionarioIndexado.ForEach(action);
         }
 
-        public IRepresentacaoGrafo Transpor()
+        public IRepresentacaoGrafo<Aresta> Transpor()
         {
-            var t = new MatrixAdjacencia();
+            var t = new MatrixAdjacencia<Aresta>();
             foreach (var aresta in _dicionarioIndexadoAresta)
             {
-                t.AdicionarAresta(aresta.GetDestino(), aresta.GetOrigem());
+                t.AdicionarAresta(aresta.GetVerticeV(), aresta.GetVerticeU());
             }
             return t;
         }

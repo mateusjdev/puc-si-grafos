@@ -19,10 +19,10 @@ namespace grafos_lista_02_atv_06.Core.Models.Tests
             Vertice v2 = new Vertice("2");
             Vertice v3 = new Vertice("3");
             Vertice v4 = new Vertice("4");
-            representacao.AdicionarAresta(v1, v2);
-            representacao.AdicionarAresta(v2, v3);
-            representacao.AdicionarAresta(v3, v4);
-            representacao.AdicionarAresta(v4, v1);
+            representacao.AdicionarAresta(new Aresta(v1, v2));
+            representacao.AdicionarAresta(new Aresta(v2, v3));
+            representacao.AdicionarAresta(new Aresta(v3, v4));
+            representacao.AdicionarAresta(new Aresta(v4, v1));
             var transposto = representacao.Transpor();
             Assert.AreEqual(transposto.Sucessores(v2)[0], v1);
             Assert.AreEqual(transposto.Sucessores(v3)[0], v2);

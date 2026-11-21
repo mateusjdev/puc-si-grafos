@@ -16,8 +16,4 @@
     <None Remove="Tests\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Algorithms\CaminhoMinimo\Interfaces\" />
-  </ItemGroup>
-
 </Project>

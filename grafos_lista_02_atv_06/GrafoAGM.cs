@@ -22,7 +22,7 @@ namespace grafos_lista_02_atv_06
             sb.AppendLine("Arestas:");
             foreach (var aresta in Arestas)
             {
-                sb.AppendLine($"  {aresta.GetOrigem()} -- {aresta.GetDestino()} : {aresta.GetPeso()}");
+                sb.AppendLine($"  {aresta.GetVerticeU()} -- {aresta.GetVerticeV()} : {aresta.GetPeso()}");
             }
             return sb.ToString().TrimEnd();
         }
@@ -36,7 +36,7 @@ namespace grafos_lista_02_atv_06
 
         private readonly Dictionary<string, VerticeIndexado> _vertices;
 
-        private readonly ListaAdjacenciaV2 _representacao;
+        private readonly ListaAdjacencia _representacao;
 
         public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
 
@@ -44,14 +44,14 @@ namespace grafos_lista_02_atv_06
         {
             _nome = "G";
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         public GrafoAGM(string nome)
         {
             _nome = nome.Trim();
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         #region Representação
@@ -137,7 +137,7 @@ namespace grafos_lista_02_atv_06
             visitados.Add(origem);
             foreach (var aresta in _representacao.ArestasAdjacentes(origem))
             {
-                filaPrioridade.Enqueue((aresta.GetDestino(), aresta), aresta.GetPeso());
+                filaPrioridade.Enqueue((aresta.GetVerticeV(), aresta), aresta.GetPeso());
             }
 
             while (filaPrioridade.Count > 0 && visitados.Count < _vertices.Count)
@@ -151,13 +151,13 @@ namespace grafos_lista_02_atv_06
 
                 agmArestas.Add(aresta);
                 pesoTotal += aresta.GetPeso();
-                predecessor[destino] = aresta.GetOrigem();
+                predecessor[destino] = aresta.GetVerticeU();
 
                 foreach (var prox in _representacao.ArestasAdjacentes(destino))
                 {
-                    if (!visitados.Contains(prox.GetDestino()))
+                    if (!visitados.Contains(prox.GetVerticeV()))
                     {
-                        filaPrioridade.Enqueue((prox.GetDestino(), prox), prox.GetPeso());
+                        filaPrioridade.Enqueue((prox.GetVerticeV(), prox), prox.GetPeso());
                     }
                 }
             }
@@ -201,8 +201,8 @@ namespace grafos_lista_02_atv_06
 
             foreach (var a in _representacao.GetArestas())
             {
-                var orig = a.GetOrigem().GetIdentificador();
-                var dest = a.GetDestino().GetIdentificador();
+                var orig = a.GetVerticeU().GetIdentificador();
+                var dest = a.GetVerticeV().GetIdentificador();
                 var chave = string.Compare(orig, dest, StringComparison.Ordinal) < 0
                     ? (orig, dest)
                     : (dest, orig);
@@ -221,8 +221,8 @@ namespace grafos_lista_02_atv_06
 
             foreach (var aresta in arestasUnicas)
             {
-                var orig = aresta.GetOrigem().GetIdentificador();
-                var dest = aresta.GetDestino().GetIdentificador();
+                var orig = aresta.GetVerticeU().GetIdentificador();
+                var dest = aresta.GetVerticeV().GetIdentificador();
 
                 if (dsu.Union(orig, dest))
                 {

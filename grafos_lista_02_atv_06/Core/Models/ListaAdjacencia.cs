@@ -1,4 +1,5 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Core.Exceptions;
+using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,66 +7,94 @@ using System.Text;
 
 namespace grafos_lista_02_atv_06.Core.Models
 {
-    public class ListaAdjacencia : IRepresentacaoGrafo
+    public class ListaAdjacencia : ListaAdjacencia<IAresta>;
+
+    public class ListaAdjacencia<Aresta> : IRepresentacaoGrafo<Aresta> where Aresta : IAresta
     {
-        private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
-        private readonly Dictionary<IVertice, LinkedList<IVertice>> _lista;
+        private readonly Dictionary<IVertice, LinkedList<Aresta>> _listaAdjacencias;
 
         public ListaAdjacencia()
         {
-            _lista = [];
-            _dicionarioIndexado = [];
+            _listaAdjacencias = [];
         }
 
-        public void AdicionarAresta(IVertice v, IVertice w)
+        private void GarantirListaVertices(IVertice v)
         {
-            AdicionarVertice(v);
-            if (v != w)
+            if (!_listaAdjacencias.ContainsKey(v))
             {
-                AdicionarVertice(w);
+                _listaAdjacencias.Add(v, new LinkedList<Aresta>());
             }
-            _lista[v].AddLast(w);
+        }
+
+        public void AdicionarAresta(Aresta aresta)
+        {
+            if (aresta.EhLaco())
+            {
+                throw new LacoNaoSuportadoException();
+            }
+            GarantirListaVertices(aresta.GetVerticeU());
+            GarantirListaVertices(aresta.GetVerticeV());
+            _listaAdjacencias[aresta.GetVerticeU()].AddLast(aresta);
         }
 
         public void AdicionarVertice(IVertice v)
         {
-            if (!_lista.ContainsKey(v))
+            if (_listaAdjacencias.ContainsKey(v))
             {
-                _dicionarioIndexado.Add(v);
-                _lista.Add(v, new LinkedList<IVertice>());
+                throw new InvalidOperationException("Vertice já adicionado");
             }
+            _listaAdjacencias.Add(v, new LinkedList<Aresta>());
         }
 
-        private LinkedList<IVertice> ListaDeArestas(IVertice v)
+        private IReadOnlyList<Aresta> ListaDeAdjacenciasDe(IVertice v)
         {
-            if (!_lista.ContainsKey(v))
+            if (!_listaAdjacencias.ContainsKey(v))
             {
                 throw new InvalidOperationException("O vértice não pertente ao grafo.");
             }
-            return _lista[v];
+            return _listaAdjacencias[v].ToArray();
         }
 
         public IReadOnlyList<IVertice> Sucessores(IVertice v)
         {
-            var tmp = ListaDeArestas(v);
-            return tmp.ToArray();
+            var tmp = ListaDeAdjacenciasDe(v);
+            return tmp.Select(x => x.GetVerticeV()).ToArray();
         }
 
         public int Grau(IVertice v)
         {
-            var tmp = ListaDeArestas(v);
+            var tmp = ListaDeAdjacenciasDe(v);
             return tmp.Count;
         }
 
         public bool PossuiLaco()
         {
-            return _lista.Any(l => l.Value.Any(a => a == l.Key));
+            return _listaAdjacencias.Any(l => l.Value.Any(a => a.EhLaco()));
+        }
+
+        public IReadOnlyList<Aresta> ArestasAdjacentes(IVertice v)
+        {
+            var tmp = ListaDeAdjacenciasDe(v);
+            return tmp.ToArray();
+        }
+
+        public IReadOnlyList<IAresta> GetArestas()
+        {
+            LinkedList<IAresta> arestas = new LinkedList<IAresta>();
+            foreach (var sucessores in _listaAdjacencias.Values)
+            {
+                foreach (var aresta in sucessores)
+                {
+                    arestas.AddLast(aresta);
+                }
+            }
+            return arestas.ToArray();
         }
 
         public override string ToString()
         {
             StringBuilder sb = new("Lista Adjacencia:\n");
-            foreach (var vertice in _lista)
+            foreach (var vertice in _listaAdjacencias)
             {
                 sb.Append($"{vertice.Key}: ");
                 var adj = vertice.Value.First;
@@ -83,33 +112,14 @@ namespace grafos_lista_02_atv_06.Core.Models
             return sb.ToString();
         }
 
-        public int GetVerticeCount()
+        public IRepresentacaoGrafo<Aresta> Transpor()
         {
-            return _dicionarioIndexado.Count;
-        }
-
-        public int IndexOf(IVertice v)
-        {
-            return _dicionarioIndexado.IndexOf(v);
-        }
-
-        public void ForEach(Action<IVertice> action)
-        {
-            foreach (var item in _dicionarioIndexado)
+            var t = new ListaAdjacencia<Aresta>();
+            foreach (var adjacencias in _listaAdjacencias)
             {
-                action.Invoke(item);
-            }
-        }
-
-        public IRepresentacaoGrafo Transpor()
-        {
-            var t = new ListaAdjacencia();
-            foreach (var lista in _lista)
-            {
-                var origem = lista.Key;
-                foreach (var aresta in lista.Value)
+                foreach (var aresta in adjacencias.Value)
                 {
-                    t.AdicionarAresta(aresta, origem);
+                    t.AdicionarAresta((Aresta)aresta.Transpor());
                 }
             }
             return t;

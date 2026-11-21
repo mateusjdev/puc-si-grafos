@@ -15,7 +15,7 @@ namespace grafos_lista_02_atv_06
 
         private Dictionary<string, VerticeIndexado> _vertices;
 
-        private ListaAdjacenciaV2 _representacao;
+        private ListaAdjacencia _representacao;
 
         public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
 
@@ -23,14 +23,14 @@ namespace grafos_lista_02_atv_06
         {
             _nome = "G";
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         public GrafoBellmanFord(string nome)
         {
             _nome = nome.Trim();
             _vertices = new Dictionary<string, VerticeIndexado>();
-            _representacao = new ListaAdjacenciaV2();
+            _representacao = new ListaAdjacencia();
         }
 
         #region Representação
@@ -91,8 +91,8 @@ namespace grafos_lista_02_atv_06
                 {
                     foreach (var aresta in _representacao.ArestasAdjacentes(vertice))
                     {
-                        var v = aresta.GetOrigem();
-                        var w = aresta.GetDestino();
+                        var v = aresta.GetVerticeU();
+                        var w = aresta.GetVerticeV();
                         var peso = aresta.GetPeso();
                         if (_distancia[w] > _distancia[v] + peso)
                         {

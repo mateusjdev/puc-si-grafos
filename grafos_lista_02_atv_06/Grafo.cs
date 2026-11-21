@@ -136,7 +136,8 @@ namespace grafos_lista_02_atv_06
         {
             Vertice vOrigem = GarantirExistenciaVertice(origem);
             Vertice vDestino = GarantirExistenciaVertice(destino);
-            _representacao.AdicionarAresta(vOrigem, vDestino);
+            var aresta = new Aresta(vOrigem, vDestino);
+            _representacao.AdicionarAresta(aresta);
             if (!_ehDirecionado)
             {
                 _representacao.AdicionarAresta(vDestino, vOrigem);
