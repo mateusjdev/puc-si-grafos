@@ -1,19 +1,15 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06.Algorithms.CaminhoMinimo
 {
-    public class Dijkstra : ICaminhoMinimo<ListaAdjacencia<IArestaPonderada>, IArestaPonderada>
+    // Ideal: ICaminhoMinimo<ListaAdjacencia<IArestaPonderada>, IArestaPonderada>
+    public class Dijkstra : ICaminhoMinimo<IRepresentacaoGrafo<IArestaPonderada>, IArestaPonderada>
     {
         private Dijkstra() { }
 
-        public static ResultadoCaminhoMinimo CaminhoMinimo(IGrafo<ListaAdjacencia<IArestaPonderada>, IArestaPonderada> grafo, IVertice origem)
+        public static ResultadoCaminhoMinimo CaminhoMinimo(IGrafo<IRepresentacaoGrafo<IArestaPonderada>, IArestaPonderada> grafo, IVertice origem)
         {
             Dictionary<IVertice, double> distancia = new Dictionary<IVertice, double>();
             Dictionary<IVertice, IVertice> predecessor = new Dictionary<IVertice, IVertice>(); ;

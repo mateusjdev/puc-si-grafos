@@ -2,8 +2,6 @@
 using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
@@ -28,7 +26,8 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
                 {
                     ExecutarBusca(grafo, v);
                 }
-            };
+            }
+            ;
             return new ResultadoDFS
             {
                 TemposTermino = tempoTermino,
@@ -64,7 +63,7 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
         protected override ResultadoBusca InicializarBuscaPorOrdem(IGrafo grafo, Stack<IVertice> ordem)
         {
             var vertices = grafo.Vertices;
-            while(ordem.Count > 0)
+            while (ordem.Count > 0)
             {
                 var v = ordem.Pop();
                 if (tempoTermino.GetValueOrDefault(v, 0) == 0)

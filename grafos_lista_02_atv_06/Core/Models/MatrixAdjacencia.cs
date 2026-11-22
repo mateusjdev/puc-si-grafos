@@ -1,41 +1,63 @@
 ﻿using grafos_lista_02_atv_06.Core.Exceptions;
 using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace grafos_lista_02_atv_06.Core.Models
 {
-    public class MatrixAdjacencia<Aresta> : IRepresentacaoGrafo<Aresta> where Aresta : IAresta
+    public class MatrixAdjacencia : MatrixAdjacencia<IAresta>, IRepresentacaoGrafo;
+
+    public class MatrixAdjacencia<TAresta> : IRepresentacaoGrafo<TAresta> where TAresta : IAresta
     {
         private readonly DicionarioIndexado<IVertice> _dicionarioIndexado;
-        private readonly LinkedList<Aresta> _dicionarioIndexadoAresta;
-        private int[,] _matriz;
+        private readonly LinkedList<TAresta> _dicionarioIndexadoAresta;
+        private TAresta[,] _matriz;
         private bool _representacaoAtualizada;
 
         public MatrixAdjacencia()
         {
             _dicionarioIndexado = new DicionarioIndexado<IVertice>();
-            _dicionarioIndexadoAresta = new LinkedList<Aresta>();
+            _dicionarioIndexadoAresta = new LinkedList<TAresta>();
             _representacaoAtualizada = false;
         }
 
-        public void AdicionarAresta(Aresta aresta)
+        private void FalharSeVerticeNaoExistir(IVertice v)
+        {
+            if (!_dicionarioIndexado.Contains(v))
+            {
+                throw new InvalidOperationException("O vértice informado não existe na representação.");
+            }
+        }
+
+        private bool PossuiArestaEntre(IVertice u, IVertice v)
+        {
+            GarantirRepresentacao();
+            int i = _dicionarioIndexado.IndexOf(u);
+            int j = _dicionarioIndexado.IndexOf(v);
+            return _matriz[i, j] != null;
+        }
+
+        public void AdicionarAresta(TAresta aresta)
         {
             if (aresta.EhLaco())
             {
                 throw new LacoNaoSuportadoException();
             }
+            var u = aresta.GetVerticeU();
+            var v = aresta.GetVerticeV();
+            // Essa representação não suporta adicionar os vertices no mesmo momento que as arestas.
+            int i = _dicionarioIndexado.IndexOf(u);
+            int j = _dicionarioIndexado.IndexOf(v);
+            FalharSeVerticeNaoExistir(u);
+            FalharSeVerticeNaoExistir(v);
+            if (PossuiArestaEntre(u, v))
+            {
+                throw new InvalidOperationException($"Já existe um vertice entre {u} e {v}");
+            }
+            _matriz[i, j] = aresta;
             _dicionarioIndexadoAresta.AddLast(aresta);
-
-            GarantirListaVertices(aresta.GetVerticeU());
-            GarantirListaVertices(aresta.GetVerticeV());
-            _listaAdjacencias[aresta.GetVerticeU()].AddLast(aresta);
-            IAresta vw = new Aresta(v, w);
-            
-            _representacaoAtualizada = false;
         }
 
         public void AdicionarVertice(IVertice v)
@@ -59,7 +81,7 @@ namespace grafos_lista_02_atv_06.Core.Models
             int tamanho = _dicionarioIndexado.Count;
             for (int j = 0; j < tamanho; j++)
             {
-                if (_matriz[i, j] > 0)
+                if (_matriz[i, j] != null)
                 {
                     tmp.AddLast(_dicionarioIndexado[j]);
                 }
@@ -79,7 +101,7 @@ namespace grafos_lista_02_atv_06.Core.Models
             int count = 0;
             for (int j = 0; j < tamanho; j++)
             {
-                if (_matriz[i, j] > 0)
+                if (_matriz[i, j] != null)
                 {
                     count++;
                 }
@@ -92,12 +114,12 @@ namespace grafos_lista_02_atv_06.Core.Models
             if (!_representacaoAtualizada)
             {
                 int tamanho = _dicionarioIndexado.Count;
-                _matriz = new int[tamanho, tamanho];
+                _matriz = new TAresta[tamanho, tamanho];
                 foreach (var aresta in _dicionarioIndexadoAresta)
                 {
                     int iv = _dicionarioIndexado.IndexOf(aresta.GetVerticeU());
                     int iw = _dicionarioIndexado.IndexOf(aresta.GetVerticeV());
-                    _matriz[iv, iw] += 1;
+                    _matriz[iv, iw] = aresta;
                 }
                 _representacaoAtualizada = true;
             }
@@ -111,7 +133,7 @@ namespace grafos_lista_02_atv_06.Core.Models
             int i = 0;
             while (i < tamanho && resultado == false)
             {
-                if (_matriz[i, i] >= 1)
+                if (_matriz[i, i] != null)
                 {
                     resultado = true;
                 }
@@ -155,7 +177,7 @@ namespace grafos_lista_02_atv_06.Core.Models
                 int atual = 0;
                 for (int j = 0; j < tamanho; j++)
                 {
-                    atual += _matriz[i, j];
+                    atual += _matriz[i, j] != null ? 1 : 0;
                 }
                 if (atual > maior)
                 {
@@ -179,14 +201,24 @@ namespace grafos_lista_02_atv_06.Core.Models
             _dicionarioIndexado.ForEach(action);
         }
 
-        public IRepresentacaoGrafo<Aresta> Transpor()
+        public IRepresentacaoGrafo<TAresta> Transpor()
         {
-            var t = new MatrixAdjacencia<Aresta>();
+            var t = new MatrixAdjacencia<TAresta>();
+            foreach (var vertice in _dicionarioIndexado)
+            {
+                t.AdicionarVertice(vertice);
+            }
             foreach (var aresta in _dicionarioIndexadoAresta)
             {
-                t.AdicionarAresta(aresta.GetVerticeV(), aresta.GetVerticeU());
+                t.AdicionarAresta((TAresta)aresta.Transpor());
             }
             return t;
+        }
+
+        public IReadOnlyList<TAresta> ArestasAdjacentes(IVertice v)
+        {
+            throw new NotImplementedException();
+            return [];
         }
     }
 }

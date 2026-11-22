@@ -1,20 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using grafos_lista_02_atv_06;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo;
 
 namespace grafos_lista_02_atv_06.Tests
 {
     [TestClass()]
-    public class GrafoDijkstraTests
+    public class CM_BMSSP_Tests
     {
         [TestMethod()]
         public void CaminhoMinimoZigZagBasico()
         {
-            var grafo = new GrafoDijkstra();
+            var grafo = new SuperGrafoDirecionado();
             // A 1→ B 5→ C 2→ D 10→ E
             // ↓1000               ↓3
             // F ←5 G ←15 H ←7 I ←3 J
@@ -61,7 +55,7 @@ namespace grafos_lista_02_atv_06.Tests
 
             var origem = grafo.Vertice("A");
             var destino = grafo.Vertice("P");
-            var caminho = grafo.CaminhoMinimo(origem).Ate(destino);
+            var caminho = BMSSP.CaminhoMinimo(grafo, origem).Ate(destino);
             var output = $"{string.Join(", ", caminho.Select(x => x.ToString()))}";
             var expected = "A, B, C, D, E, J, I, H, G, F, K, L, M, N, O, T, S, R, Q, P";
 

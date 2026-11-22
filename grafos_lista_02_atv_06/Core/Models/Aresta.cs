@@ -3,7 +3,7 @@ using System;
 
 namespace grafos_lista_02_atv_06.Core.Models
 {
-    public class Aresta : IAresta, IEquatable<Aresta>
+    public class Aresta : IAresta<Aresta>, IEquatable<Aresta>
     {
         private readonly IVertice _origem;
         private readonly IVertice _destino;
@@ -44,9 +44,14 @@ namespace grafos_lista_02_atv_06.Core.Models
             return _origem.Equals(_destino);
         }
 
-        public IAresta Transpor()
+        public Aresta Transpor()
         {
             return new Aresta(_destino, _origem);
+        }
+
+        IAresta IAresta.Transpor()
+        {
+            return Transpor();
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
@@ -33,7 +31,8 @@ namespace grafos_lista_02_atv_06.Algorithms.Search
                     fila.Enqueue(v);
                     ExecutarBusca(grafo);
                 }
-            };
+            }
+            ;
             return new ResultadoBFS
             {
                 Nivel = nivelDescoberta,

@@ -36,9 +36,10 @@ namespace grafos_lista_02_atv_06.Algorithms.CaminhoMinimo
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Resultado do Caminho Mínimo:");
+            var vertices = Vertices.OrderBy(x => x.GetIdentificador());
             sb.AppendLine($"Ver: {string.Join(", ", Vertices.Select(x => x.ToString().PadLeft(4)))}");
-            sb.AppendLine($"Dis: {string.Join(", ", Distancia.Select(x => x.Value.ToString().PadLeft(4)))}");
-            sb.AppendLine($"Pre: {string.Join(", ", Predecessor.Select(x => x.Value == null ? "∅".PadLeft(4) : x.Value.ToString().PadLeft(4)))}");
+            sb.AppendLine($"Dis: {string.Join(", ", Vertices.Select(x => Distancia[x].ToString().PadLeft(4)))}");
+            sb.AppendLine($"Pre: {string.Join(", ", Vertices.Select(x => Predecessor[x] == null ? "∅".PadLeft(4) : Predecessor[x].ToString().PadLeft(4)))}");
             return sb.ToString();
         }
     }
