@@ -1,11 +1,12 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
+using grafos_lista_02_atv_06.Algorithms.Search;
 using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
+using grafos_lista_02_atv_06.Core.Exceptions;
+using grafos_lista_02_atv_06.Core.Interfaces;
+using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using grafos_lista_02_atv_06.Algorithms.Search;
 
 namespace grafos_lista_02_atv_06
 {
@@ -16,7 +17,7 @@ namespace grafos_lista_02_atv_06
         private readonly bool _ehDirecionado;
 
         // Representação
-        private readonly IRepresentacaoGrafo _representacao;
+        private readonly IRepresentacaoGrafo<IAresta> _representacao;
 
         private readonly OrderedDictionary<string, Vertice> _vertices;
         private readonly LinkedList<(string, string)> _arestas;
@@ -24,6 +25,8 @@ namespace grafos_lista_02_atv_06
         public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
 
         public int VerticeCount => _vertices.Count;
+
+        public bool EhDirecionado() => _ehDirecionado;
 
         public Grafo(bool ehDirecionado, string nome = "G")
         {
@@ -34,7 +37,7 @@ namespace grafos_lista_02_atv_06
             _representacao = new ListaAdjacencia();
         }
 
-        public Grafo(bool ehDirecionado, IRepresentacaoGrafo representacao, string nome = "G")
+        public Grafo(bool ehDirecionado, IRepresentacaoGrafo<IAresta> representacao, string nome = "G")
         {
             _vertices = [];
             _arestas = new LinkedList<(string, string)>();
@@ -140,10 +143,10 @@ namespace grafos_lista_02_atv_06
             _representacao.AdicionarAresta(aresta);
             if (!_ehDirecionado)
             {
-                _representacao.AdicionarAresta(vDestino, vOrigem);
+                _representacao.AdicionarAresta(aresta.Transpor());
             }
-            var aresta = (origem, destino);
-            _arestas.AddLast(aresta);
+            var aresta2 = (origem, destino);
+            _arestas.AddLast(aresta2);
             return this;
         }
 
@@ -188,7 +191,7 @@ namespace grafos_lista_02_atv_06
             return true;
         }
 
-        public IGrafo Transpor()
+        public IGrafo<IRepresentacaoGrafo, IAresta> Transpor()
         {
             if (!_ehDirecionado)
             {
@@ -198,29 +201,9 @@ namespace grafos_lista_02_atv_06
             var transposto = new Grafo(true, rep, $"{_nome} - Transposto");
             foreach (var vertice in _vertices.Values)
             {
-                transposto.AdicionarVertice(vertice);
+                transposto._vertices.Add(vertice.GetIdentificador(), vertice);
             }
             return transposto;
-        }
-
-        public string Kosaraju()
-        {
-            if (!_ehDirecionado)
-            {
-                throw new InvalidOperationException("Não é necessário executar o Kosaraju em grafos não direcionados.");
-            }
-            var resultadoDFS = BuscarViaProfundidade().Buscar(this) as ResultadoDFS;
-            var pilha = new Stack<IVertice>();
-            foreach (var vertice in resultadoDFS.TemposTermino.OrderBy(t => t.Value))
-            {
-                pilha.Push(vertice.Key);
-            }
-            var transposto = Transpor();
-            var resultadoDFS_Gt = BuscarViaProfundidade().BuscarPorOrdem(transposto, pilha) as ResultadoDFS;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(resultadoDFS.ToString());
-            sb.AppendLine(resultadoDFS_Gt.ToString());
-            return sb.ToString();
         }
 
         /*
@@ -304,6 +287,16 @@ namespace grafos_lista_02_atv_06
         public IVertice Vertice(string vertice)
         {
             return _vertices[vertice];
+        }
+
+        public IReadOnlyList<IAresta> ArestasAdjacentes(IVertice vertice)
+        {
+            var v = _vertices.GetValueOrDefault(vertice.GetIdentificador(), null);
+            if (v == null)
+            {
+                throw new VerticeNaoPertencenteException();
+            }
+            return _representacao.ArestasAdjacentes(v);
         }
 
         #endregion

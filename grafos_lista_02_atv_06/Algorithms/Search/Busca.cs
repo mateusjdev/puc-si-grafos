@@ -1,6 +1,5 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
 using grafos_lista_02_atv_06.Core.Interfaces;
-using grafos_lista_02_atv_06.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
 

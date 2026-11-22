@@ -1,10 +1,8 @@
-﻿using grafos_lista_02_atv_06.Core.Interfaces;
+﻿using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo;
+using grafos_lista_02_atv_06.Algorithms.ComponentesConectados;
 using grafos_lista_02_atv_06.Terminal.Exemplos;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06.Terminal
 {
@@ -14,32 +12,78 @@ namespace grafos_lista_02_atv_06.Terminal
 
         public static string Lista02_Questao04_Grafo01()
         {
-            var grafo = GrafosDeExemplo.Lista02_Questao04_Grafo01() as Grafo;
+            var grafo = GrafosLista02.Questao04_Grafo01() as Grafo;
             return Debug.ImprimirBusca(grafo);
         }
 
         public static string Lista02_Questao04_Grafo02()
         {
-            var grafo = GrafosDeExemplo.Lista02_Questao04_Grafo02() as Grafo;
+            var grafo = GrafosLista02.Questao04_Grafo02() as Grafo;
             return Debug.ImprimirBusca(grafo);
         }
 
         public static string Lista02_Questao04_Grafo03()
         {
-            var grafo = GrafosDeExemplo.Lista02_Questao04_Grafo03() as Grafo;
+            var grafo = GrafosLista02.Questao04_Grafo03() as Grafo;
             return Debug.ImprimirBusca(grafo);
         }
 
         public static string Grafo_Ciclico()
         {
-            var grafo = GrafosDeExemplo.Grafo_Ciclico() as Grafo;
+            var grafo = GrafosLista02.Grafo_Ciclico() as Grafo;
             return Debug.ImprimirCiclicidade(grafo);
         }
 
         public static string Grafo_Aciclico()
         {
-            var grafo = GrafosDeExemplo.Grafo_Aciclico() as Grafo;
+            var grafo = GrafosLista02.Grafo_Aciclico() as Grafo;
             return Debug.ImprimirCiclicidade(grafo);
+        }
+
+        #endregion
+
+        #region Lista 03
+
+        public static string Lista03_Questao03_Grafo01()
+        {
+            var grafo = GrafosLista03.Questao03_Grafo01() as Grafo;
+            return Kosaraju.ComponentesConectados(grafo).ToString();
+        }
+
+        public static string Lista03_Questao03_Grafo02()
+        {
+            var grafo = GrafosLista03.Questao03_Grafo02() as Grafo;
+            return Kosaraju.ComponentesConectados(grafo).ToString();
+        }
+
+        public static string Lista03_Questao08()
+        {
+            var grafo = GrafosLista03.Questao08_Dijkstra();
+            return Debug.Profile(() =>
+            {
+                var caminho = Dijkstra.CaminhoMinimo(grafo, grafo.Vertice("A"));
+                return caminho.ToString();
+            });
+        }
+
+        public static string Lista03_Questao07()
+        {
+            var grafo = GrafosLista03.Questao07_BellmanFord();
+            return Debug.Profile(() =>
+            {
+                var caminho = BellmanFord.CaminhoMinimo(grafo, grafo.Vertice("1"));
+                return caminho.ToString();
+            });
+        }
+
+        public static string Lista03_Questao15()
+        {
+            var grafo = GrafosLista03.Questao15_BellmanFord();
+            return Debug.Profile(() =>
+            {
+                var caminho = BellmanFord.CaminhoMinimo(grafo, grafo.Vertice("USD"));
+                return caminho.ToString();
+            });
         }
 
         #endregion
@@ -48,8 +92,32 @@ namespace grafos_lista_02_atv_06.Terminal
 
         public static string Aula09_Kosaraju()
         {
-            var grafo = GrafosDeExemplo.Aula09_Kosaraju() as Grafo;
-            return grafo.Kosaraju();
+            var grafo = GrafosAulas.Aula09_Kosaraju() as Grafo;
+            return Kosaraju.ComponentesConectados(grafo).ToString();
+        }
+
+        /*
+        public static string Aula12()
+        {
+            var grafo = GrafosLista03.PrepararAula12();
+            return Debug.Profile(() =>
+            {
+                var kruskal = grafo.Kruskal();
+                var prim = grafo.Prim();
+
+                return $"{kruskal.ToString()}\n{prim.ToString()}";
+            });
+        }
+        */
+
+        public static string Aula14()
+        {
+            var grafo = GrafosAulas.Aula14_BellmanFord();
+            return Debug.Profile(() =>
+            {
+                var caminho = BellmanFord.CaminhoMinimo(grafo, grafo.Vertice("1"));
+                return caminho.ToString();
+            });
         }
 
         #endregion
@@ -58,51 +126,51 @@ namespace grafos_lista_02_atv_06.Terminal
 
         public static string TesteV1()
         {
-            var grafo = new GrafoDijkstra("v1");
-            GrafosDeExemplo.PrepararCaminhoV01(grafo);
-            var v = grafo.Vertice("1");
-            var w = grafo.Vertice("3");
-            var caminho = grafo.CaminhoMinimo(v).Ate(w);
+            var grafo = new SuperGrafoDirecionado("v1");
+            GrafosCaminhoMinimo.PrepararCaminhoV01(grafo);
+            var u = grafo.Vertice("1");
+            var v = grafo.Vertice("3");
+            var caminho = Dijkstra.CaminhoMinimo(grafo, u).Ate(v);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
         public static string TesteV2_Dijkstra()
         {
-            var grafo = new GrafoDijkstra("v2 - Dijkstra");
-            GrafosDeExemplo.PrepararCaminhoV02(grafo);
-            var v = grafo.Vertice("1");
-            var w = grafo.Vertice("3");
-            var caminho = grafo.CaminhoMinimo(v).Ate(w);
+            var grafo = new SuperGrafoDirecionado("v2 - Dijkstra");
+            GrafosCaminhoMinimo.PrepararCaminhoV02(grafo);
+            var u = grafo.Vertice("1");
+            var v = grafo.Vertice("3");
+            var caminho = Dijkstra.CaminhoMinimo(grafo, u).Ate(v);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
         public static string TesteV2_BMSSP()
         {
-            var grafo = new GrafoBMSSP("v2 - BMSSP");
-            GrafosDeExemplo.PrepararCaminhoV02(grafo);
-            var v = grafo.Vertice("1");
-            var w = grafo.Vertice("3");
-            var caminho = grafo.CaminhoMinimo(v).Ate(w);
+            var grafo = new SuperGrafoDirecionado("v2 - BMSSP");
+            GrafosCaminhoMinimo.PrepararCaminhoV02(grafo);
+            var u = grafo.Vertice("1");
+            var v = grafo.Vertice("3");
+            var caminho = BMSSP.CaminhoMinimo(grafo, u).Ate(v);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
         public static string TesteV3_Dijkstra()
         {
-            var grafo = new GrafoDijkstra("v3 - Dijkstra");
-            GrafosDeExemplo.PrepararCaminhoV03(grafo);
-            var v = grafo.Vertice("1");
-            var w = grafo.Vertice("3");
-            var caminho = grafo.CaminhoMinimo(v).Ate(w);
+            var grafo = new SuperGrafoDirecionado("v3 - Dijkstra");
+            GrafosCaminhoMinimo.PrepararCaminhoV03(grafo);
+            var u = grafo.Vertice("1");
+            var v = grafo.Vertice("3");
+            var caminho = Dijkstra.CaminhoMinimo(grafo, u).Ate(v);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
         public static string TesteV3_BMSSP()
         {
-            var grafo = new GrafoBMSSP("v3 - BMSSP");
-            GrafosDeExemplo.PrepararCaminhoV03(grafo);
-            var v = grafo.Vertice("1");
-            var w = grafo.Vertice("3");
-            var caminho = grafo.CaminhoMinimo(v).Ate(w);
+            var grafo = new SuperGrafoDirecionado("v3 - BMSSP");
+            GrafosCaminhoMinimo.PrepararCaminhoV03(grafo);
+            var u = grafo.Vertice("1");
+            var v = grafo.Vertice("3");
+            var caminho = BMSSP.CaminhoMinimo(grafo, u).Ate(v);
             return $"{grafo}: {string.Join(", ", caminho.Select(x => x.ToString()))}";
         }
 
@@ -116,122 +184,32 @@ namespace grafos_lista_02_atv_06.Terminal
             // K 4→ L 1→ M 3→ N 1→  O
             // ↓9999                ↓10
             // P ←7 Q ←6 R ←7 S ←6  T
-            var grafoDijkstra = new GrafoDijkstra("v4 - ZigZag - Dijkstra");
-            var grafoBellmanFord = new GrafoBellmanFord("v4 - ZigZag - BellmanFord");
-            var grafoBMSSP = new GrafoBMSSP("v4 - ZigZag - BMSSP");
+            var grafo = new SuperGrafoDirecionado("v4 - ZigZag");
 
-            GrafosDeExemplo.PrepararCaminhoZigZag(iteracoes, grafoDijkstra, grafoBellmanFord, grafoBMSSP);
+            GrafosCaminhoMinimo.PrepararCaminhoZigZag(iteracoes, grafo);
+            var u = grafo.Vertice("1");
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Caminho minimo de V({1}) a V({iteracoes}) entre {iteracoes} vertices encontrado.\n");
             sb.AppendLine("# Dijkstra:")
                 .AppendLine(Debug.Profile(() =>
                 {
-                    var v = grafoDijkstra.Vertice("1");
-                    var caminho = grafoDijkstra.CaminhoMinimo(v);
+                    var caminho = Dijkstra.CaminhoMinimo(grafo, u);
                     return mostrarCaminhos ? caminho.ToString() : "";
-                    // Console.WriteLine($"{grafoDijkstra}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));
             sb.AppendLine("# BellmanFord:");
             sb.AppendLine(Debug.Profile(() =>
                 {
-                    var v = grafoBellmanFord.Vertice("1");
-                    var caminho = grafoBellmanFord.CaminhoMinimo(v);
+                    var caminho = BellmanFord.CaminhoMinimo(grafo, u);
                     return mostrarCaminhos ? caminho.ToString() : "";
-                    // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));
             sb.AppendLine("# BMSSP:");
             sb.AppendLine(Debug.Profile(() =>
                 {
-                    var v = grafoBMSSP.Vertice("1");
-                    var caminho = grafoBMSSP.CaminhoMinimo(v);
+                    var caminho = BMSSP.CaminhoMinimo(grafo, u);
                     return mostrarCaminhos ? caminho.ToString() : "";
-                    // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
                 }));
             return sb.AppendLine().ToString();
-        }
-
-        #endregion
-
-        #region Lista 03
-
-        public static string Lista03_Questao03_Grafo01()
-        {
-            StringBuilder sb = new StringBuilder();
-            var grafo = GrafosDeExemplo.Lista03_Questao03_Grafo01() as Grafo;
-            return grafo.Kosaraju();
-        }
-
-        public static string Lista03_Questao03_Grafo02()
-        {
-            StringBuilder sb = new StringBuilder();
-            var grafo = GrafosDeExemplo.Lista03_Questao03_Grafo02() as Grafo;
-            return grafo.Kosaraju();
-        }
-
-        public static string Lista03_Questao04()
-        {
-            StringBuilder sb = new StringBuilder();
-            // TODO:
-            return sb.ToString();
-        }
-
-        public static string Lista03_Questao08()
-        {
-            var grafo = GrafosDeExemplo.Lista03_Questao08();
-            return grafo.CaminhoMinimo(grafo.Vertice("A")).ToString();
-        }
-
-        public static string Aula14()
-        {
-            var grafoBellmanFord = new GrafoBellmanFord("v4 - ZigZag - BellmanFord");
-            GrafosDeExemplo.PrepararAula14(grafoBellmanFord);
-            return Debug.Profile(() =>
-            {
-                var v = grafoBellmanFord.Vertice("1");
-                var caminho = grafoBellmanFord.CaminhoMinimo(v);
-                return caminho.ToString();
-                // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
-            });
-        }
-
-        public static string Aula12()
-        {
-            var grafo = GrafosDeExemplo.PrepararAula12();
-            return Debug.Profile(() =>
-            {
-                var kruskal = grafo.Kruskal();
-                var prim = grafo.Prim();
-
-                return $"{kruskal.ToString()}\n{prim.ToString()}";
-                // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
-            });
-        }
-
-        public static string   Lista03_Questao07()
-        {
-            var grafoBellmanFord = new GrafoBellmanFord("BellmanFord");
-            GrafosDeExemplo.PrepararLista03_Questao07(grafoBellmanFord);
-            return Debug.Profile(() =>
-            {
-                var v = grafoBellmanFord.Vertice("1");
-                var caminho = grafoBellmanFord.CaminhoMinimo(v);
-                return caminho.ToString();
-                // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
-            });
-        }
-
-        public static string Lista03_Questao15()
-        {
-            var grafoBellmanFord = new GrafoBellmanFord("v4 - BellmanFord");
-            GrafosDeExemplo.PrepararLista03_Questao15(grafoBellmanFord);
-            return Debug.Profile(() =>
-            {
-                var v = grafoBellmanFord.Vertice("USD");
-                var caminho = grafoBellmanFord.CaminhoMinimo(v);
-                return caminho.ToString();
-                // Console.WriteLine($"{grafoBMSSP}: {string.Join(", ", caminho.Select(x => x.ToString()))}");
-            });
         }
 
         #endregion

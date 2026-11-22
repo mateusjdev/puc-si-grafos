@@ -1,30 +1,75 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.Search;
 using grafos_lista_02_atv_06.Algorithms.Search.Interfaces;
-using grafos_lista_02_atv_06.Core;
+using grafos_lista_02_atv_06.Core.Exceptions;
 using grafos_lista_02_atv_06.Core.Interfaces;
 using grafos_lista_02_atv_06.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06
 {
-    public class SuperGrafo : SuperGrafo<ListaAdjacencia<IAresta>, IAresta>
+    public class SuperGrafoDirecionado : SuperGrafo<ListaAdjacencia<IArestaPonderada>, IArestaPonderada>, IGrafoPonderado
     {
-        public SuperGrafo(bool ehDirecionado, string nome = "G") : base(ehDirecionado, new ListaAdjacencia(), "G") { }
+        private int _identificadorVertice = 0;
+
+        private SuperGrafoDirecionado(ListaAdjacencia<IArestaPonderada> representacao, string nome = "G") : base(true, representacao, "G") { }
+
+        public SuperGrafoDirecionado(string nome = "G") : base(true, new ListaAdjacencia<IArestaPonderada>(), "G") { }
+
+        public IVertice GarantirExistenciaVertice(string vertice)
+        {
+            if (_vertices.TryGetValue(vertice, out IVertice v1))
+            {
+                return v1;
+            }
+            var v2 = new VerticeIndexado(vertice, _identificadorVertice);
+            _identificadorVertice++;
+            _vertices.Add(vertice, v2);
+            return v2;
+        }
+
+        public IGrafoPonderado AdicionarVertice(string vertice)
+        {
+            var v = GarantirExistenciaVertice(vertice);
+            _representacao.AdicionarVertice(v);
+            return this;
+        }
+
+        public IGrafoPonderado AdicionarAresta(string u, string v, double peso)
+        {
+            if (peso < 0)
+            {
+                throw new ArgumentException("Os pesos não podem ser negativos!");
+            }
+            var verticeU = GarantirExistenciaVertice(u);
+            var verticeV = GarantirExistenciaVertice(v);
+            var aresta = new ArestaPonderada(verticeU, verticeV, peso);
+            _representacao.AdicionarAresta(aresta);
+            return this;
+        }
+
+        public new IGrafo<IRepresentacaoGrafo<IArestaPonderada>, IArestaPonderada> Transpor()
+        {
+            var rep = (ListaAdjacencia<IArestaPonderada>)_representacao.Transpor();
+            var transposto = new SuperGrafoDirecionado(rep, $"{_nome} - Transposto");
+            foreach (var vertice in _vertices.Values)
+            {
+                transposto._vertices.Add(vertice.GetIdentificador(), vertice);
+            }
+            return transposto;
+        }
     }
 
-    public class SuperGrafo<Representacao, Aresta> : IGrafo where Representacao : IRepresentacaoGrafo<Aresta> where Aresta : IAresta
+    public class SuperGrafo<TRepresentacao, TAresta> : IGrafo<TRepresentacao, TAresta> where TRepresentacao : IRepresentacaoGrafo<TAresta> where TAresta : IAresta
     {
         // Grafo
-        private readonly string _nome;
+        protected readonly string _nome;
         private readonly bool _ehDirecionado;
 
-        private readonly Representacao _representacao;
+        protected readonly TRepresentacao _representacao;
 
-        private readonly OrderedDictionary<string, IVertice> _vertices;
+        protected readonly OrderedDictionary<string, IVertice> _vertices;
         private readonly LinkedList<IAresta> _arestas;
 
         public IReadOnlyList<IVertice> Vertices => _vertices.Values.ToArray();
@@ -35,7 +80,9 @@ namespace grafos_lista_02_atv_06
 
         public int ArestaCount => _vertices.Count;
 
-        public SuperGrafo(bool ehDirecionado, Representacao representacao, string nome = "G")
+        public bool EhDirecionado() => _ehDirecionado;
+
+        public SuperGrafo(bool ehDirecionado, TRepresentacao representacao, string nome = "G")
         {
             _vertices = [];
             _arestas = new LinkedList<IAresta>();
@@ -64,13 +111,13 @@ namespace grafos_lista_02_atv_06
             }
             return _representacao.Sucessores(vertice);
         }
-        public IReadOnlyList<IAresta> ArestasAdjacentes(IVertice vertice)
+        public IReadOnlyList<TAresta> ArestasAdjacentes(IVertice vertice)
         {
             if (!_vertices.ContainsValue(vertice))
             {
                 throw new VerticeNaoPertencenteException();
             }
-            return _representacao.ArestasAdjacentes();
+            return _representacao.ArestasAdjacentes(vertice);
         }
 
         #endregion
@@ -119,6 +166,21 @@ namespace grafos_lista_02_atv_06
                 resposta = busca.PossuiArestaDeRetorno();
             }
             return resposta;
+        }
+
+        public IGrafo<TRepresentacao, TAresta> Transpor()
+        {
+            if (!_ehDirecionado)
+            {
+                throw new InvalidOperationException("Não é possível transpor um grafo não direcionado.");
+            }
+            var rep = (TRepresentacao)_representacao.Transpor();
+            var transposto = new SuperGrafo<TRepresentacao, TAresta>(true, rep, $"{_nome} - Transposto");
+            foreach (var vertice in _vertices.Values)
+            {
+                transposto._vertices.Add(vertice.GetIdentificador(), vertice);
+            }
+            return transposto;
         }
 
         #endregion

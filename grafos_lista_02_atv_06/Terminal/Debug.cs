@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using grafos_lista_02_atv_06.Core.Models;
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06.Terminal
 {
@@ -35,6 +32,15 @@ namespace grafos_lista_02_atv_06.Terminal
             stopwatch.Stop();
             sb.AppendLine($"Tempo de Conclusão: {stopwatch.ToString()}");
             return sb.ToString();
+        }
+
+        public static void teste()
+        {
+            var a = new Aresta(new Vertice("a"), new Vertice("b"));
+            a.Transpor();
+            var b = new ArestaPonderada(new Vertice("a"), new Vertice("b"), 2);
+            b.Transpor();
+
         }
     }
 }

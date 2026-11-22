@@ -1,13 +1,11 @@
 ﻿using grafos_lista_02_atv_06.Core.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace grafos_lista_02_atv_06.Algorithms.Search
 {
-    public class ResultadoBFS: ResultadoBusca
+    public class ResultadoBFS : ResultadoBusca
     {
         public required IReadOnlyDictionary<IVertice, int> Nivel { get; init; }
 

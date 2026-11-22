@@ -1,15 +1,10 @@
-﻿using grafos_lista_02_atv_06.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace grafos_lista_02_atv_06.Core.Interfaces
 {
     public interface IGrafo : IGrafo<IRepresentacaoGrafo, IAresta> { }
 
-    public interface IGrafo<Representacao, Aresta> where Representacao : IRepresentacaoGrafo<Aresta> where Aresta : IAresta
+    public interface IGrafo<TRepresentacao, TAresta> where TRepresentacao : IRepresentacaoGrafo<TAresta> where TAresta : IAresta
     {
         public IReadOnlyList<IVertice> Vertices { get; }
 
@@ -17,8 +12,12 @@ namespace grafos_lista_02_atv_06.Core.Interfaces
 
         public IReadOnlyList<IVertice> Sucessores(IVertice vertice);
 
-        public IReadOnlyList<Aresta> ArestasAdjacentes(IVertice vertice);
+        public IReadOnlyList<TAresta> ArestasAdjacentes(IVertice vertice);
 
         public int VerticeCount { get; }
+
+        public bool EhDirecionado();
+
+        public IGrafo<TRepresentacao, TAresta> Transpor();
     }
 }

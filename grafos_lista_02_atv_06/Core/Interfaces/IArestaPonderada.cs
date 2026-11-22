@@ -2,6 +2,13 @@
 {
     public interface IArestaPonderada : IAresta
     {
-        public double GetPeso();
+        double GetPeso();
+
+        new IArestaPonderada Transpor();
+    }
+
+    public interface IArestaPonderada<out TAresta> : IArestaPonderada, IAresta<TAresta> where TAresta : IArestaPonderada<TAresta>
+    {
+        new TAresta Transpor();
     }
 }

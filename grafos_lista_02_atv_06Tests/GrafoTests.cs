@@ -1,18 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using grafos_lista_02_atv_06;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace grafos_lista_02_atv_06.Tests
+﻿namespace grafos_lista_02_atv_06.Tests
 {
     [TestClass()]
-    public class GrafoTests
+    public class Grafo_Tests
     {
         [TestMethod()]
-        public void TranpostoTest()
+        public void TransporTest()
         {
             var grafo = new Grafo(true, "G");
             grafo.AdicionarAresta("1", "2");

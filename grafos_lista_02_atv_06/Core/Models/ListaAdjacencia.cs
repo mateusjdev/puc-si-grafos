@@ -7,11 +7,11 @@ using System.Text;
 
 namespace grafos_lista_02_atv_06.Core.Models
 {
-    public class ListaAdjacencia : ListaAdjacencia<IAresta>;
+    public class ListaAdjacencia : ListaAdjacencia<IAresta>, IRepresentacaoGrafo<IAresta>;
 
-    public class ListaAdjacencia<Aresta> : IRepresentacaoGrafo<Aresta> where Aresta : IAresta
+    public class ListaAdjacencia<TAresta> : IRepresentacaoGrafo<TAresta> where TAresta : IAresta
     {
-        private readonly Dictionary<IVertice, LinkedList<Aresta>> _listaAdjacencias;
+        private readonly Dictionary<IVertice, LinkedList<TAresta>> _listaAdjacencias;
 
         public ListaAdjacencia()
         {
@@ -22,11 +22,11 @@ namespace grafos_lista_02_atv_06.Core.Models
         {
             if (!_listaAdjacencias.ContainsKey(v))
             {
-                _listaAdjacencias.Add(v, new LinkedList<Aresta>());
+                _listaAdjacencias.Add(v, new LinkedList<TAresta>());
             }
         }
 
-        public void AdicionarAresta(Aresta aresta)
+        public void AdicionarAresta(TAresta aresta)
         {
             if (aresta.EhLaco())
             {
@@ -43,10 +43,10 @@ namespace grafos_lista_02_atv_06.Core.Models
             {
                 throw new InvalidOperationException("Vertice já adicionado");
             }
-            _listaAdjacencias.Add(v, new LinkedList<Aresta>());
+            _listaAdjacencias.Add(v, new LinkedList<TAresta>());
         }
 
-        private IReadOnlyList<Aresta> ListaDeAdjacenciasDe(IVertice v)
+        private IReadOnlyList<TAresta> ListaDeAdjacenciasDe(IVertice v)
         {
             if (!_listaAdjacencias.ContainsKey(v))
             {
@@ -72,15 +72,15 @@ namespace grafos_lista_02_atv_06.Core.Models
             return _listaAdjacencias.Any(l => l.Value.Any(a => a.EhLaco()));
         }
 
-        public IReadOnlyList<Aresta> ArestasAdjacentes(IVertice v)
+        public IReadOnlyList<TAresta> ArestasAdjacentes(IVertice v)
         {
             var tmp = ListaDeAdjacenciasDe(v);
             return tmp.ToArray();
         }
 
-        public IReadOnlyList<IAresta> GetArestas()
+        public IReadOnlyList<TAresta> GetArestas()
         {
-            LinkedList<IAresta> arestas = new LinkedList<IAresta>();
+            LinkedList<TAresta> arestas = new LinkedList<TAresta>();
             foreach (var sucessores in _listaAdjacencias.Values)
             {
                 foreach (var aresta in sucessores)
@@ -112,14 +112,14 @@ namespace grafos_lista_02_atv_06.Core.Models
             return sb.ToString();
         }
 
-        public IRepresentacaoGrafo<Aresta> Transpor()
+        public IRepresentacaoGrafo<TAresta> Transpor()
         {
-            var t = new ListaAdjacencia<Aresta>();
+            var t = new ListaAdjacencia<TAresta>();
             foreach (var adjacencias in _listaAdjacencias)
             {
                 foreach (var aresta in adjacencias.Value)
                 {
-                    t.AdicionarAresta((Aresta)aresta.Transpor());
+                    t.AdicionarAresta((TAresta)aresta.Transpor());
                 }
             }
             return t;
