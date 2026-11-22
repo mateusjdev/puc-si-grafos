@@ -1,5 +1,6 @@
 ﻿using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo;
 using grafos_lista_02_atv_06.Algorithms.ComponentesConectados;
+using grafos_lista_02_atv_06.Algorithms.FluxoMaximo;
 using grafos_lista_02_atv_06.Terminal.Exemplos;
 using System.Linq;
 using System.Text;
@@ -210,6 +211,24 @@ namespace grafos_lista_02_atv_06.Terminal
                     return mostrarCaminhos ? caminho.ToString() : "";
                 }));
             return sb.AppendLine().ToString();
+        }
+
+        #endregion
+
+        #region Fluxo Máximo (Dinic)
+
+        public static string ExecutarDinicRedeDiamante()
+        {
+            var grafo = GrafosFluxoMaximo.RedeDiamante();
+            var resultado = Dinic.CalcularFluxoMaximo(grafo, "S", "T");
+            return resultado.ToString();
+        }
+
+        public static string ExecutarDinicMultiplasFases()
+        {
+            var grafo = GrafosFluxoMaximo.RedeComMultiplasFases();
+            var resultado = Dinic.CalcularFluxoMaximo(grafo, "S", "T");
+            return resultado.ToString();
         }
 
         #endregion
