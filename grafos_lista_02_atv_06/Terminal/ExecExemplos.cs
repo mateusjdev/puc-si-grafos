@@ -1,4 +1,4 @@
-﻿using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo;
+using grafos_lista_02_atv_06.Algorithms.CaminhoMinimo;
 using grafos_lista_02_atv_06.Algorithms.ComponentesConectados;
 using grafos_lista_02_atv_06.Algorithms.FluxoMaximo;
 using grafos_lista_02_atv_06.Terminal.Exemplos;
